@@ -237,6 +237,7 @@ function visitPlan(c: VisitPlanCard): Node[] {
   cal.append(lines, axis, head);
   if (w.window) {
     const band = el("div", "band", el("span", "band-label", w.window.label));
+    band.dataset.layer = "backdrop"; // the free window behind the visits, not a card
     band.style.setProperty("--ws", String(minutes(w.window.start) - h0));
     band.style.setProperty("--wl", String(minutes(w.window.end) - minutes(w.window.start)));
     cal.append(band);

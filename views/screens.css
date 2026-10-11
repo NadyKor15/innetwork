@@ -63,7 +63,7 @@
 
 /* ======================================================================================================
    InNetwork MCP App views (one bundle, six files). Everything below the tokens is the CSS of the reference
-   screens design/screens/0N-*/screen.html, class for class, scoped by the screen root (.s-fm 01, .s-cy 02,
+   screens (design/screens/0N-name/screen.html), class for class, scoped by the screen root (.s-fm 01, .s-cy 02,
    .s-vp 03, .s-bk 04, .s-sa 05, .s-cs 06). The host draws the 24-px app bar and the conversation band; a view
    draws only what is under them. Zoom (1.667 on echo-show-8) and data-theme come from hostContext (screens.ts).
    ====================================================================================================== */
@@ -84,7 +84,7 @@ body {
 .scr .dot { margin: 0 1.5px; }
 
 /* shared add-on marks (not on the references): "Booked" after a booking, "?" for an unknown answer */
-.booked-tag { display: inline-flex; align-items: center; gap: 3px; font-weight: 700; color: var(--fits); white-space: nowrap; }
+.booked-tag { display: inline-flex; align-items: center; gap: 3px; vertical-align: top; height: 1lh; line-height: inherit; font-weight: 700; color: var(--fits); white-space: nowrap; }
 .booked-tag svg { width: 12px; height: 12px; display: block; flex: none; }
 .booked-tag svg path { fill: none; stroke: var(--fits); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 

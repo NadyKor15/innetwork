@@ -121,6 +121,8 @@ body { min-height: 100vh; overflow-x: hidden; }
 #band-reply span { display: block; }
 #band-reply span:empty { display: none; }
 #band p { white-space: nowrap; }
+#band.wrap { height: auto !important; padding-bottom: 6px !important; }
+#band.wrap p { white-space: normal; }
 /* 01 family match: framed card, grey request, bold reply */
 #screen[data-band="framed-fm"] #band { display: flex; flex-direction: column; margin: 9px 12px 0; height: 54px; background: var(--card); border: 1px solid var(--hairline); border-radius: var(--r-card); padding: 8px 17px 0; }
 #screen[data-band="framed-fm"] #band-ask { font-size: var(--body3); line-height: 16px; color: var(--text-2); }

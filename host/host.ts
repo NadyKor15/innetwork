@@ -87,9 +87,24 @@ function setBand(view: string, utterance: string, speech: string): void {
     const m = speech.match(/^(.+?[.!?])\s+(.+)$/);
     if (m) { r1 = m[1]; r2 = m[2]; }
   }
+  if (band === "none") { ask = ""; r1 = ""; r2 = ""; }
   $("band-ask").textContent = ask;
   $("band-reply-1").textContent = r1;
   $("band-reply-2").textContent = r2;
+  fitBand();
+}
+/** A line longer than the band never gets cut: first a smaller size (down to 10 base px), then it wraps and the band grows. */
+function fitBand(): void {
+  const bandEl = $("band");
+  bandEl.classList.remove("wrap");
+  for (const id of ["band-ask", "band-reply"]) {
+    const el = $(id);
+    el.style.fontSize = "";
+    const over = () => el.scrollWidth > el.clientWidth + 1;
+    let size = parseFloat(getComputedStyle(el).fontSize);
+    while (over() && size > 10) { size -= 0.5; el.style.fontSize = `${size}px`; }
+    if (over()) bandEl.classList.add("wrap");
+  }
 }
 
 // ---------- subtitles: Alexa's line(s) with seconds, one speech part at a time ----------
@@ -436,7 +451,7 @@ async function renderDevboard(): Promise<void> {
     const mode = step?.mode ?? plan?.sourceMode ?? "fixture";
     const kind = plan?.kind ?? "";
     const kindText = KIND_TEXT[kind] ?? `${plan?.programType ?? "plan"} directory`;
-    const recorded = mode === "fixture" ? " · recorded sample" : "";
+    const recorded = mode === "fixture" && !KIND_TEXT[kind] ? " · recorded sample" : "";
     const who = r.memberLabel ? `${r.memberLabel} · ` : "";
     grid.append(h("div", `member member--${r.member || memberCls[i]} inner r${i + 1}`, h("span", "dot"), h("span", "member-name", r.memberLabel || r.planLabel)));
     grid.append(h("div", `source inner r${i + 1}`, h("p", "source-text", `${who}${r.planLabel} · ${kindText}${recorded}`), modeBadge(mode, kind)));
