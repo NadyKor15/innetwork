@@ -25,7 +25,7 @@ test("site age: synthetic pages with a minimum age light up", () => {
 test("site age: plain pages stay dark (no false minimum age)", () => {
   for (const page of [
     "<p>Dr. Sample is a board-certified orthopaedic surgeon with 18 years of experience.</p>",
-    "Call 407-555-0100. Suite 300. Open Monday to Friday 8 to 5.",
+    "Call the front desk. Suite 300. Open Monday to Friday 8 to 5.",
     "<script>var age = 'ages 3 and up';</script><p>Sports medicine and joint replacement.</p>",
     "Founded in 1998, our practice has 12 physicians.",
   ]) {
