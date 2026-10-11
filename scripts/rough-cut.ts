@@ -14,6 +14,8 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const VID = join(ROOT, "docs", "video");
 const WORK = join(VID, ".work");
 const DRAFT = process.argv.includes("--draft");
+// The device (1320x856 at 20,42 on the 1920x1080 host page) plus its caption and the subtitle bar under it.
+const CROP = process.env.ROUGH_CUT_CROP ?? "crop=1340:1000:10:12";
 type Beats = { video: string; durationMs: number; beats: { beat: number; label: string; startMs: number; endMs: number }[]; cues: { atMs: number; who: "mom" | "alexa"; text: string; beat: number }[] };
 
 function run(cmd: string, args: string[]): string {
@@ -94,17 +96,20 @@ async function main() {
   ]);
 
   const beat = (n: number) => b.beats.filter((x) => x.beat === n);
+  const firstAlexa = (n: number) => b.cues.find((c) => c.beat === n && c.who === "alexa")?.atMs;
   const span = (ns: number[]) => { const xs = ns.flatMap(beat); if (!xs.length) throw new Error(`beat(s) ${ns} not in beats.json`); return { start: Math.min(...xs.map((x) => x.startMs)), end: Math.max(...xs.map((x) => x.endMs)) }; };
   type Seg = { id: string; kind: "rec"; start: number; end: number; beats: number[] } | { id: string; kind: "card"; png: string; secs: number; text: string };
   const seg: Seg[] = [
-    { id: "open", kind: "rec", ...span([2]), beats: [2] },
+    // cold open starts on the answer (the screen before it is still the previous step); the request is in the band
+    { id: "open", kind: "rec", start: Math.max(span([2]).start, (firstAlexa(2) ?? span([2]).start) - 300), end: span([2]).end, beats: [2] },
     { id: "c1", kind: "card", png: png.c1, secs: 3.5, text: cardText.c1 },
     { id: "c2", kind: "card", png: png.c2, secs: 5, text: cardText.c2 },
     { id: "c3", kind: "card", png: png.c3, secs: 4.5, text: cardText.c3 },
     { id: "c4", kind: "card", png: png.c4, secs: 4.5, text: cardText.c4 },
     { id: "scene1", kind: "rec", ...span([3, 4]), beats: [3, 4] },
     { id: "scene2", kind: "rec", ...span([5]), beats: [5] },
-    { id: "consent", kind: "rec", ...span([1]), beats: [1] },
+    // consent and boundaries: about 8 s from the consent screen (SPEC §2 1:45-1:53)
+    { id: "consent", kind: "rec", start: (firstAlexa(1) ?? span([1]).start) - 300, end: Math.min(span([1]).end, (firstAlexa(1) ?? span([1]).start) + 7700), beats: [1] },
     { id: "evidence", kind: "rec", ...span([6]), beats: [6] },
     { id: "end", kind: "card", png: png.end, secs: 4, text: cardText.end },
   ];
@@ -119,9 +124,10 @@ async function main() {
       srt.push({ a: t, b: t + s.secs * 1000 - 50, text: s.text });
     } else {
       const ss = (s.start / 1000).toFixed(3), to = (s.end / 1000).toFixed(3);
-      run("ffmpeg", ["-y", "-loglevel", "error", "-ss", ss, "-to", to, "-i", src, "-f", "lavfi", "-i", "anullsrc=r=48000:cl=stereo", "-vf", "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=0x14181E,format=yuv420p", "-r", "30", "-c:v", "libx264", "-crf", "18", "-c:a", "aac", "-shortest", f]);
-      for (const c of b.cues.filter((x) => s.beats.includes(x.beat) && x.atMs >= s.start && x.atMs < s.end)) {
-        const at = t + (c.atMs - s.start);
+      run("ffmpeg", ["-y", "-loglevel", "error", "-ss", ss, "-to", to, "-i", src, "-f", "lavfi", "-i", "anullsrc=r=48000:cl=stereo", "-vf", `${CROP},scale=-2:1080,pad=1920:1080:(ow-iw)/2:0:color=0x0D0C0F,format=yuv420p`, "-r", "30", "-c:v", "libx264", "-crf", "18", "-c:a", "aac", "-shortest", f]);
+      const beatStart = Math.min(...s.beats.flatMap(beat).map((x) => x.startMs));
+      for (const c of b.cues.filter((x) => s.beats.includes(x.beat) && x.atMs >= beatStart && x.atMs < s.end)) {
+        const at = t + Math.max(0, c.atMs - s.start); // a line said just before the cut point starts with the segment
         srt.push({ a: at, b: at + Math.max(1800, Math.min(9000, c.text.split(/\s+/).length * 400 + 800)), text: `${c.who === "mom" ? "Mom" : "Alexa (synthetic)"}: ${c.text}` });
       }
     }

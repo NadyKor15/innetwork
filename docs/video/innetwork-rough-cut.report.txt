@@ -1,5 +1,5 @@
-rough cut 2026-10-11T05:30:10.584Z (DRAFT)
-duration 129.6 s (limit 180, target ≤ 170)
+rough cut 2026-10-11T05:38:25.651Z
+duration 110.0 s (limit 180, target ≤ 170)
 segments: open > c1 > c2 > c3 > c4 > scene1 > scene2 > consent > evidence > end
 freezes ≥ 6 s: none
-audit card: placeholder N (DRAFT)
+audit card: 0 of 8506 (AUDIT-2026-10-11.json)
