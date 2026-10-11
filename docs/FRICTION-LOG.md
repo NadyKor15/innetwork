@@ -137,6 +137,24 @@ re-counted by `npm run audit:directories`.
 - **Workaround:** joins (Practitioner, NPPES by NPI), and never showing hours or "accepting" as verified.
 - **Suggestion:** populate specialty and NPI on the role; vary `newpatients` by practice.
 
+### F14. In-network listings at Orlando addresses for practitioners who report practicing elsewhere
+- **Task:** call or book an in-network orthopedist the directory lists at a central Orlando address.
+- **Steps:** `node scripts/audit-sites.ts --candidates` 2026-10-11 05:3xZ: Florida Blue BlueChoice (network PPC-2026-BCHPPO), orthopedics, ZIPs 32803/32806/32801 → 108 practitioners (distinct NPI) at 12 addresses; 30 taken round-robin over the addresses; each NPI looked up in NPPES (`?version=2.1&number=<npi>`, 30 requests, 0 errors).
+- **Expected:** a practitioner listed at an Orlando location practices there (or at least in Florida).
+- **Actual:** **4 of 30** report no practice address in Florida to NPPES (Arizona, Pennsylvania, Texas, New Jersey). For 4 of 30 a web search found a current out-of-state employer profile (not opened; NPPES lists that state for all 4). The directory carries a website for **0 of 30**. Several of these names match Orlando training programs (fellows/residents who moved on) — our reading, not verified.
+- **Severity:** medium–high (a family calls a doctor who is not there).
+- **Workaround:** cross-check NPPES practice addresses; never present a directory row as "available".
+- **Suggestion:** retire listings when a practitioner leaves; publish the practice URL (`telecom` system `url`).
+
+### F15. Practice websites that refuse automated reads (the second measurement is thin)
+- **Task:** read 16 practitioners' own pages for the patient ages they see (`npm run audit:sites`, robots.txt honoured, one GET per page, 2 s per host).
+- **Steps:** 2026-10-11 05:3xZ.
+- **Expected:** public bio pages readable by a polite client.
+- **Actual:** **10 of 16** pages did not open: `www.orlandohealth.com` answers robots.txt with **HTTP 429** (a bot checkpoint page) — we do not read pages whose robots.txt is refused (6 pages); `www.hcafloridahealthcare.com` robots.txt **403** (1); `www.adventhealth.com` pages **403** (3). Of the **6** pages that opened, **0** state a patient age (independent grep of two pediatric pages: no age limit, only "adult athletes" in a sentence) — parser control on synthetic pages lit.
+- **Severity:** low for us (measurement), medium for families (the age is not written anywhere a family can find it in advance; you learn it on the phone).
+- **Workaround:** none taken (no bot-checkpoint bypass by design); result published with its counts.
+- **Suggestion:** structured age data in the directory (F12) instead of scraping practice pages.
+
 ---
 
 ## Part 2 — Alexa+ platform, MCP Apps, design guide

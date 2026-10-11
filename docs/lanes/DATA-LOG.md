@@ -28,3 +28,9 @@ Times: UTC, from `date -u`. One line per finished step; facts only from real run
 ## Phase 3 — `npm run guard:names`
 
 - 05:06Z and 05:27Z: 11 fictional names (fixtures/directory, fixtures/demo/scenario.json, design/screens/rules) and 10 fictional office names → NPPES FL / US / surname-FL all 0, pool of live answers 0 (pool: data/cache + audit-private captures + the audit's 1.5k-name pool, gitignored); controls lit ("Maria Garcia" FL 38, organization control 5, planted pool name found); 45 requests, 0 errors → **PASS**. `npm run verify` runs it as G9 (PASS).
+
+## Phase 4 — `npm run audit:sites` (first run, 11.10 instead of 13.10)
+
+- 05:30–05:39Z `node scripts/audit-sites.ts --candidates`: Plan A (Florida Blue BlueChoice) in-network orthopedists in 32803/32806/32801 → 108 distinct NPIs at 12 directory addresses; 30 kept round-robin by address; directory URL for 0 of 30; directory age statement for 0 of 30; NPPES practice addresses fetched per NPI (33 requests, 0 errors). Own pages found by manual web search (WebSearch, 26 queries; third-party directories not counted) → `audit-private/sites-input.json` (local): 16 with an own page, 10 none found, 4 whose current employer profile is out of state (and NPPES lists that state).
+- 05:38–05:41Z `npm run audit:sites`: **0 of 6 pages that opened state a minimum patient age** (0 of 6 say anything about ages); **10 of 16 did not open** for an automated read (orlandohealth.com robots.txt 429 → 6 pages not read; hcafloridahealthcare.com robots.txt 403 → 1; adventhealth.com page 403 → 3); parser control lit/dark on synthetic pages; NPPES: 4 of 30 have no Florida practice address. Aggregate only: `docs/AUDIT-SITES-2026-10-11.md`; rows in `audit-private/sites-results-2026-10-11.json`. Friction F14 (listings for practitioners who practice elsewhere), F15 (sites refuse automated reads).
+- Thin result (N = 6 opened). Not done: allergy and dermatology rounds; any bypass of bot checkpoints (by design: not done).
