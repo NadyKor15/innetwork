@@ -11,7 +11,8 @@ export const LINE_N1 = "I can't suggest a kind of doctor. Tell me which doctor y
 export const LINE_N7 = "I can't help with emergencies. If this is an emergency, call 911.";
 export const DISCLAIMER = "This information is not a substitute for professional medical advice. Consult a healthcare provider for personal medical decisions.";
 
-export const words = (s: string) => s.trim().split(/\s+/).filter(Boolean).length;
+/** Spoken words: tokens with a letter or digit ("—" is not a word; "8:30" is). */
+export const words = (s: string) => s.trim().split(/\s+/).filter((t) => /[A-Za-z0-9]/.test(t)).length;
 export const seconds = (s: string) => Math.round((words(s) / WORDS_PER_SECOND) * 10) / 10;
 
 export type LintIssue = { rule: "N5" | "N7" | "N9" | "budget"; text: string };

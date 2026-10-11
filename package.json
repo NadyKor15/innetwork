@@ -19,7 +19,9 @@
     "guard:names": "node scripts/guard-names.ts",
     "audit:directories": "node packages/plannet-directory-check/bin/audit-directories.ts",
     "audit:sites": "node scripts/audit-sites.ts",
-    "record": "node scripts/record-demo.ts"
+    "record": "node scripts/record-demo.ts",
+    "rough-cut": "node scripts/rough-cut.ts",
+    "mutations": "node verify/mutations.ts"
   },
   "dependencies": {
     "@fontsource/nunito": "5.3.0",
