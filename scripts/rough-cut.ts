@@ -27,8 +27,9 @@ function auditNumber(): { records: number; withAge: number; file: string } | nul
   const docs = join(ROOT, "docs");
   const files = existsSync(docs) ? readdirSync(docs).filter((f) => /^AUDIT-.*\.json$/.test(f) && !/SITES/i.test(f)).sort() : [];
   if (!files.length) return null;
-  const j = JSON.parse(readFileSync(join(docs, files.at(-1)!), "utf8")) as { summary?: { records?: number; age_policy_published?: number } };
-  const s = j.summary ?? {};
+  const j = JSON.parse(readFileSync(join(docs, files.at(-1)!), "utf8")) as { totals?: { records?: number; age_policy_published?: number }; control?: { synthetic_age_record_counted?: boolean } };
+  const s = j.totals ?? {};
+  if (j.control?.synthetic_age_record_counted !== true) return null; // the counter must be shown to work before its zero goes on a card
   return typeof s.records === "number" && typeof s.age_policy_published === "number" ? { records: s.records, withAge: s.age_policy_published, file: files.at(-1)! } : null;
 }
 
