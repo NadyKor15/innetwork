@@ -582,11 +582,20 @@ const BEATS: BeatStep[] = [
   { beat: 6, label: "behind the scenes", action: "developer" },
 ];
 
+/** While the parent speaks, the screen shows the words heard so far ("Alexa, …" requests only; "Yes." keeps the screen). */
+function hearing(text: string | null): void {
+  const el = $("hearing");
+  if (text === null) { el.hidden = true; return; }
+  $("hearing-text").textContent = `“${text.replace(/^alexa[,!.]?\s*/i, "")}”`;
+  el.hidden = false;
+}
 async function typeInto(text: string): Promise<void> {
   const input = $("utterance") as HTMLInputElement;
+  const show = /^alexa\b/i.test(text);
   input.value = "";
   if (FAST) { input.value = text; return; }
-  for (const ch of text) { input.value += ch; await sleep(26); }
+  if (show) { $("sub-alexa").textContent = ""; $("sub-seconds").textContent = ""; }
+  for (const ch of text) { input.value += ch; if (show) { hearing(input.value); $("sub-user").textContent = `You: ${input.value}`; } await sleep(26); }
   await sleep(300);
 }
 /** Verify hook (?hold=1): pause after a step until window.__release() is called. */
@@ -624,7 +633,7 @@ async function playDemo(): Promise<void> {
       cue("mom", b.say!);
       await typeInto(b.say!);
       ($("utterance") as HTMLInputElement).value = "";
-      const turn = await enqueue(b.say!, "demo");
+      const turn = await enqueue(b.say!, "demo").finally(() => hearing(null));
       if (!turn) throw new Error(`no answer to "${b.say}"`);
       if (turn.isError) throw new Error(`error answer to "${b.say}": ${turn.speech}`);
       await hold(`beat-${b.beat}-${turn.view ?? "voice"}-${turn.n}`);

@@ -100,8 +100,8 @@ async function main() {
   const span = (ns: number[]) => { const xs = ns.flatMap(beat); if (!xs.length) throw new Error(`beat(s) ${ns} not in beats.json`); return { start: Math.min(...xs.map((x) => x.startMs)), end: Math.max(...xs.map((x) => x.endMs)) }; };
   type Seg = { id: string; kind: "rec"; start: number; end: number; beats: number[] } | { id: string; kind: "card"; png: string; secs: number; text: string };
   const seg: Seg[] = [
-    // cold open starts on the answer (the screen before it is still the previous step); the request is in the band
-    { id: "open", kind: "rec", start: Math.max(span([2]).start, (firstAlexa(2) ?? span([2]).start) - 300), end: span([2]).end, beats: [2] },
+    // cold open: the "Heard" screen shows the mom's words while she speaks, then the answer
+    { id: "open", kind: "rec", ...span([2]), beats: [2] },
     { id: "c1", kind: "card", png: png.c1, secs: 3.5, text: cardText.c1 },
     { id: "c2", kind: "card", png: png.c2, secs: 5, text: cardText.c2 },
     { id: "c3", kind: "card", png: png.c3, secs: 4.5, text: cardText.c3 },

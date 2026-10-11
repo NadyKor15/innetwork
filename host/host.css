@@ -274,3 +274,11 @@ body[data-mode="developer"] #chrome, body[data-mode="developer"] #card { visibil
 #devboard .brand { display: inline; margin-left: 3.3px; font-size: 12px; line-height: 14px; font-weight: 800; white-space: nowrap; color: var(--text-1); }
 #devboard .audit { margin-left: 16px; font-family: var(--mono); font-size: 9px; line-height: 12px; color: var(--text-2); white-space: nowrap; overflow: hidden; }
 #devboard .demo { margin-left: auto; font-size: var(--label1); line-height: 12px; font-weight: 400; color: var(--text-3); position: relative; top: 1.4px; white-space: nowrap; }
+
+/* "Heard": while the parent is speaking, the device shows the words it hears (as Echo Show shows a transcription),
+   not the previous step. Host-drawn, base px under zoom; no Alexa marks, no light bar. */
+#hearing { position: absolute; inset: 0; z-index: 6; background: var(--screen); }
+#hearing[hidden] { display: none; }
+#hearing .hearing-in { width: 768px; height: 480px; zoom: 1.667; box-sizing: border-box; padding: 0 56px; display: flex; flex-direction: column; justify-content: center; gap: var(--sp-8); }
+#hearing .hearing-label { margin: 0; font: 700 var(--body2)/1.2 var(--font); color: var(--text-3); letter-spacing: 0.04em; text-transform: uppercase; }
+#hearing #hearing-text { margin: 0; font: 700 var(--display5)/1.3 var(--font); color: var(--text-1); }
