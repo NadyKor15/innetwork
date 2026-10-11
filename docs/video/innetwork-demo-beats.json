@@ -2,146 +2,146 @@
   "video": "docs/video/innetwork-demo-silent.mp4",
   "webm": "docs/video/innetwork-demo-silent.webm",
   "mp4": "docs/video/innetwork-demo-silent.mp4",
-  "durationMs": 118133,
+  "durationMs": 119400,
   "theme": "dark",
   "demo": "done",
   "beats": [
     {
       "beat": 1,
       "label": "consent",
-      "startMs": 2537,
-      "endMs": 20654
+      "startMs": 2525,
+      "endMs": 20624
     },
     {
       "beat": 2,
       "label": "opening: three people, three plans",
-      "startMs": 20654,
-      "endMs": 36092
+      "startMs": 20624,
+      "endMs": 36327
     },
     {
       "beat": 3,
       "label": "checkup year around the routine",
-      "startMs": 36092,
-      "endMs": 85018
+      "startMs": 36327,
+      "endMs": 86268
     },
     {
       "beat": 4,
       "label": "new session: state kept",
-      "startMs": 85018,
-      "endMs": 91742
+      "startMs": 86268,
+      "endMs": 92998
     },
     {
       "beat": 5,
       "label": "set aside before you call",
-      "startMs": 91742,
-      "endMs": 102158
+      "startMs": 92998,
+      "endMs": 103414
     },
     {
       "beat": 6,
       "label": "behind the scenes",
-      "startMs": 102158,
-      "endMs": 109179
+      "startMs": 103414,
+      "endMs": 110440
     }
   ],
   "cues": [
     {
-      "atMs": 2538,
+      "atMs": 2526,
       "who": "mom",
       "text": "Alexa, open In Network.",
       "beat": 1
     },
     {
-      "atMs": 3554,
+      "atMs": 3524,
       "who": "alexa",
       "text": "Before we start, here's what I use and why. This information is not a substitute for professional medical advice. Consult a healthcare provider for personal medical decisions. Say allow to continue.",
       "beat": 1
     },
     {
-      "atMs": 16858,
+      "atMs": 16828,
       "who": "mom",
       "text": "Allow.",
       "beat": 1
     },
     {
-      "atMs": 17349,
+      "atMs": 17321,
       "who": "alexa",
       "text": "Thanks. You can change this anytime.",
       "beat": 1
     },
     {
-      "atMs": 20654,
+      "atMs": 20625,
       "who": "mom",
       "text": "Alexa, I need a gastroenterologist, an allergist for my five-year-old, and an orthopedist for my little one. He's under two.",
       "beat": 2
     },
     {
-      "atMs": 29445,
+      "atMs": 29683,
       "who": "alexa",
       "text": "One doctor each, in their own plan. Book all three?",
       "beat": 2
     },
     {
-      "atMs": 34349,
+      "atMs": 34586,
       "who": "mom",
       "text": "Yes.",
       "beat": 2
     },
     {
-      "atMs": 34789,
+      "atMs": 35023,
       "who": "alexa",
       "text": "Booked.",
       "beat": 2
     },
     {
-      "atMs": 36092,
+      "atMs": 36327,
       "who": "mom",
       "text": "Alexa, I've met my out-of-pocket max this year. I want a full checkup: primary care, OB-GYN, a dermatologist, a gastroenterologist and lab work. Book them all before my plan resets.",
       "beat": 3
     },
     {
-      "atMs": 46467,
+      "atMs": 47722,
       "who": "alexa",
       "text": "After the out-of-pocket max, plans usually pay 100% of covered in-network care until the plan year ends — per HealthCare.gov.",
       "beat": 3
     },
     {
-      "atMs": 54423,
+      "atMs": 55678,
       "who": "alexa",
       "text": "Your gastroenterologist is already booked for Thursday. Tuesday, same clinic: primary care, then OB-GYN. Friday: dermatology. All between 8:30 and 11, while he's at daycare. Lab work may need an order — I'll add it after primary care. Book these three?",
       "beat": 3
     },
     {
-      "atMs": 79276,
+      "atMs": 80528,
       "who": "mom",
       "text": "Yes.",
       "beat": 3
     },
     {
-      "atMs": 79715,
+      "atMs": 80965,
       "who": "alexa",
       "text": "Booked. Details in your Alexa app and email. Say cancel anytime.",
       "beat": 3
     },
     {
-      "atMs": 86238,
+      "atMs": 87488,
       "who": "mom",
       "text": "Alexa, what's left on my checkup plan?",
       "beat": 4
     },
     {
-      "atMs": 87638,
+      "atMs": 88894,
       "who": "alexa",
       "text": "Four booked. Lab work comes after Tuesday's visit.",
       "beat": 4
     },
     {
-      "atMs": 91743,
+      "atMs": 92999,
       "who": "mom",
       "text": "Alexa, find an orthopedist for my youngest. He's under two.",
       "beat": 5
     },
     {
-      "atMs": 94056,
+      "atMs": 95312,
       "who": "alexa",
       "text": "I checked six nearby. Two don't see children under three, one isn't in his plan. These two fit.",
       "beat": 5

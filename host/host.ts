@@ -595,7 +595,7 @@ async function typeInto(text: string): Promise<void> {
   input.value = "";
   if (FAST) { input.value = text; return; }
   if (show) { $("sub-alexa").textContent = ""; $("sub-seconds").textContent = ""; }
-  for (const ch of text) { input.value += ch; if (show) { hearing(input.value); $("sub-user").textContent = `You: ${input.value}`; } await sleep(26); }
+  for (const ch of text) { input.value += ch; if (show) { hearing(input.value); $("sub-user").textContent = input.value; } await sleep(26); }
   await sleep(300);
 }
 /** Verify hook (?hold=1): pause after a step until window.__release() is called. */

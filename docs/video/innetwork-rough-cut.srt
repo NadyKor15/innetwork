@@ -1,83 +1,83 @@
 1
-00:00:00,000 --> 00:00:08,800
+00:00:00,001 --> 00:00:08,801
 Mom: Alexa, I need a gastroenterologist, an allergist for my five-year-old, and an orthopedist for my little one. He's under two.
 
 2
-00:00:08,791 --> 00:00:13,591
+00:00:09,059 --> 00:00:13,859
 Alexa (synthetic): One doctor each, in their own plan. Book all three?
 
 3
-00:00:13,695 --> 00:00:15,495
+00:00:13,962 --> 00:00:15,762
 Mom: Yes.
 
 4
-00:00:14,135 --> 00:00:15,935
+00:00:14,399 --> 00:00:16,199
 Alexa (synthetic): Booked.
 
 5
-00:00:15,467 --> 00:00:32,467
+00:00:15,733 --> 00:00:32,733
 Nadya (her own voice, recorded Fri 16.10): I'm a mom of two. One call to book my son's orthopedist took an hour. I've been putting off six doctors for months.
 
 6
-00:00:15,467 --> 00:00:18,917
+00:00:15,733 --> 00:00:19,183
 One family. Three health plans. Three networks.
 
 7
-00:00:18,967 --> 00:00:23,917
+00:00:19,233 --> 00:00:24,183
 Today an assistant can book a table or a salon. Matching a doctor to each person's plan and age still takes phone calls.
 
 8
-00:00:23,967 --> 00:00:28,417
+00:00:24,233 --> 00:00:28,683
 0 of 8,506 public directory records we checked say what age a doctor sees.
 
 9
-00:00:28,467 --> 00:00:32,917
+00:00:28,733 --> 00:00:33,183
 The first family to hear "we don't see under 3" saves every next family the call.
 
 10
-00:00:32,967 --> 00:00:41,967
+00:00:33,233 --> 00:00:42,233
 Mom: Alexa, I've met my out-of-pocket max this year. I want a full checkup: primary care, OB-GYN, a dermatologist, a gastroenterologist and lab work. Book them all before my plan resets.
 
 11
-00:00:43,342 --> 00:00:52,142
+00:00:44,628 --> 00:00:53,428
 Alexa (synthetic): After the out-of-pocket max, plans usually pay 100% of covered in-network care until the plan year ends — per HealthCare.gov.
 
 12
-00:00:51,298 --> 00:01:00,298
+00:00:52,584 --> 00:01:01,584
 Alexa (synthetic): Your gastroenterologist is already booked for Thursday. Tuesday, same clinic: primary care, then OB-GYN. Friday: dermatology. All between 8:30 and 11, while he's at daycare. Lab work may need an order — I'll add it after primary care. Book these three?
 
 13
-00:01:16,151 --> 00:01:17,951
+00:01:17,434 --> 00:01:19,234
 Mom: Yes.
 
 14
-00:01:16,590 --> 00:01:21,790
+00:01:17,871 --> 00:01:23,071
 Alexa (synthetic): Booked. Details in your Alexa app and email. Say cancel anytime.
 
 15
-00:01:23,113 --> 00:01:26,713
+00:01:24,394 --> 00:01:27,994
 Mom: Alexa, what's left on my checkup plan?
 
 16
-00:01:24,513 --> 00:01:28,513
+00:01:25,800 --> 00:01:29,800
 Alexa (synthetic): Four booked. Lab work comes after Tuesday's visit.
 
 17
-00:01:28,634 --> 00:01:33,434
+00:01:29,934 --> 00:01:34,734
 Mom: Alexa, find an orthopedist for my youngest. He's under two.
 
 18
-00:01:30,947 --> 00:01:38,947
+00:01:32,247 --> 00:01:40,247
 Alexa (synthetic): I checked six nearby. Two don't see children under three, one isn't in his plan. These two fit.
 
 19
-00:01:39,100 --> 00:01:41,500
+00:01:40,367 --> 00:01:42,767
 Mom: Alexa, open In Network.
 
 20
-00:01:39,400 --> 00:01:48,400
+00:01:40,667 --> 00:01:49,667
 Alexa (synthetic): Before we start, here's what I use and why. This information is not a substitute for professional medical advice. Consult a healthcare provider for personal medical decisions. Say allow to continue.
 
 21
-00:01:54,133 --> 00:01:58,083
+00:01:55,433 --> 00:01:59,383
 InNetwork — a doctor for each person, in their own plan's network.
