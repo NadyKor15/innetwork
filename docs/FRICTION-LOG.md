@@ -147,10 +147,10 @@ re-counted by `npm run audit:directories`.
 - **Suggestion:** retire listings when a practitioner leaves; publish the practice URL (`telecom` system `url`).
 
 ### F15. Practice websites that refuse automated reads (the second measurement is thin)
-- **Task:** read 16 practitioners' own pages for the patient ages they see (`npm run audit:sites`, robots.txt honoured, one GET per page, 2 s per host).
-- **Steps:** 2026-10-11 05:3xZ.
+- **Task:** read 44 practitioners' own pages (orthopedics 16, allergy 10, dermatology 18; 71 looked up, 21 with no own page found, 6 practising in another state) for the patient ages they see (`npm run audit:sites`, robots.txt honoured, one GET per page, 2 s per host).
+- **Steps:** 2026-10-11 05:3xZ (orthopedics), 06:4xZ (all three specialties; `node scripts/audit-sites.ts --keep-text`).
 - **Expected:** public bio pages readable by a polite client.
-- **Actual:** **10 of 16** pages did not open: `www.orlandohealth.com` answers robots.txt with **HTTP 429** (a bot checkpoint page) — we do not read pages whose robots.txt is refused (6 pages); `www.hcafloridahealthcare.com` robots.txt **403** (1); `www.adventhealth.com` pages **403** (3). Of the **6** pages that opened, **0** state a patient age (independent grep of two pediatric pages: no age limit, only "adult athletes" in a sentence) — parser control on synthetic pages lit.
+- **Actual:** **26 of 44** pages did not open: robots.txt answered with a bot-checkpoint status (**HTTP 429** on one health-system host, **403** on two) or the page itself answered **403** (two hosts), so we read nothing; one search hit was a stale URL (404). 20 of the 26 are hospital-system doctor profiles. Of the **18** pages that opened, **0** state a patient age (an independent, broader grep of the saved page text, every hit read: no minimum or maximum age anywhere; 8 of 18 mention children or a pediatric service with no number). Allergy has only 11 in-network practitioners in the three default ZIPs plus neighbours (3 in the default three). Parser control on synthetic pages lit.
 - **Severity:** low for us (measurement), medium for families (the age is not written anywhere a family can find it in advance; you learn it on the phone).
 - **Workaround:** none taken (no bot-checkpoint bypass by design); result published with its counts.
 - **Suggestion:** structured age data in the directory (F12) instead of scraping practice pages.

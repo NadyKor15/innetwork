@@ -3,14 +3,16 @@
 //
 //   node scripts/audit-sites.ts --candidates [--zips 32803,32806,32801] [--specialty orthopedics] [--n 30]
 //       In-network Plan A practitioners from the live Florida Blue directory (BlueChoice), one per NPI, with what
-//       their directory records say about age -> audit-private/sites-candidates.json (real names: local only).
+//       their directory records say about age -> audit-private/sites-candidates-<specialty>.json (real names: local only;
+//       one file per specialty, a later specialty never overwrites an earlier one).
 //   node scripts/audit-sites.ts [--input audit-private/sites-input.json]
-//       Input rows { id, npi, url, source } (url = the practice's own page for that practitioner; found in the
+//       Input rows { id, npi, specialty?, url, source } (url = the practice's own page for that practitioner; found in the
 //       directory's telecom where present, otherwise by a manual web search, recorded in `source`).
 //       For each URL: robots.txt honoured, one GET of a public page, no forms, no calls. Parses the visible text for
 //       patient-age wording (src/directory/site-age.ts). Writes per-site rows to audit-private/ and ONLY the aggregate
-//       to docs/AUDIT-SITES-<date>.md. Prints the parser's must-light control and the count of sites that did not open.
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+//       to docs/AUDIT-SITES-<date>.md (with a per-specialty breakdown); --keep-text also saves each opened page's visible
+//       text under audit-private/site-text/ (local) so the parser's "no age wording" can be re-checked by an independent grep. Prints the parser's must-light control and the count of sites that did not open.
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { FhirClient } from "../packages/plannet-directory-check/src/fhir.ts";
@@ -33,7 +35,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 // ---- candidates ------------------------------------------------------------------------------------------------------
 async function candidates() {
-  const zips = (arg("zips") ?? "32803,32806,32801").split(",");
+  const zips = [...new Set((arg("zips") ?? "32803,32806,32801").split(","))];
   const specialty = (arg("specialty") ?? "orthopedics") as Specialty;
   const n = Number(arg("n") ?? 30);
   const src = PLAN_SOURCES["plan-a"];
@@ -75,9 +77,9 @@ async function candidates() {
     } catch (err) { c.nppes = { error: (err as Error).message.slice(0, 80) }; }
   }
   mkdirSync(PRIVATE, { recursive: true });
-  writeFileSync(join(PRIVATE, "sites-candidates.json"), JSON.stringify({ capturedAt: new Date().toISOString(), plan: "plan-a (Florida Blue BlueChoice, network PPC-2026-BCHPPO)", specialty, zips, candidates: list }, null, 1));
+  writeFileSync(join(PRIVATE, `sites-candidates-${specialty}.json`), JSON.stringify({ capturedAt: new Date().toISOString(), plan: "plan-a (Florida Blue BlueChoice, network PPC-2026-BCHPPO)", specialty, zips, candidates: list }, null, 1));
   console.log(`${byNpi.size} in-network ${specialty} practitioners (distinct NPI) in ${zips.join(", ")} · kept ${list.length} · with a URL in the directory: ${list.filter((c) => c.urls.length).length} · directory states an age for ${list.filter((c) => c.directoryAgeStated).length} · ${counters.summary()}`);
-  console.log(`wrote audit-private/sites-candidates.json (local only)`);
+  console.log(`wrote audit-private/sites-candidates-${specialty}.json (local only)`);
 }
 
 // ---- robots.txt ------------------------------------------------------------------------------------------------------
@@ -137,23 +139,41 @@ export function robotsAllows(rules: { allow: string[]; disallow: string[] }, pat
 }
 
 // ---- site sweep ------------------------------------------------------------------------------------------------------
-type Row = { id: string; npi?: string; url: string | null; source: string; note?: "no_own_page_found" | "practices_elsewhere" };
-type Outcome = { id: string; host: string; status: "ok" | "robots_disallowed" | "robots_unavailable" | "did_not_open" | "no_own_page_found" | "practices_elsewhere"; http: number | null; statements: SiteAge[]; minAge: number | null; ms: number; error?: string; textChars?: number };
+type Row = { id: string; npi?: string; specialty?: string; expect?: string; url: string | null; source: string; note?: "no_own_page_found" | "practices_elsewhere" };
+type Outcome = { id: string; host: string; status: "ok" | "robots_disallowed" | "robots_unavailable" | "did_not_open" | "no_own_page_found" | "practices_elsewhere"; http: number | null; statements: SiteAge[]; minAge: number | null; ms: number; error?: string; textChars?: number; nameOnPage?: boolean | null };
 
-const o_or = (robots: string | undefined, page: (number | null)[]) => [robots && robots !== "200" ? `robots.txt ${robots}` : null, page.length ? `page ${[...new Set(page)].join("/")}` : null].filter(Boolean).join(", ");
+type Cand = { npi: string; directoryAgeStated: boolean; urls?: string[]; nppes?: { locations?: { state: string }[] } | null };
+type CandFile = { specialty?: string; zips?: string[]; candidates: Cand[] };
+/** Every audit-private/sites-candidates-<specialty>.json (older runs: sites-candidates.json), one entry per file. */
+function candidateFiles(): CandFile[] {
+  const names = readdirSync(PRIVATE).filter((f) => /^sites-candidates(-[a-z_]+)?\.json$/.test(f)).sort();
+  const files = names.map((f) => JSON.parse(readFileSync(join(PRIVATE, f), "utf8")) as CandFile);
+  // The legacy un-suffixed file is the same data as sites-candidates-<its specialty>.json when both exist.
+  return files.filter((c, i) => !(names[i] === "sites-candidates.json" && names.includes(`sites-candidates-${c.specialty}.json`)));
+}
+
 
 async function sweep() {
   const input = arg("input") ?? join(PRIVATE, "sites-input.json");
   if (!existsSync(input)) { console.error(`no input: ${input} (build it from audit-private/sites-candidates.json)`); process.exit(2); }
   const parsed = JSON.parse(readFileSync(input, "utf8")) as { rows: Row[] } | Row[];
   const rows: Row[] = Array.isArray(parsed) ? parsed : parsed.rows;
-  const cand = existsSync(join(PRIVATE, "sites-candidates.json")) ? (JSON.parse(readFileSync(join(PRIVATE, "sites-candidates.json"), "utf8")) as { candidates: { npi: string; directoryAgeStated: boolean }[] }).candidates : [];
+  const candFiles = candidateFiles();
+  const cand = candFiles.flatMap((f) => f.candidates.map((c) => ({ ...c, specialty: f.specialty ?? "unknown" })));
+  const specOf = (r: Row) => r.specialty ?? cand.find((c) => c.npi === r.npi)?.specialty ?? "unknown";
   // Must-light control of the parser, on synthetic pages, in this run.
   const lit = minimumAgeStated(siteAgeStatements("<p>We see patients ages 3 and older.</p>")) === 3;
   const dark = siteAgeStatements("<p>Board-certified orthopaedic surgeon, 18 years in practice.</p>").length === 0;
   const lastHit = new Map<string, number>();
-  const out: Outcome[] = [];
-  for (const row of rows) {
+  const day = new Date().toISOString().slice(0, 10);
+  const resultsPath = join(PRIVATE, `sites-results-${day}.json`);
+  // --render: rebuild the aggregate report from the saved per-site rows of today's run, with no network (wording fixes).
+  const render = argv.includes("--render");
+  const saved = render ? (JSON.parse(readFileSync(resultsPath, "utf8")) as { at: string; robots?: Record<string, string>; rows: Outcome[] }) : null;
+  for (const [k, v] of Object.entries(saved?.robots ?? {})) robotsStatus.set(k, v);
+  const out: Outcome[] = saved ? saved.rows : [];
+  const runAt = saved ? saved.at : new Date().toISOString();
+  for (const row of saved ? [] : rows) {
     const t0 = Date.now();
     if (!row.url) { out.push({ id: row.id, host: "-", status: row.note ?? "no_own_page_found", http: null, statements: [], minAge: null, ms: 0 }); continue; }
     let u: URL;
@@ -169,7 +189,10 @@ async function sweep() {
       const body = (await res.text()).slice(0, 3_000_000);
       if (!res.ok) { out.push({ id: row.id, host: u.host, status: "did_not_open", http: res.status, statements: [], minAge: null, ms: Date.now() - t0 }); continue; }
       const st = siteAgeStatements(body);
-      out.push({ id: row.id, host: u.host, status: "ok", http: res.status, statements: st, minAge: minimumAgeStated(st), ms: Date.now() - t0, textChars: visibleText(body).length });
+      const text = visibleText(body);
+      if (argv.includes("--keep-text")) { mkdirSync(join(PRIVATE, "site-text"), { recursive: true }); writeFileSync(join(PRIVATE, "site-text", `${row.id}.txt`), text); } // local, gitignored: for an independent grep of the parser's "no age wording"
+      // Identity control: does the page name the practitioner? (row.expect = surname, kept in the local input file only.)
+      out.push({ id: row.id, host: u.host, status: "ok", http: res.status, statements: st, minAge: minimumAgeStated(st), ms: Date.now() - t0, textChars: text.length, nameOnPage: row.expect ? text.toLowerCase().includes(row.expect.toLowerCase()) : null });
     } catch (err) {
       out.push({ id: row.id, host: u.host, status: "did_not_open", http: null, statements: [], minAge: null, ms: Date.now() - t0, error: (err as Error).message.slice(0, 120) });
     }
@@ -185,22 +208,49 @@ async function sweep() {
   const elsewhere = out.filter((o) => o.status === "practices_elsewhere");
   const dirKnown = rows.filter((r) => cand.some((x) => x.npi === r.npi));
   const dirNothing = dirKnown.length === rows.length && dirKnown.every((r) => !cand.find((x) => x.npi === r.npi)!.directoryAgeStated);
-  const nppesOutOfState = rows.filter((r) => { const c = cand.find((x) => x.npi === r.npi) as { nppes?: { locations?: { state: string }[] } } | undefined; const locs = c?.nppes?.locations ?? []; return locs.length > 0 && !locs.some((l) => l.state === "FL"); }).length;
-  const nppesKnown = rows.filter((r) => ((cand.find((x) => x.npi === r.npi) as { nppes?: { locations?: unknown[] } } | undefined)?.nppes?.locations ?? []).length > 0).length;
-  const day = new Date().toISOString().slice(0, 10);
-  writeFileSync(join(PRIVATE, `sites-results-${day}.json`), JSON.stringify({ at: new Date().toISOString(), rows: out }, null, 1));
-  const candMeta = existsSync(join(PRIVATE, "sites-candidates.json")) ? JSON.parse(readFileSync(join(PRIVATE, "sites-candidates.json"), "utf8")) as { specialty?: string; zips?: string[] } : {};
+  const dirUrls = rows.filter((r) => (cand.find((x) => x.npi === r.npi)?.urls ?? []).length > 0).length;
+  const nppesLocs = (r: Row) => cand.find((x) => x.npi === r.npi)?.nppes?.locations ?? [];
+  const nppesOutOfState = rows.filter((r) => nppesLocs(r).length > 0 && !nppesLocs(r).some((l) => l.state === "FL")).length;
+  const nppesKnown = rows.filter((r) => nppesLocs(r).length > 0).length;
+  const nameChecked = opened.filter((o) => o.nameOnPage !== null && o.nameOnPage !== undefined);
+  const nameMissing = nameChecked.filter((o) => !o.nameOnPage).length;
+  // Per-specialty breakdown (aggregate only).
+  const specialties = [...new Set(rows.map(specOf))];
+  const byId = new Map(out.map((o) => [o.id, o]));
+  const tally = (rs: Row[]) => {
+    const os = rs.map((r) => byId.get(r.id)!);
+    const op = os.filter((o) => o.status === "ok");
+    const mn = op.filter((o) => o.statements.some((x) => (x.kind === "min_age" && x.minYears > 0) || (x.kind === "range" && x.minYears > 0) || x.kind === "adults_only"));
+    const an = op.filter((o) => o.statements.length > 0);
+    const wp = os.filter((o) => o.status !== "no_own_page_found" && o.status !== "practices_elsewhere");
+    return { n: rs.length, withPage: wp.length, opened: op.length, statesMin: mn.length, statesAny: an.length, failed: wp.length - op.length, noPage: os.filter((o) => o.status === "no_own_page_found").length, elsewhere: os.filter((o) => o.status === "practices_elsewhere").length };
+  };
+  const specRows = specialties.map((sp) => ({ sp, ...tally(rows.filter((r) => specOf(r) === sp)) }));
+  const total = tally(rows);
+  if (!saved) writeFileSync(resultsPath, JSON.stringify({ at: runAt, robots: Object.fromEntries(robotsStatus), rows: out }, null, 1));
   const sentence = `${statesMin.length} of ${opened.length} practice pages that opened state a minimum patient age (${statesAny.length} of ${opened.length} say anything about ages); ${dirNothing ? `the insurer directory says nothing about age for all ${rows.length} practitioners` : `directory age data known for ${dirKnown.length} of ${rows.length}`}`;
+  const reasonOf = (o: Outcome) => (o.status === "robots_unavailable" ? `robots.txt HTTP ${robotsStatus.get(`https://${o.host}`) ?? "?"}` : o.http ? `page HTTP ${o.http}` : `page: ${o.error ?? "no answer"}`);
+  const reasonGroups = new Map<string, { pages: number; hosts: Set<string> }>();
+  for (const o of failed) { const k = reasonOf(o); const g = reasonGroups.get(k) ?? { pages: 0, hosts: new Set<string>() }; g.pages++; g.hosts.add(o.host); reasonGroups.set(k, g); }
+  const failReasons = [...reasonGroups].sort((a, b) => b[1].pages - a[1].pages).map(([k, g]) => `${k} (${g.pages} page${g.pages === 1 ? "" : "s"}, ${g.hosts.size} host${g.hosts.size === 1 ? "" : "s"})`).join("; ");
   const md = [
     `# Practice websites vs the insurer directory — ${day}`,
     "",
-    `- Run: ${new Date().toISOString()} · command: \`npm run audit:sites\` (input: ${rows.length} practitioners, local file, not published)`,
-    `- Practitioners: in-network for Plan A (Florida Blue BlueChoice, network PPC-2026-BCHPPO), ${candMeta.specialty ?? "?"}, directory locations in ZIPs ${(candMeta.zips ?? []).join(", ")}, spread over the directory's practice addresses (round-robin). The practitioner's own page was looked up by a manual web search (the directory carries no URL: 0 of ${rows.length}); third-party directories were not counted as a practice's own page.`,
+    `- Run: ${runAt} · command: \`npm run audit:sites\` (input: ${rows.length} practitioners, local file, not published)`,
+    `- Practitioners: in-network for Plan A (Florida Blue BlueChoice, network PPC-2026-BCHPPO), up to 30 per specialty (kept: ${candFiles.map((f) => `${f.specialty ?? "?"} ${f.candidates.length}`).join(", ")}), spread over the directory's practice addresses (round-robin). ZIP sets: ${candFiles.map((f) => { const zs = [...new Set(f.zips ?? [])]; return `${f.specialty ?? "?"}: ${zs.length} ZIPs${zs.length > 3 ? " (the three default Orlando ZIPs 32803/32806/32801 plus neighbouring ones, because the default three hold too few in-network practitioners of this specialty)" :  " (32803, 32806, 32801)"}`; }).join("; ")}. The practitioner's own page was looked up by a manual web search (the directory carries a practice URL for ${dirUrls} of ${rows.length}); third-party directories (Healthgrades, Zocdoc, Vitals, WebMD, Doximity, Sharecare, NPI registries and the like) were not counted as a practice's own page; a hospital system's doctor profile was.`,
+    `- Identity control: ${nameChecked.length ? `${nameChecked.length - nameMissing} of ${nameChecked.length} opened pages name the practitioner (the other ${nameMissing} are practice-level pages)` : "not run"}.`,
     `- Method: robots.txt honoured, one GET per public page, 2 s between requests to a host, no forms, no calls; visible text parsed for patient-age wording (\`src/directory/site-age.ts\`).`,
     `- Parser control (synthetic pages, this run): "ages 3 and older" found = **${lit}**, plain bio page stays quiet = **${dark}**.`,
-    `- Pages that did not open: **${failed.length}** of ${withUrl.length} (robots disallowed ${out.filter((o) => o.status === "robots_disallowed").length}, robots.txt unavailable ${out.filter((o) => o.status === "robots_unavailable").length}, HTTP error or timeout ${out.filter((o) => o.status === "did_not_open").length}). Hosts that refused an automated read: ${[...new Set(failed.map((o) => o.host))].map((h) => { const rs = robotsStatus.get(`https://${h}`); const page = failed.filter((o) => o.host === h).map((o) => o.http).filter(Boolean); return `${h} (${o_or(rs, page)})`; }).join(", ") || "none"}. When robots.txt itself is refused we do not read the page.`,
+    `- Pages that did not open: **${failed.length}** of ${withUrl.length} (robots disallowed ${out.filter((o) => o.status === "robots_disallowed").length}, robots.txt unavailable ${out.filter((o) => o.status === "robots_unavailable").length}, HTTP error or timeout ${out.filter((o) => o.status === "did_not_open").length}). Reasons (host names are not published): ${failReasons || "none"}. When robots.txt itself is refused we do not read the page.`,
     "",
     `**${sentence}.**`,
+    "",
+    "By specialty:",
+    "",
+    "| Specialty | Practitioners | Own page found | Opened | Minimum age stated | Any age wording | Did not open | No own page | Practises in another state |",
+    "|---|---|---|---|---|---|---|---|---|",
+    ...specRows.map((t) => `| ${t.sp} | ${t.n} | ${t.withPage} | ${t.opened} | ${t.statesMin} | ${t.statesAny} | ${t.failed} | ${t.noPage} | ${t.elsewhere} |`),
+    `| **All** | **${total.n}** | **${total.withPage}** | **${total.opened}** | **${total.statesMin}** | **${total.statesAny}** | **${total.failed}** | **${total.noPage}** | **${total.elsewhere}** |`,
     "",
     "| Outcome | Practitioners |",
     "|---|---|",
@@ -216,7 +266,11 @@ async function sweep() {
     "",
     "Names, addresses and per-site rows are not published; they stay in a local file.",
   ];
-  writeFileSync(join(ROOT, "docs", `AUDIT-SITES-${day}.md`), `${md.join("\n")}\n`);
+  // Anything a human appended after this marker (independent checks, caveats) survives a re-run.
+  const reportPath = join(ROOT, "docs", `AUDIT-SITES-${day}.md`);
+  const MARK = "<!-- manual-notes: kept across runs -->";
+  const prev = existsSync(reportPath) ? readFileSync(reportPath, "utf8") : "";
+  writeFileSync(reportPath, `${md.join("\n")}\n${prev.includes(MARK) ? `\n${prev.slice(prev.indexOf(MARK))}` : ""}`);
   console.log(sentence);
   console.log(`parser control: lit ${lit} · dark ${dark} · did not open ${failed.length} of ${withUrl.length} with a page · no own page ${noPage.length} · elsewhere ${elsewhere.length} · NPPES out of state ${nppesOutOfState} of ${nppesKnown}`);
   console.log(`wrote docs/AUDIT-SITES-${day}.md (aggregate) and audit-private/sites-results-${day}.json (rows, local)`);
