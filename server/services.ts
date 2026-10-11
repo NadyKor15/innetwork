@@ -10,6 +10,12 @@ import type { Services } from "./tools.ts";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 export async function createDirectoryService(): Promise<DirectoryService> {
+  // INNETWORK_DIRECTORY=dev: the unit-test double (offline, no recorded samples). verify refuses to pass with it.
+  if (process.env.INNETWORK_DIRECTORY === "dev") {
+    const { devDirectory, DEV_POLICIES } = await import("./dev-directory.ts");
+    const d = devDirectory();
+    return { ...d, mode: "fixture", plans: d.plans.map((p) => ({ ...p, dev: { ...p.dev, product: `${p.dev.product} (test double)` } })), devPolicies: DEV_POLICIES } as DirectoryService;
+  }
   const entry = join(ROOT, "src", "directory", "index.ts");
   if (!existsSync(entry)) throw new Error("src/directory/index.ts is missing (directory adapters)");
   const mod = (await import(pathToFileURL(entry).href)) as { createDirectory: (o: { mode?: "fixture" | "live" | "auto" }) => DirectoryService };
@@ -20,5 +26,14 @@ export async function createDirectoryService(): Promise<DirectoryService> {
 export async function createServices(opts: { directory?: DirectoryService; now?: () => number } = {}): Promise<Services> {
   const scenario = loadScenario();
   const directory = opts.directory ?? (await createDirectoryService());
-  return { directory, scenario, policiesSeed: existsSync(POLICIES_SEED) ? POLICIES_SEED : null, now: opts.now ?? (() => scenario.now), probes: new Map() };
+  let policiesSeed = existsSync(POLICIES_SEED) ? POLICIES_SEED : null;
+  const devPolicies = (directory as DirectoryService & { devPolicies?: unknown }).devPolicies;
+  if (devPolicies) {
+    const { writeFileSync, mkdirSync } = await import("node:fs");
+    const { dataDir } = await import("./store.ts");
+    mkdirSync(dataDir(), { recursive: true });
+    policiesSeed = join(dataDir(), "dev-policies-seed.json");
+    writeFileSync(policiesSeed, JSON.stringify(devPolicies));
+  }
+  return { directory, scenario, policiesSeed, now: opts.now ?? (() => scenario.now), probes: new Map() };
 }
