@@ -44,25 +44,8 @@ const displayName = (raw: string | null): string => {
   return `Dr. ${titleCase(clean)}`;
 };
 
-/**
- * `specialty:text` terms that match Florida Blue's own words (measured 2026-10-11 on ZIPs 32801/32803/32804/32806; the
- * server matches word prefixes, so "FAMILY" finds "FAMILY MEDICINE" and "FAMILY PRACTICE"). Results are re-checked
- * exactly on our side.
- */
-export const FB_TEXTS: Record<Specialty, string[]> = {
-  primary_care: ["FAMILY", "GENERAL PRACTICE"],
-  ob_gyn: ["OBSTETRICS"],
-  gastroenterology: ["INTERNAL MEDICINE"],
-  dermatology: ["DERMATOLOGY"],
-  allergy: ["ALLERGY"],
-  orthopedics: ["ORTHOPAEDIC"],
-  pediatrics: ["PEDIATRICS"],
-  cardiology: ["INTERNAL MEDICINE"],
-  ent: ["OTOLARYNGOLOGY"],
-  ophthalmology: ["OPHTHALMOLOGY"],
-  urology: ["UROLOGY"],
-  endocrinology: ["INTERNAL MEDICINE"],
-};
+/** `specialty:text` words that match Florida Blue's own vocabulary (measured; kept in the package's directory table). */
+export const FB_TEXTS = FB.specialtySearch as Record<Specialty, string[]>;
 
 export type FbLookup = { specialty: Specialty; zip: string; planCode: string; networkIds: string[] };
 
