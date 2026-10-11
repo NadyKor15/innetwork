@@ -1,0 +1,37 @@
+{
+  "_about": "Demo household (fictional family) and the sandbox booking partner. The household is what the parent set up earlier (plans, routine, one note); the developer view shows it as SANDBOX. Slots are the sandbox partner's offered times for the fictional doctors; real doctors never get slots (SPEC §4.4, N11). The routine is a weekday routine as label + time only (no names, no places).",
+  "now": "2026-10-16T19:45:00-04:00",
+  "timeZone": "America/New_York",
+  "zip": "32801",
+  "planYearEnd": "2026-12-31",
+  "visitMinutes": 45,
+  "family": [
+    { "memberId": "m1", "label": "Mom", "role": "adult", "pronoun": "she", "planId": "plan-a" },
+    { "memberId": "m2", "label": "Older child", "role": "child", "pronoun": "they", "planId": "plan-b" },
+    { "memberId": "m3", "label": "Youngest", "role": "child", "pronoun": "he", "planId": "plan-c" }
+  ],
+  "routine": [
+    { "label": "Daycare drop-off", "days": [1, 2, 3, 4, 5], "start": "07:50", "end": "08:15" },
+    { "label": "Daycare pick-up", "days": [1, 2, 3, 4, 5], "start": "11:45", "end": "12:10" }
+  ],
+  "notes": [
+    { "doctorName": "Dr. Ansel Quillfeather", "text": "great with kids" }
+  ],
+  "slots": {
+    "Dr. Rowena Thistlewood": [["2026-10-19", "07:45"], ["2026-10-20", "09:00"], ["2026-10-21", "13:00"]],
+    "Dr. Linnea Marchbank": [["2026-10-19", "11:00"], ["2026-10-20", "10:15"], ["2026-10-21", "09:30"]],
+    "Dr. Marisol Venterra": [["2026-10-19", "08:00"], ["2026-10-20", "12:00"], ["2026-10-22", "09:15"], ["2026-10-23", "10:00"]],
+    "Dr. Ottilie Brennagh": [["2026-10-22", "09:15"], ["2026-10-23", "09:30"], ["2026-10-26", "09:00"]],
+    "Dr. Ansel Quillfeather": [["2026-10-19", "11:30"], ["2026-10-21", "14:30"], ["2026-10-23", "15:00"]],
+    "Dr. Imogen Pellworth": [["2026-10-19", "13:30"], ["2026-10-22", "14:00"]],
+    "Dr. Corwin Pembrook": [["2026-10-19", "08:00"], ["2026-10-20", "14:00"], ["2026-10-23", "13:30"]],
+    "Dr. Tobias Wrenfield": [["2026-10-19", "15:00"]],
+    "Dr. Percival Ashgrove": [["2026-10-20", "15:30"]],
+    "Dr. Caspian Ardley": [["2026-10-19", "14:30"]],
+    "Dr. Wendeline Hartsworth": [["2026-10-21", "13:30"]]
+  },
+  "officeAnswersAtBooking": {
+    "_about": "What each sandbox office says about patient ages when a booking is made. Booking a doctor whose age policy is unknown stores the answer as an office policy (no family data) so the next family is spared the call (SPEC §4.2 mechanism, demo data).",
+    "Dr. Wendeline Hartsworth": { "minAgeMonths": 0, "maxAgeMonths": null }
+  }
+}

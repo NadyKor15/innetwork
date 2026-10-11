@@ -100,3 +100,19 @@ export type DirectoryAnswer =
 export type RoutineBlock = { label: string; days: number[]; start: string; end: string };
 
 export type Slot = { start: number; end: number };
+
+/** Live check of the network step shown in the developer view (auto mode: cards come from the recorded sample,
+ *  and this probe asks the live directory how many in-network practitioners it has for the specialty in the ZIP). */
+export type NetworkProbe =
+  | { ok: true; mode: "live"; directory: string; ms: number; asOf: string; ref: string; inNetworkCount: number }
+  | { ok: false; mode: "live"; directory: string; ms: number; asOf: string; ref: string; error: string };
+
+/** What the server needs from src/directory (implemented by the directory lane). */
+export type DirectoryService = {
+  /** "fixture" (offline, recorded samples), "live" (real records, directory fields only), "auto" (samples + live probe). */
+  mode: "fixture" | "live" | "auto";
+  plans: Plan[];
+  lookup(plan: Plan, specialty: Specialty, zip: string): Promise<DirectoryAnswer>;
+  /** Optional live probe of the network step (auto/live). Never throws: failures come back as ok:false (N8). */
+  probe?(plan: Plan, specialty: Specialty, zip: string): Promise<NetworkProbe | null>;
+};
