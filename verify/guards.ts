@@ -22,7 +22,8 @@ export function placeholderHits(files: { path: string; text: string }[]): string
 
 const PII = [
   { name: "email", re: /\b[A-Za-z0-9._%+-]+@(?!example\.(com|org)\b)[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/ },
-  { name: "us-phone", re: /\b\(?\d{3}\)?[-. ]\d{3}[-. ]\d{4}\b/ },
+  // NANP reserves 555-0100..0199 for fiction; those are allowed (test pages use them), any other number is not
+  { name: "us-phone", re: /\b\(?\d{3}\)?[-. ](?!555[-. ]01\d\d\b)\d{3}[-. ]\d{4}\b/ },
   { name: "ssn", re: /\b\d{3}-\d{2}-\d{4}\b/ },
   { name: "dob", re: /\b(dob|date of birth|born on)\b\s*[:=]?\s*\d/i },
 ];
@@ -45,7 +46,7 @@ export function runStaticGuards(log: (s: string) => void): Row[] {
   // Personal data scan: everything tracked except third-party font/license text and lockfiles.
   const piiScope = all.filter((f) => !/package-lock\.json$|OFL-LICENSE|^design\/fonts\//.test(f)).map((path) => ({ path, text: read(path) }));
   const pii = piiHits(piiScope).filter((h) => !/verify\/guards\.ts/.test(h));
-  const piiControl = piiHits([{ path: "synthetic", text: "mail a.b@gmail.com or call (407) 555-0137, ssn 123-45-6789, DOB: 01/02/2023" }]).length;
+  const piiControl = piiHits([{ path: "synthetic", text: "mail a.b@gmail.com or call (000) 123-4567, ssn 123-45-6789, DOB: 01/02/2023" }]).length;
   add("G6", "no personal data patterns in the tracked tree (emails, phones, SSN, DOB)", "0 hits; control finds 4", `${pii.length ? pii.slice(0, 3).join(" | ") : "0 hits"} in ${piiScope.length} files · control ${piiControl}`, pii.length === 0 && piiControl === 4);
 
   const brandScope = all.filter((f) => !/^verify\/guards\.ts$|package-lock\.json$|^design\/fonts\/|^LICENSE$/.test(f)).map((path) => ({ path, text: read(path) }));
