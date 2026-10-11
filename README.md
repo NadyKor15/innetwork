@@ -19,7 +19,7 @@ An Alexa+ add-on: a self-hosted **MCP server (spec 2025-11-25, Streamable HTTP; 
 |---|---|---|
 | Alexa+: self-hosted MCP server (2025-11-25+, Streamable HTTP), called in code | Built | `server/server.ts`, `server/tools.ts` |
 | Simulated Alexa+ experience: simulation source in the repo, demo shows it working | Built | `host/`, `scripts/demo.ts` |
-| Demo video < 3 min, English, no third-party marks or music | ⏳ rough cut; author's voice Fri 16.10 | `docs/video/` (not in git) |
+| Demo video < 3 min, English, no third-party marks or music | ⏳ rough cut; author's voice Fri 16.10 | `docs/video/` (video renders not in git; subtitles, beats, the run's `/devinfo` snapshot and TTS durations are) |
 | Product feedback (5 questions) | Draft | `docs/PRODUCT-FEEDBACK.md` |
 | Friction log (optional, up to +10%) | Draft | `docs/FRICTION-LOG.md` |
 | Feature requests (optional) | Draft | `docs/FEATURE-REQUESTS.md` |
@@ -61,7 +61,7 @@ Every refusal is a deterministic check (no model) with a test, and a mutation ch
 |---|---|---|---|
 | Mom | Plan A | Florida Blue provider directory, FHIR Plan-Net — BlueChoice PPO (plan_id `BCHPPO`, network `PPC-2026-BCHPPO`) | LIVE in `auto`; recorded sample (names and offices changed) on the cards |
 | Older child | Plan B | Oscar Health (FL) machine-readable provider file, CMS QHP JSON — Silver Classic Standard (HIOS `21525FL0010009`) | FILE (no API exists for marketplace plans); recorded sample on the cards |
-| Youngest | Plan C | Molina Healthcare of Florida provider directory, FHIR Plan-Net — Medicaid Managed Medical Assistance (network `15`) | LIVE in `auto`; recorded sample (names, offices and the specialty label changed — disclosed per record) on the cards |
+| Youngest | Plan C | Molina Healthcare of Florida provider directory, FHIR Plan-Net — Medicaid Managed Medical Assistance (network `15`) | LIVE in `auto` when Molina answers — not shown yet: its daily quota stopped us on Oct 11 and the screen says "not confirmed" (N8); recorded sample (names, offices and the specialty label changed — disclosed per record) on the cards |
 
 Office age policies ("doesn't see children under 3") are not in any directory. In production they are learned once at a booking and kept as a property of the office — no family data — so the next family is spared the call. In this demo they are sandbox data and every line built from them says "demo data". Slots, booking, calendar and the written confirmation are a sandbox partner.
 
@@ -73,7 +73,7 @@ The parent is the user. A child appears as a relative label ("Youngest") and a p
 
 **0 of 8,506 public directory records (4,170 practitioner roles + 4,336 locations) state what patient ages are seen.** The counter is proven on a synthetic record ("Ages 3 and up" → counted; plain record → not). 283 requests, 3 errors (Molina's daily quota → "not measured" for Molina, said so in the report). Also measured: office hours on 16.8% of records; a "new patients" flag on 88.6%; 25 of 474 NPPES individuals found by ZIP practice somewhere else unless `address_purpose=LOCATION` is added. Full table: `docs/AUDIT-2026-10-11.md`.
 
-`npm run audit:sites` — 71 in-network practitioners for Plan A in Orlando (30 orthopedists, all 11 allergists the directory lists in 21 Orlando ZIPs, 30 dermatologists): the directory carries a website for none of them and says nothing about age for all 71. We found the practices' own pages for 44; 18 opened for a polite automated read (robots.txt honoured), and **0 of 18 state a minimum patient age** — 8 mention children or a pediatric service, none with a number. 26 refused automated reads (20 of them hospital-system profiles); 21 practitioners had no own page; 6 are listed at Orlando addresses while their current profiles place them in another state. Only totals are published (`docs/AUDIT-SITES-2026-10-11.md`); coverage is 18 of 71 and we say so.
+`npm run audit:sites` — 71 in-network practitioners for Plan A in Orlando (30 orthopedists, all 11 allergists the directory lists in 21 Orlando ZIPs, 30 dermatologists): the directory carries a website for none of them and says nothing about age for all 71. We found the practices' own pages for 44; 18 opened for a polite automated read (robots.txt honoured), and **0 of 18 state a minimum patient age** — 8 mention children or a pediatric service, none with a number. 26 did not open (25 refused automated reads — 20 of them hospital-system profiles — and 1 was a stale link); 21 practitioners had no own page; 6 are listed at Orlando addresses while their current profiles place them in another state. Only totals are published (`docs/AUDIT-SITES-2026-10-11.md`); coverage is 18 of 71 and we say so.
 
 Public insurer directories don't say what age a doctor sees, so there is nowhere to check in advance — you find out on the phone.
 

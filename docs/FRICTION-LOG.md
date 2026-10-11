@@ -1,6 +1,6 @@
 # Friction log — InNetwork (Alexa+ track)
 
-Part 1 (F1–F13): public provider directories, NPPES, CMS files — measured with `npm run audit:directories`. Part 2 (A1–A6): the Alexa+ platform, MCP Apps and the add-on design guide. Every entry has the six fields (task · steps · expected vs actual · severity · workaround · suggestion).
+Part 1 (F1–F15): public provider directories, NPPES, CMS files — measured with `npm run audit:directories`. Part 2 (A1–A6): the Alexa+ platform, MCP Apps and the add-on design guide. Every entry has the six fields (task · steps · expected vs actual · severity · workaround · suggestion).
 
 ## Part 1 — directories, NPPES, CMS files
 
