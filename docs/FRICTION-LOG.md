@@ -97,20 +97,38 @@ re-counted by `npm run audit:directories`.
 - **Workaround:** streaming reader with a byte ceiling (`scanJsonArray`), warm cache.
 - **Suggestion:** split provider files by state/plan in the index, or add a plan → file map.
 
-### F10. NPPES: a ZIP search also matches mailing addresses *(to re-measure in the audit)*
+### F10. NPPES: a ZIP search also matches mailing addresses
 - **Task:** practices in an Orlando ZIP.
-- **Steps:** `GET npiregistry …?version=2.1&state=FL&taxonomy_description=Urgent+Care&postal_code=<an Orlando ZIP>` (spike 2026-10-11 02:2xZ).
-- **Expected:** practices located in <an Orlando ZIP>.
-- **Actual:** 4 of 8 "clinics in <an Orlando ZIP>" practice in other cities (their mailing address is in <an Orlando ZIP>).
-- **Severity:** medium.
-- **Workaround:** `address_purpose=LOCATION`.
-- **Suggestion:** make LOCATION the default for postal_code searches, or say so in the API page.
+- **Steps:** spike 2026-10-11 02:2xZ: `…?version=2.1&state=FL&taxonomy_description=Urgent+Care&postal_code=<an Orlando ZIP>` → 4 of 8 organizations practice in other cities. Audit 2026-10-11 05:28Z (`npm run audit:directories`, individuals, 3 ZIPs × 6 specialties, 36 requests, 0 errors): **25 of 474** results (5.3%) have no practice address (primary LOCATION or secondary practice location) in the searched ZIP; with `address_purpose=LOCATION` the same queries return 449.
+- **Expected:** a postal-code search returns practices located in that ZIP.
+- **Actual:** it also matches mailing addresses (half of the urgent-care organizations in the spike, 5.3% of individuals in the audit).
+- **Severity:** medium for organizations, low for individuals.
+- **Workaround:** `address_purpose=LOCATION`, and check secondary `practiceLocations` too (a LOCATION search matches them).
+- **Suggestion:** make LOCATION the default for postal_code searches, or say so on the API page.
 
-### F11. Directories that need registration *(to re-measure in the audit)*
-- **Task:** read Aetna and Elevance (Simply) directories.
-- **Steps:** spike 2026-10-11 02:2xZ: Aetna `providerdirectorydata` → **401** "Invalid client id or secret"; Elevance `cms_mandate/mcd` Location without token → **500**; UnitedHealthcare QHP index → **403** three times of three.
-- **Expected:** CMS-9115-F public directory APIs open without registration (Medicaid/MA).
+### F11. Directories and indexes that need registration or refuse anonymous reads
+- **Task:** read Aetna and Elevance (Simply) directories; read Florida marketplace indexes.
+- **Steps:** spike 2026-10-11 02:2xZ: Aetna `providerdirectorydata` → **401** "Invalid client id or secret"; Elevance `cms_mandate/mcd` Location without token → **500**. Audit 05:28Z: 26 Florida rows of the CMS Machine-readable URL PUF PY2026 (23 distinct index URLs) → **22 × 200, 1 × 403** (UnitedHealthcare, `www.uhc.com/…/cms-data-index.json`; also 403 three times of three in the spike).
+- **Expected:** CMS-9115-F public directory APIs open without registration (Medicaid/MA); marketplace indexes publicly readable (45 CFR 156.122/156.230 machine-readable files).
 - **Actual:** see codes.
 - **Severity:** medium.
 - **Workaround:** not used (no registration by design).
-- **Suggestion:** open the directory endpoints as the rule intends.
+- **Suggestion:** open the directory endpoints as the rule intends; serve the index to non-browser clients.
+
+### F12. No public directory record states a patient age (Plan-Net has no field for it)
+- **Task:** know before calling whether a doctor sees a child that age.
+- **Steps:** `npm run audit:directories` 2026-10-11 05:28Z: Florida Blue, UnitedHealthcare/Optum, Cigna, Humana, Centene (Molina not measured: quota, F6b) × ZIPs 32801/32803/32806 × 6 specialties; 283 requests, 3 errors (all Molina 403).
+- **Expected:** an age range where a practice limits ages; Plan-Net offers only `newpatients.characteristics`, a free string.
+- **Actual:** **0 of 8,506** records (4,170 PractitionerRole + 4,336 Location) state a patient age in any text field we read (characteristics, comments, descriptions, eligibility, string extensions); the must-light control on a synthetic "Ages 3 and up" record counts it.
+- **Severity:** high for families with young children (an unsuitable referral is found out on the phone).
+- **Workaround:** office policy learned once at a booking, kept per office without family data (SPEC §4.2; demo data in the add-on).
+- **Suggestion:** a structured patient-age range in Plan-Net (e.g. a coded extension on `newpatients` or HealthcareService.eligibility with an age range), and directories populating it.
+
+### F13. Directory records that cannot answer the basic questions on their own
+- **Task:** specialty, NPI, new-patient status and hours from one PractitionerRole.
+- **Steps:** same audit run (F12).
+- **Expected:** PractitionerRole carries specialty (Must Support in Plan-Net) and the NPI (on the role or one hop away); `newpatients` informative; hours where offered.
+- **Actual:** UnitedHealthcare/Optum: **435 of 1,500** roles carry a specialty, **341 of 1,500** an NPI. Humana: **0 of 912** roles carry an NPI (it sits on Practitioner, by absolute URL). Florida Blue: `newpatients` = `newpt` on **4,932 of 4,932** records; hours on **0 of 4,932**. Hours across all five directories: **1,431 of 8,506** records (16.8%). Hours conflicts inside one record: **0 found** in this run (the known example is a Molina record, F6b — not measured today).
+- **Severity:** medium.
+- **Workaround:** joins (Practitioner, NPPES by NPI), and never showing hours or "accepting" as verified.
+- **Suggestion:** populate specialty and NPI on the role; vary `newpatients` by practice.
