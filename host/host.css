@@ -181,8 +181,8 @@ body { min-height: 100vh; overflow-x: hidden; }
 .step-sum { display: block; color: var(--ink-2); }
 .step-ms { font-family: var(--mono); color: var(--ink-3); white-space: nowrap; }
 .step[data-error] .step-text { color: var(--rose); }
-.gate { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--bezel-edge); font-family: var(--mono); font-size: 11px; line-height: 15px; color: var(--ink-2); }
-.gate p { overflow-wrap: anywhere; }
+.chip-gate { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--bezel-edge); font-family: var(--mono); font-size: 11px; line-height: 15px; color: var(--ink-2); }
+.chip-gate p { overflow-wrap: anywhere; }
 /* source badges: outline / dashed in our style (STYLE §4, screen 07) */
 .badge { display: inline-flex; align-items: center; justify-content: center; height: 18px; padding: 0 6px; border-radius: var(--r-badge); border: 1.2px solid var(--ink-3); font: 800 10px/16px var(--font); letter-spacing: 0.6px; white-space: nowrap; }
 .badge[data-mode="live"] { border-style: solid; border-color: var(--fits); color: var(--fits); }
@@ -196,3 +196,78 @@ body { min-height: 100vh; overflow-x: hidden; }
 #devboard { position: absolute; inset: 0; background: var(--screen); }
 #devboard[hidden] { display: none; }
 body[data-mode="developer"] #chrome, body[data-mode="developer"] #card { visibility: hidden; }
+
+/* screen 07 "Behind the scenes" (design/screens/07-developer-view/screen.html, class for class, scoped) */
+#devboard .db {
+  --tint-live: color-mix(in srgb, var(--fits) 6%, var(--screen));
+  --glow-live: color-mix(in srgb, var(--fits) 32%, transparent);
+  --glow-file: color-mix(in srgb, var(--file) 30%, transparent);
+  zoom: 1.667; width: 768px; height: 480px; overflow: hidden;
+  padding: 30.5px 11.2px 0 12.1px;
+  background: var(--screen); color: var(--text-1);
+  font-family: var(--font); font-size: var(--body3); line-height: 16px;
+}
+#devboard h1, #devboard h2, #devboard h3, #devboard p, #devboard ol, #devboard ul { margin: 0; padding: 0; }
+#devboard ol, #devboard ul { list-style: none; }
+#devboard .hdr { display: flex; align-items: center; height: 23px; padding: 0 8.7px 0 8px; }
+#devboard .hdr-title { font-size: 19.5px; line-height: 23px; font-weight: 800; white-space: nowrap; color: var(--text-1); }
+#devboard .legend { display: flex; gap: var(--sp-8); margin-left: auto; }
+#devboard .badge { display: inline-flex; align-items: center; justify-content: center; flex: none; height: 23px; padding: 0 6px; border: 1px solid currentColor; border-radius: var(--r-badge); font-size: var(--label1); line-height: 12px; font-weight: 700; letter-spacing: 0; white-space: nowrap; font-family: var(--font); }
+#devboard .legend .badge--live { min-width: 36px; }
+#devboard .legend .badge--file { min-width: 34px; }
+#devboard .legend .badge--simulated { min-width: 75.5px; }
+#devboard .badge--live { color: var(--fits); box-shadow: 0 0 5px 0 var(--glow-live); }
+#devboard .badge--file { color: var(--file); box-shadow: 0 0 5px 0 var(--glow-file); }
+#devboard .badge--fixture { color: var(--text-2); border-style: dashed; }
+#devboard .badge--sandbox { color: var(--unknown); border-style: dashed; }
+#devboard .badge--simulated { color: var(--older); border-style: dashed; }
+#devboard .card { background: var(--card); border: 1px solid var(--hairline); border-radius: var(--r-card); }
+#devboard .inner { background: var(--card-inner); border: 1px solid var(--hairline); border-radius: var(--r-inner); }
+#devboard .board { margin-top: 17.7px; height: 246.4px; padding: 10.6px 11.2px 0 12px; }
+#devboard .board-title { font-size: var(--headline1); line-height: 24px; font-weight: 800; padding: 0.6px 0 0 2.6px; height: 24.9px; white-space: nowrap; }
+#devboard .board-grid { display: grid; margin-top: 6px; grid-template-columns: 107px 48.4px 279.9px 61px 223.2px; grid-template-rows: 51.3px 16px 51.3px 17.9px 50.9px; }
+#devboard .r1 { grid-row: 1; } #devboard .r2 { grid-row: 3; } #devboard .r3 { grid-row: 5; }
+#devboard .member { grid-column: 1; align-self: center; height: 48px; margin-top: 0.5px; display: flex; align-items: center; gap: 9.8px; padding: 0.9px 4px 0 11.1px; }
+#devboard .dot { width: 12px; height: 12px; border-radius: var(--r-pill); flex: none; }
+#devboard .member--mom .dot { background: var(--mom); }
+#devboard .member--older .dot { background: var(--older); }
+#devboard .member--youngest .dot { background: var(--youngest); }
+#devboard .member-name { font-size: 13px; line-height: 16px; font-weight: 700; padding-top: 1px; overflow-wrap: anywhere; }
+#devboard .links { grid-row: 1 / 6; overflow: visible; display: block; }
+#devboard .links--in { grid-column: 2; }
+#devboard .links--gate { grid-column: 4; }
+#devboard .links .mom { stroke: var(--mom); fill: var(--mom); }
+#devboard .links .older { stroke: var(--older); fill: var(--older); }
+#devboard .links .youngest { stroke: var(--youngest); fill: var(--youngest); }
+#devboard .links path, #devboard .links line { fill: none; stroke-width: 1.25px; stroke-linecap: round; }
+#devboard .links polygon, #devboard .links circle { stroke: none; }
+#devboard .source { grid-column: 3; display: flex; align-items: center; padding: 0 11.6px 0 13.6px; }
+#devboard .source-text { flex: 1 1 auto; min-width: 0; font-size: var(--body3); line-height: 16px; font-weight: 600; padding-top: 2px; color: var(--text-1); }
+#devboard .source .badge { height: 23px; padding: 0 8px; margin-left: 8px; letter-spacing: 0.1px; }
+#devboard .badge--fill { background: var(--tint-live); }
+#devboard .source .badge--file { min-width: 55px; }
+#devboard .gate { grid-column: 5; grid-row: 1 / 6; margin-top: 1px; height: 186.4px; padding: 10.7px 4.1px 0 11.9px; }
+#devboard .gate-title { font-size: 17px; line-height: 20px; font-weight: 800; white-space: nowrap; }
+#devboard .gate-log { margin-top: 7.6px; }
+#devboard .gate-entry { position: relative; padding: 7px 0 4.5px 1.1px; font-family: var(--mono); font-size: 9px; line-height: 14.5px; letter-spacing: -0.25px; color: var(--text-1); }
+#devboard .gate-entry::before { content: ""; position: absolute; top: 0; left: 0; right: 7.1px; border-top: 1px solid var(--hairline); }
+#devboard .nb { white-space: nowrap; }
+#devboard .strip { display: flex; margin-top: 10.7px; }
+#devboard .strip--live { height: 41.1px; flex-direction: column; justify-content: center; gap: 2px; padding: 0 15px 0 14.8px; }
+#devboard .req { font-family: var(--mono); font-size: 11.3px; line-height: 14px; white-space: nowrap; color: var(--text-1); overflow: hidden; text-overflow: clip; }
+#devboard .chain { font-family: var(--mono); font-size: 9px; line-height: 11px; white-space: nowrap; color: var(--text-2); }
+#devboard .chain .sbx { color: var(--unknown); }
+#devboard .chain .m-live { color: var(--fits); }
+#devboard .chain .m-file { color: var(--file); }
+#devboard .chain .m-fixture { color: var(--text-2); }
+#devboard .chain .m-simulated { color: var(--older); }
+#devboard .strip--count { height: 49.9px; align-items: center; justify-content: space-between; gap: 12px; padding: 0 15px 0 15.4px; }
+#devboard .count { font-size: 17px; line-height: 20px; font-weight: 600; padding-top: 3px; white-space: nowrap; min-width: 0; }
+#devboard .verify { display: inline-flex; align-items: center; height: 32px; padding: 0 11.5px; flex: none; border: 1px solid var(--fits); border-radius: var(--r-badge); background: var(--tint-live); box-shadow: 0 0 6px 0 var(--glow-live); color: var(--fits); font-size: 15px; line-height: 18px; font-weight: 600; white-space: nowrap; }
+#devboard .verify--none { border-color: var(--text-3); border-style: dashed; background: transparent; box-shadow: none; color: var(--text-2); }
+#devboard .foot { display: flex; align-items: center; height: 14px; margin-top: 19.3px; padding: 0 9.5px 0 7.7px; }
+#devboard .logo-mark { width: 38px; height: 14px; display: block; flex: none; }
+#devboard .logo-mark .c1 { fill: var(--mom); } #devboard .logo-mark .c2 { fill: var(--older); } #devboard .logo-mark .c3 { fill: var(--youngest); }
+#devboard .brand { display: inline; margin-left: 3.3px; font-size: 12px; line-height: 14px; font-weight: 800; white-space: nowrap; color: var(--text-1); }
+#devboard .audit { margin-left: 16px; font-family: var(--mono); font-size: 9px; line-height: 12px; color: var(--text-2); white-space: nowrap; overflow: hidden; }
+#devboard .demo { margin-left: auto; font-size: var(--label1); line-height: 12px; font-weight: 400; color: var(--text-3); position: relative; top: 1.4px; white-space: nowrap; }
