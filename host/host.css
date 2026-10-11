@@ -1,0 +1,198 @@
+/* InNetwork design tokens v2 (docs: STYLE.md §3). Form from the Alexa+ add-on design guide, colour ours.
+   Surfaces: option B "like Alexa" (Nadya's pick 2026-10-11T04:16:46Z). Dark is the default; light via [data-theme="light"].
+   Base canvas 768x480; Echo Show 8 renders it at zoom 1.667 (1280x800). All sizes below are base px. */
+:root {
+  /* surfaces */
+  --screen: #14181E;
+  --card: #14181E;
+  --card-inner: #1B2028;
+  --hairline: #2A303A;             /* decoration only (1.3:1) */
+  /* text (white with alpha on dark) */
+  --text-1: #FFFFFF;
+  --text-2: rgba(255, 255, 255, 0.72);
+  --text-3: rgba(255, 255, 255, 0.48); /* minimum for any text */
+  --on-accent: #17111C;            /* text on coral and any light tile (8.1:1) */
+  /* family members (thin frame, dot, left bar - never a large fill) */
+  --mom: #FF8C6B;
+  --older: #B49CFF;
+  --youngest: #4FD1C5;
+  /* statuses (always with an icon and a word, never colour alone) */
+  --fits: #7FE0A8;                 /* outline check, no filled circle */
+  --rose: #FF8FA3;                 /* set aside, reason text */
+  --unknown: #F2D06B;              /* "?" in an outline */
+  --file: #8CB8FF;                 /* source FILE */
+  /* the one bright fill in the product: the "Allow" action */
+  --accent: #FF8C6B;
+  --accent-text: #17111C;
+  /* mom's window under her visits: 15% coral on the card */
+  --mom-window: rgba(255, 140, 107, 0.15);
+  /* type scale (Alexa+ add-on guide, base px) */
+  --display1: 48px; --display2: 40px; --display3: 32px; --display4: 28px; --display5: 24px;
+  --headline1: 20px; --headline2: 18px;
+  --body1: 16px; --body2: 14px; --body3: 12px;  /* body3 = minimum for customer-facing text */
+  --label1: 10px;                                 /* badges and axis labels only; label2 (8) not used */
+  /* spacing, radii, icons */
+  --sp-2: 2px; --sp-6: 6px; --sp-8: 8px; --sp-12: 12px; --sp-16: 16px; --sp-20: 20px; --sp-24: 24px;
+  --r-card: 16px; --r-inner: 12px; --r-badge: 8px; --r-pill: 999px;
+  --icon-s: 16px; --icon-m: 20px; --icon-l: 24px;
+  --font: "Nunito", ui-rounded, system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme: dark;
+}
+:root[data-theme="light"] {
+  --screen: #FAF9FB;
+  --card: #FFFFFF;
+  --card-inner: #FAF9FB;
+  --hairline: #E6E2EA;
+  --text-1: #17111C;
+  --text-2: rgba(23, 17, 28, 0.72);
+  --text-3: rgba(23, 17, 28, 0.60);
+  --on-accent: #FFFFFF;
+  --mom: #B4462A;
+  --older: #6A4FCF;
+  --youngest: #0F7F76;
+  --fits: #1E7D4C;
+  --rose: #B42D4A;
+  --unknown: #8A6A00;
+  --file: #2F5FB3;
+  --accent: #B4462A;
+  --accent-text: #FFFFFF;
+  --mom-window: rgba(180, 70, 42, 0.10);
+  color-scheme: light;
+}
+
+/* ======================================================================================================
+   Echo Show 8 simulator (our web host). Tokens above are design/tokens.css verbatim. Inside #screen the host
+   draws what Alexa+ would: the add-on attribution row (logo top-left, "demo data" top-right) and the
+   conversation band, in the reference screens' geometry (base px, zoom 1.667); the add-on view sits below in a
+   sandboxed iframe. No Amazon/Alexa/Echo logos, no device images, no blue light bar (STYLE §2).
+   ====================================================================================================== */
+@font-face { font-family: "Nunito"; font-weight: 400; font-style: normal; font-display: block; src: url("/fonts/nunito-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Nunito"; font-weight: 600; font-style: normal; font-display: block; src: url("/fonts/nunito-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Nunito"; font-weight: 700; font-style: normal; font-display: block; src: url("/fonts/nunito-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Nunito"; font-weight: 800; font-style: normal; font-display: block; src: url("/fonts/nunito-latin-800-normal.woff2") format("woff2"); }
+
+:root {
+  --page: #0B0D11;
+  --bezel: #050608;
+  --bezel-edge: #22262E;
+  --panel: #12151A;
+  --panel-2: #181C23;
+  --ink: rgba(255, 255, 255, 0.92);
+  --ink-2: rgba(255, 255, 255, 0.66);
+  --ink-3: rgba(255, 255, 255, 0.48);
+}
+:root[data-theme="light"] {
+  --page: #E9E7EC;
+  --bezel: #1A1C20;
+  --bezel-edge: #3A3E46;
+  --panel: #FFFFFF;
+  --panel-2: #F4F2F6;
+  --ink: rgba(23, 17, 28, 0.92);
+  --ink-2: rgba(23, 17, 28, 0.70);
+  --ink-3: rgba(23, 17, 28, 0.58);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--page); color: var(--ink); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+body { min-height: 100vh; overflow-x: hidden; }
+#stage { display: flex; gap: 20px; padding: 14px 20px 12px; align-items: flex-start; }
+
+/* ---------- device ---------- */
+#device-col { flex: none; width: 1320px; display: flex; flex-direction: column; gap: 8px; }
+.frame-caption { font-size: 15px; line-height: 20px; color: var(--ink-2); font-weight: 600; }
+#device { position: relative; width: 1320px; padding: 20px 20px 34px; background: var(--bezel); border: 1px solid var(--bezel-edge); border-radius: 28px; }
+.sim-mark { position: absolute; left: 0; right: 0; bottom: 8px; text-align: center; font-size: 13px; line-height: 18px; color: rgba(255, 255, 255, 0.62); font-weight: 600; letter-spacing: 0.2px; }
+#screen { position: relative; width: 1280px; height: 800px; overflow: hidden; background: var(--screen); display: flex; flex-direction: column; border-radius: 4px; }
+#card { position: relative; flex: 1; min-height: 0; }
+#card iframe { display: block; width: 100%; height: 100%; border: 0; background: var(--screen); }
+
+/* add-on attribution row + conversation band, base px under zoom (exact geometry of the reference screens) */
+#chrome { flex: none; width: 768px; zoom: 1.667; color: var(--text-1); }
+#chrome[hidden] { display: none; }
+.app-bar { height: 24px; padding: 0 var(--sp-24); display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: var(--sp-6); }
+.brand-mark { height: 12px; width: 32.57px; display: block; }
+.brand-mark .m1 { fill: var(--mom); } .brand-mark .m2 { fill: var(--older); } .brand-mark .m3 { fill: var(--youngest); }
+.brand-name { font-size: var(--body2); font-weight: 700; line-height: 18px; color: var(--text-1); white-space: nowrap; }
+.demo-tag { font-size: var(--label1); line-height: 14px; color: var(--text-3); white-space: nowrap; }
+#screen[data-view="booked"] .brand, #screen[data-view="set-aside"] .brand, #screen[data-view="consent"] .brand { gap: var(--sp-8); }
+
+#band { display: none; }
+#band-reply span { display: block; }
+#band-reply span:empty { display: none; }
+#band p { white-space: nowrap; }
+/* 01 family match: framed card, grey request, bold reply */
+#screen[data-band="framed-fm"] #band { display: flex; flex-direction: column; margin: 9px 12px 0; height: 54px; background: var(--card); border: 1px solid var(--hairline); border-radius: var(--r-card); padding: 8px 17px 0; }
+#screen[data-band="framed-fm"] #band-ask { font-size: var(--body3); line-height: 16px; color: var(--text-2); }
+#screen[data-band="framed-fm"] #band-reply { margin-top: 1.2px; font-size: 18.5px; font-weight: 700; line-height: 22px; color: var(--text-1); }
+/* 02 checkup year: framed card, slightly larger request */
+#screen[data-band="framed-cy"] #band { display: block; margin: var(--sp-8) 0 0 12.1px; width: 743.8px; height: 52.3px; background: var(--card); border: 1px solid var(--hairline); border-radius: var(--r-card); padding: 5.1px 15px 0; }
+#screen[data-band="framed-cy"] #band-ask { font-size: 13.6px; line-height: 16px; color: var(--text-2); }
+#screen[data-band="framed-cy"] #band-reply { margin-top: 1.55px; font-size: 19px; line-height: 22px; font-weight: 700; color: var(--text-1); }
+/* 05 set aside: no frame, request + two short reply lines */
+#screen[data-band="open-sa"] #band { display: block; padding: var(--sp-6) var(--sp-24) 0; }
+#screen[data-band="open-sa"] #band p { white-space: normal; }
+#screen[data-band="open-sa"] #band-ask { font-size: 13.2px; line-height: 17px; color: var(--text-2); }
+#screen[data-band="open-sa"] #band-reply { margin-top: var(--sp-2); font-size: var(--body1); font-weight: 800; line-height: 19px; color: var(--text-1); }
+/* 03 visit plan: only the grey quote of the request's last sentence */
+#screen[data-band="quote-vp"] #band { display: block; }
+#screen[data-band="quote-vp"] #band-ask { margin: 0.6px 0 0 14.6px; height: 18px; font-size: var(--body2); line-height: 18px; color: var(--text-2); }
+#screen[data-band="quote-vp"] #band-reply { display: none; }
+
+/* ---------- subtitles + controls ---------- */
+#subtitles { min-height: 78px; padding: 10px 18px; background: var(--panel); border: 1px solid var(--bezel-edge); border-radius: 14px; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+#sub-user { font-size: 15px; line-height: 20px; color: var(--ink-2); min-height: 20px; }
+#sub-user:not(:empty)::before { content: "You: "; color: var(--ink-3); }
+#sub-line { display: flex; align-items: baseline; gap: 14px; min-height: 30px; }
+#sub-alexa { font-size: 22px; line-height: 29px; font-weight: 700; color: var(--ink); }
+#sub-alexa:not(:empty)::before { content: "Alexa: "; color: var(--ink-3); font-weight: 600; }
+#sub-seconds { flex: none; font-size: 14px; line-height: 20px; color: var(--ink-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
+#say { display: flex; gap: 8px; align-items: center; }
+#utterance { flex: 1; min-width: 0; height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--bezel-edge); background: var(--panel); color: var(--ink); font: 600 15px var(--font); }
+.ctl { height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--bezel-edge); background: var(--panel-2); color: var(--ink); font: 700 14px var(--font); cursor: pointer; white-space: nowrap; }
+.ctl:disabled { opacity: 0.5; cursor: default; }
+.ctl.primary { background: var(--accent); color: var(--accent-text); border-color: transparent; }
+.ctl.icon { width: 40px; padding: 0; display: flex; align-items: center; justify-content: center; }
+.ctl.icon svg { width: 14px; height: 20px; }
+.ctl.icon svg rect { fill: currentColor; } .ctl.icon svg path { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; }
+.ctl-gap { width: 4px; }
+
+/* ---------- developer view (side panel) ---------- */
+#dev { flex: 1; min-width: 0; height: 1052px; display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--bezel-edge); border-radius: 16px; overflow: hidden; }
+.dev-head { padding: 14px 16px 10px; border-bottom: 1px solid var(--bezel-edge); }
+.dev-head h2 { font-size: 17px; line-height: 22px; font-weight: 800; }
+.dev-head h2 span { color: var(--ink-3); font-weight: 600; }
+.dev-meta { margin-top: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; font-size: 12px; line-height: 16px; }
+.dev-meta div { display: flex; gap: 6px; min-width: 0; }
+.dev-meta dt { color: var(--ink-3); }
+.dev-meta dd { font-family: var(--mono); color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dev-legend { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
+#chips { flex: 1; overflow: auto; padding: 10px 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.chip { border: 1px solid var(--bezel-edge); border-radius: 12px; padding: 8px 10px; background: var(--panel-2); }
+.chip[data-state="pending"] { opacity: 0.7; }
+.chip[data-state="error"] { border-color: var(--rose); }
+.chip-head { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; line-height: 18px; }
+.chip-head code { font-family: var(--mono); font-weight: 700; color: var(--ink); overflow-wrap: anywhere; }
+.chip-head .ms { font-family: var(--mono); color: var(--ink-3); white-space: nowrap; }
+.chip-args { margin-top: 2px; font-family: var(--mono); font-size: 11px; line-height: 15px; color: var(--ink-3); overflow-wrap: anywhere; }
+.steps { list-style: none; margin-top: 6px; display: flex; flex-direction: column; gap: 4px; }
+.step { display: grid; grid-template-columns: 84px 1fr auto; gap: 8px; align-items: start; font-size: 12px; line-height: 16px; }
+.step-text { color: var(--ink); overflow-wrap: anywhere; }
+.step-sum { display: block; color: var(--ink-2); }
+.step-ms { font-family: var(--mono); color: var(--ink-3); white-space: nowrap; }
+.step[data-error] .step-text { color: var(--rose); }
+.gate { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--bezel-edge); font-family: var(--mono); font-size: 11px; line-height: 15px; color: var(--ink-2); }
+.gate p { overflow-wrap: anywhere; }
+/* source badges: outline / dashed in our style (STYLE §4, screen 07) */
+.badge { display: inline-flex; align-items: center; justify-content: center; height: 18px; padding: 0 6px; border-radius: var(--r-badge); border: 1.2px solid var(--ink-3); font: 800 10px/16px var(--font); letter-spacing: 0.6px; white-space: nowrap; }
+.badge[data-mode="live"] { border-style: solid; border-color: var(--fits); color: var(--fits); }
+.badge[data-mode="file"] { border-style: solid; border-color: var(--file); color: var(--file); }
+.badge[data-mode="fixture"] { border-style: dashed; border-color: var(--text-3); color: var(--text-2); }
+.badge[data-mode="sandbox"] { border-style: dashed; border-color: var(--unknown); color: var(--unknown); }
+.badge[data-mode="simulated"] { border-style: dashed; border-color: var(--older); color: var(--older); }
+:root[data-theme="light"] .badge[data-mode="fixture"] { border-color: rgba(23, 17, 28, 0.5); color: rgba(23, 17, 28, 0.72); }
+
+/* ---------- full-screen developer view (screen 07) ---------- */
+#devboard { position: absolute; inset: 0; background: var(--screen); }
+#devboard[hidden] { display: none; }
+body[data-mode="developer"] #chrome, body[data-mode="developer"] #card { visibility: hidden; }
