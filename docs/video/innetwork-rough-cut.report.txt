@@ -1,5 +1,6 @@
-rough cut 2026-10-11T08:24:40.649Z
+rough cut 2026-10-11T08:26:45.216Z
 duration 122.1 s (limit 180, target ≤ 170)
 segments: open > c1 > c2 > c3 > c4 > scene1 > scene2 > consent > evidence > end
+timeline: open 0:00 · c1 0:17 · c2 0:21 · c3 0:26 · c4 0:30 · scene1 0:35 · scene2 1:32 · consent 1:42 · evidence 1:50 · end 1:58 · end of video 2:02
 freezes ≥ 6 s: none
 audit card: 0 of 8506 (AUDIT-2026-10-11.json)

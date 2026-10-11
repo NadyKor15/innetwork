@@ -119,7 +119,10 @@ async function main() {
   const parts: string[] = [];
   const srt: { a: number; b: number; text: string }[] = [];
   let t = 0;
+  const starts: string[] = [];
+  const mmss = (ms: number) => `${Math.floor(ms / 60_000)}:${String(Math.floor((ms % 60_000) / 1000)).padStart(2, "0")}`;
   for (const s of seg) {
+    starts.push(`${s.id} ${mmss(t)}`);
     const f = join(WORK, `seg-${s.id}.mp4`);
     if (s.kind === "card") {
       run("ffmpeg", ["-y", "-loglevel", "error", "-loop", "1", "-t", String(s.secs), "-i", s.png, "-f", "lavfi", "-t", String(s.secs), "-i", "anullsrc=r=48000:cl=stereo", "-vf", "scale=1920:1080,format=yuv420p", "-r", "30", "-c:v", "libx264", "-crf", "18", "-c:a", "aac", "-shortest", f]);
@@ -148,7 +151,7 @@ async function main() {
   writeFileSync(join(VID, "innetwork-rough-cut.srt"), srt.map((c, i) => `${i + 1}\n${srtTime(c.a)} --> ${srtTime(Math.min(c.b, total * 1000))}\n${c.text}\n`).join("\n"));
   const fz = spawnSync("ffmpeg", ["-hide_banner", "-i", out, "-vf", "freezedetect=n=0.001:d=6", "-map", "0:v:0", "-f", "null", "-"], { encoding: "utf8" });
   const freezes = (fz.stderr.match(/freeze_duration: [\d.]+/g) ?? []).map((x) => Number(x.split(": ")[1]));
-  const report = [`rough cut ${new Date().toISOString()}${DRAFT ? " (DRAFT)" : ""}`, `duration ${total.toFixed(1)} s (limit 180, target ≤ 170)`, `segments: ${seg.map((s) => s.id).join(" > ")}`, `freezes ≥ 6 s: ${freezes.length ? freezes.map((x) => x.toFixed(1)).join(", ") : "none"}`, `audit card: ${audit ? `${audit.withAge} of ${audit.records} (${audit.file})` : "placeholder N (DRAFT)"}`];
+  const report = [`rough cut ${new Date().toISOString()}${DRAFT ? " (DRAFT)" : ""}`, `duration ${total.toFixed(1)} s (limit 180, target ≤ 170)`, `segments: ${seg.map((s) => s.id).join(" > ")}`, `timeline: ${starts.join(" · ")} · end of video ${mmss(total * 1000)}`, `freezes ≥ 6 s: ${freezes.length ? freezes.map((x) => x.toFixed(1)).join(", ") : "none"}`, `audit card: ${audit ? `${audit.withAge} of ${audit.records} (${audit.file})` : "placeholder N (DRAFT)"}`];
   writeFileSync(join(VID, "innetwork-rough-cut.report.txt"), report.join("\n") + "\n");
   console.log(report.join("\n"));
   console.log(`-> ${out}\n-> ${join(VID, "innetwork-rough-cut.srt")}`);
