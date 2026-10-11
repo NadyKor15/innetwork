@@ -329,8 +329,8 @@ export async function runBrowserChecks(opts: { hostUrl: string; screensDir: stri
     const domRows = Object.entries(doms).map(([k, d]) => `${k} ${domStr(d)}`);
     add("B12", "dom_check on every view document (dark + light) and on the board: 0 wrapped numbers/times, 0 clipped, 0 overlapping cards, fits the screen, no img, no brand marks", "all clean",
       domRows.filter((r) => !/ w0 c0 o0 fitYok$/.test(r)).join(" | ") || `${domRows.length} documents clean`, Object.values(doms).every(domOk));
-    add("B13", "host page dom_check at every step (subtitles, band, developer view)", "0 wrapped numbers, 0 clipped, 0 overlaps on the page",
-      hostDoms.filter((r) => !/w0 c0 o0/.test(r)).join(" | ") || `${hostDoms.length} steps clean`, hostDoms.every((r) => /w0 c0 o0/.test(r)));
+    add("B13", "host page dom_check at every step (subtitles, band, developer view): 0 wrapped numbers, 0 clipped, 0 overlaps, nothing below 1080 px", "every step clean",
+      hostDoms.filter((r) => !/w0 c0 o0 fitYok/.test(r)).join(" | ") || `${hostDoms.length} steps clean`, hostDoms.every((r) => /w0 c0 o0 fitYok/.test(r)));
     add("B14", 'customer screens: no stars, "checked today", tool names, ids, source badges, JSON; board: no mockup placeholders', "0 hits", forbidden.length ? forbidden.join(" | ") : `0 hits in ${Object.keys(doms).length} screens`, forbidden.length === 0);
 
     // screen 07 numbers come from /devinfo
@@ -359,6 +359,23 @@ export async function runBrowserChecks(opts: { hostUrl: string; screensDir: stri
     writeFileSync(join(workDir, "metrics.json"), JSON.stringify(metrics, null, 2));
     add("B16", `each of the 7 screens vs the render of its reference screen.html: edgeF1 ≥ ${EDGE_F1_MIN} (compare_to_image.py; also vs reference.png and the light theme, reported)`, `7/7 ≥ ${EDGE_F1_MIN}`, cmp.join(" | "), cmpOk);
     add("B17", "no console errors on the host page or in the views", "0", consoleErrors.length ? consoleErrors.slice(0, 3).join(" | ") : "0", consoleErrors.length === 0);
+
+    // must-light controls on SYNTHETIC input: the checks above can see what they claim is absent
+    const ctl = await browser.newPage({ viewport: { width: 800, height: 400 } });
+    await ctl.setContent(`<html><body style="margin:0;font:16px sans-serif">
+      <p style="width:24px">12 345 678</p><p style="width:30px">9:15 AM</p>
+      <div style="width:60px;white-space:nowrap;overflow:hidden">Dr. Wendeline Hartsworth</div>
+      <div style="position:absolute;left:100px;top:100px;width:200px;height:100px;border-radius:12px;background:#222">card one</div>
+      <div style="position:absolute;left:150px;top:150px;width:200px;height:100px;border-radius:12px;background:#333">card two</div>
+      <div style="position:absolute;left:10px;top:380px;height:80px">below the screen</div><img alt=""></body></html>`);
+    const c = await ctl.evaluate(DOM_CHECK);
+    await ctl.close();
+    const synth = 'Dr. A ★★★★ · checked today · find_in_network · Plan A · LIVE FHIR · {"a":1} · SBX-1A2B3C4D';
+    const hits = synth.split(" · ").filter((x) => CUSTOMER_FORBIDDEN.test(x)).length;
+    const clean = "Dr. Imogen Pellworth · in Plan C's network · sees this age · Mon Oct 19 · 1:30 PM · No ratings. · Booked · Your note: \"great with kids\"";
+    add("B19", "controls: the dom check and the forbidden-text check light on synthetic defects and stay dark on real customer text", "wrapped ≥2, clipped ≥1, overlaps ≥1, overflow > 0, img 1; forbidden 6/6 synthetic, 0 on clean text",
+      `wrapped ${c.wrappedNumbers} clipped ${c.clipped} overlaps ${c.cardOverlaps} overflowY ${c.overflowY} img ${c.imgs}; forbidden ${hits}/6, clean ${CUSTOMER_FORBIDDEN.test(clean) ? "HIT" : "0"}`,
+      c.wrappedNumbers >= 2 && c.clipped >= 1 && c.cardOverlaps >= 1 && c.overflowY > 0 && c.imgs === 1 && hits === 6 && !CUSTOMER_FORBIDDEN.test(clean));
     log(`screenshots -> ${shots.map((s) => s.replace(`${ROOT}/`, "")).join(", ")}`);
     log(`side-by-side compares -> ${workDir.replace(`${ROOT}/`, "")}/compare-*.png, metrics.json`);
   } catch (err) {

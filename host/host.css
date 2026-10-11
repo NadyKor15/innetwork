@@ -142,10 +142,11 @@ body { min-height: 100vh; overflow-x: hidden; }
 #screen[data-band="quote-vp"] #band-reply { display: none; }
 
 /* ---------- subtitles + controls ---------- */
-#subtitles { min-height: 78px; padding: 10px 18px; background: var(--panel); border: 1px solid var(--bezel-edge); border-radius: 14px; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+#subtitles { height: 100px; overflow: hidden; padding: 8px 18px; background: var(--panel); border: 1px solid var(--bezel-edge); border-radius: 14px; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
 #sub-user { font-size: 15px; line-height: 20px; color: var(--ink-2); min-height: 20px; }
 #sub-user:not(:empty)::before { content: "You: "; color: var(--ink-3); }
-#sub-line { display: flex; align-items: baseline; gap: 14px; min-height: 30px; }
+#sub-line { display: flex; align-items: baseline; gap: 14px; min-height: 29px; }
+#sub-alexa { flex: 1; min-width: 0; }
 #sub-alexa { font-size: 22px; line-height: 29px; font-weight: 700; color: var(--ink); }
 #sub-alexa:not(:empty)::before { content: "Alexa: "; color: var(--ink-3); font-weight: 600; }
 #sub-seconds { flex: none; font-size: 14px; line-height: 20px; color: var(--ink-3); font-variant-numeric: tabular-nums; white-space: nowrap; }

@@ -108,14 +108,24 @@ function fitBand(): void {
 }
 
 // ---------- subtitles: Alexa's line(s) with seconds, one speech part at a time ----------
+/** Shrinks a subtitle line (0.5 px steps) until it takes at most maxLines lines; it is never cut. */
+function fitLines(el: HTMLElement, maxPx: number, minPx: number, maxLines: number): void {
+  let size = maxPx;
+  el.style.fontSize = `${size}px`;
+  const lh = () => parseFloat(getComputedStyle(el).lineHeight) || size * 1.3;
+  while (size > minPx && el.getBoundingClientRect().height > maxLines * lh() + 1) { size -= 0.5; el.style.fontSize = `${size}px`; el.style.lineHeight = `${Math.round(size * 1.32)}px`; }
+  el.dataset.fit = String(size);
+}
 async function subtitles(user: string | null, parts: string[], secs?: number[]): Promise<void> {
   const run = ++subtitleRun;
-  if (user !== null) $("sub-user").textContent = user;
+  if (user !== null) { $("sub-user").textContent = user; $("sub-user").style.lineHeight = ""; fitLines($("sub-user"), 15, 11, 1); }
   if (!parts.length) { $("sub-alexa").textContent = ""; $("sub-seconds").textContent = ""; return; }
   for (let i = 0; i < parts.length; i++) {
     if (run !== subtitleRun) return;
     const s = secs?.[i] ?? secondsOf(parts[i]);
     $("sub-alexa").textContent = parts[i];
+    $("sub-alexa").style.lineHeight = "";
+    fitLines($("sub-alexa"), 22, 15, 2);
     $("sub-alexa").dataset.part = `${i + 1}/${parts.length}`;
     $("sub-seconds").textContent = `${s.toFixed(1)} s`;
     cue("alexa", parts[i]);
@@ -426,7 +436,12 @@ function s(tag: string, attrs: Record<string, string>, ...kids: SVGElement[]): S
   for (const k of kids) e.append(k);
   return e;
 }
-const KIND_TEXT: Record<string, string> = { "fhir-plannet": "insurer directory (FHIR Plan-Net)", "qhp-file": "marketplace plan file (CMS QHP JSON)" };
+/** Developer-view wording of a plan's source: what kind of directory, and its format when it was really read (not a recorded sample). */
+function sourceText(plan: DevInfo["plans"][number] | undefined, mode: string): string {
+  const what = plan?.kind === "qhp-file" ? "marketplace plan file" : /medicaid|state|chip/i.test(plan?.programType ?? "") ? "state program directory" : plan?.kind === "fhir-plannet" ? "insurer directory" : "plan directory";
+  if (mode === "fixture" || mode === "sandbox") return `${what} · recorded sample`;
+  return `${what}${plan?.kind === "fhir-plannet" ? " (FHIR Plan-Net)" : plan?.kind === "qhp-file" ? " (CMS QHP JSON)" : ""}`;
+}
 const hhmm = (iso: string) => { const d = new Date(iso); return Number.isNaN(d.getTime()) ? "?" : d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "America/New_York" }); };
 const modeBadge = (mode: string, kind: string) => {
   const cls = mode === "live" ? "badge badge--live badge--fill" : `badge badge--${mode}`;
@@ -448,13 +463,13 @@ async function renderDevboard(): Promise<void> {
   rows.forEach((r, i) => {
     const plan = plans.find((p) => p.label === r.planLabel);
     const step = last.familySteps.find((st) => st.op.endsWith(` · ${r.planLabel}`) && / · ZIP /.test(st.op));
-    const mode = step?.mode ?? plan?.sourceMode ?? "fixture";
+    // a successful live probe of this plan in this server run makes the network step LIVE; else the lookup's own mode
+    const probeOk = plan ? d?.probes?.[plan.planId]?.ok === true : false;
+    const mode = probeOk ? "live" : step?.mode ?? plan?.sourceMode ?? "fixture";
     const kind = plan?.kind ?? "";
-    const kindText = KIND_TEXT[kind] ?? `${plan?.programType ?? "plan"} directory`;
-    const recorded = mode === "fixture" && !KIND_TEXT[kind] ? " · recorded sample" : "";
     const who = r.memberLabel ? `${r.memberLabel} · ` : "";
     grid.append(h("div", `member member--${r.member || memberCls[i]} inner r${i + 1}`, h("span", "dot"), h("span", "member-name", r.memberLabel || r.planLabel)));
-    grid.append(h("div", `source inner r${i + 1}`, h("p", "source-text", `${who}${r.planLabel} · ${kindText}${recorded}`), modeBadge(mode, kind)));
+    grid.append(h("div", `source inner r${i + 1}`, h("p", "source-text", `${who}${r.planLabel} · ${sourceText(plan, mode)}`), modeBadge(mode, kind)));
   });
   grid.append(linksIn(), linksGate());
   const gate = h("div", "gate inner", h("h3", "gate-title", "deterministic gate"));
