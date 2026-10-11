@@ -130,12 +130,14 @@ async function lookupFor(sv: Services, steps: Steps, u: UserState, member: Membe
     service: answer.directory, op: `${SPECIALTY_WORDS[specialty].field} · ZIP ${u.profile.zip} · ${plan.label}`, mode: answer.mode, ms: answer.ms,
     summary: answer.ok ? `${answer.records.length} records${answer.inNetworkCount !== null ? ` · ${answer.inNetworkCount} in ${plan.label}'s network` : ""}` : `did not answer: ${answer.error} · NOT confirmed`,
   });
+  const shortErr = (e: string) => { const code = e.match(/\b(4\d\d|5\d\d)\b/)?.[1]; return /quota/i.test(e) ? `HTTP ${code ?? "403"}, daily quota` : /timeout|abort/i.test(e) ? "timeout" : code ? `HTTP ${code}` : e.slice(0, 40); };
   let probe: NetworkProbe | null = null;
   if (sv.directory.probe) {
     probe = await sv.directory.probe(plan, specialty, u.profile.zip);
     if (probe) {
+      if (!probe.ok) probe = { ...probe, error: shortErr(probe.error) };
       sv.probes.set(plan.planId, probe);
-      steps.add({ service: probe.directory, op: `live network check · ${probe.ref}`, mode: "live", ms: probe.ms, summary: probe.ok ? `${probe.inNetworkCount} in-network practitioners for this specialty in ZIP ${u.profile.zip}` : `did not answer: ${probe.error} · not confirmed` });
+      steps.add({ service: probe.directory, op: `live network check · ${probe.ref}`, mode: "live", ms: probe.ms, summary: probe.ok ? `${probe.inNetworkCount} in-network for ${SPECIALTY_WORDS[specialty].visit} · ZIP ${u.profile.zip} · ${plan.label}` : `did not answer: ${probe.error} · not confirmed` });
     }
   }
   const policies = loadPolicies(sv.policiesSeed);

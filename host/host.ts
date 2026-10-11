@@ -448,6 +448,17 @@ const modeBadge = (mode: string, kind: string) => {
   return h("span", cls, mode === "live" && kind === "fhir-plannet" ? "LIVE FHIR" : mode.toUpperCase());
 };
 
+/** "GET PractitionerRole?…plan_id…" from a probe URL: the resource and the filter that makes it "in network". */
+function requestLabel(ref: string): string {
+  try {
+    const u = new URL(ref);
+    const resource = u.pathname.split("/").filter(Boolean).pop() ?? "";
+    const q = decodeURIComponent(u.search);
+    const key = /plan_id/.test(q) ? "plan_id" : /network/.test(q) ? "network" : [...u.searchParams.keys()][0] ?? "";
+    return `GET ${resource}${key ? `?…${key}…` : ""}`;
+  } catch { return "GET"; }
+}
+
 async function renderDevboard(): Promise<void> {
   const d = await devinfo();
   const board = $("devboard");
@@ -465,11 +476,13 @@ async function renderDevboard(): Promise<void> {
     const step = last.familySteps.find((st) => st.op.endsWith(` · ${r.planLabel}`) && / · ZIP /.test(st.op));
     // a successful live probe of this plan in this server run makes the network step LIVE; else the lookup's own mode
     const probeOk = plan ? d?.probes?.[plan.planId]?.ok === true : false;
-    const mode = probeOk ? "live" : step?.mode ?? plan?.sourceMode ?? "fixture";
+    const lookupMode = probeOk ? "live" : step?.mode ?? plan?.sourceMode ?? "fixture";
     const kind = plan?.kind ?? "";
-    const who = r.memberLabel ? `${r.memberLabel} · ` : "";
+    // a marketplace plan publishes a FILE (no API): the badge names the source kind, the text says it is our recorded copy
+    const mode = kind === "qhp-file" && lookupMode !== "live" ? "file" : lookupMode;
+    const text = `${r.memberLabel ? `${r.memberLabel} · ` : ""}${r.planLabel} · ${kind === "qhp-file" ? `marketplace plan file (CMS QHP JSON)${lookupMode === "fixture" ? " · recorded sample" : ""}` : sourceText(plan, lookupMode)}`;
     grid.append(h("div", `member member--${r.member || memberCls[i]} inner r${i + 1}`, h("span", "dot"), h("span", "member-name", r.memberLabel || r.planLabel)));
-    grid.append(h("div", `source inner r${i + 1}`, h("p", "source-text", `${who}${r.planLabel} · ${sourceText(plan, mode)}`), modeBadge(mode, kind)));
+    grid.append(h("div", `source inner r${i + 1}`, h("p", "source-text", text), modeBadge(mode, kind)));
   });
   grid.append(linksIn(), linksGate());
   const gate = h("div", "gate inner", h("h3", "gate-title", "deterministic gate"));
@@ -485,9 +498,12 @@ async function renderDevboard(): Promise<void> {
 
   // live strip: the latest live probe from /devinfo; else say plainly that nothing live ran
   const probe = Object.values(d?.probes ?? {}).filter((p) => p.ok).sort((a, b) => b.asOf.localeCompare(a.asOf))[0];
-  const liveStep = [...last.lookupSteps].reverse().find((st) => st.mode === "live" && /live network check/.test(st.op));
+  // any live network check of this session (the opening's Plan A check counts even if a later search's check failed)
+  const liveSteps = [...last.familySteps, ...last.lookupSteps].reverse().filter((st) => st.mode === "live" && /live network check/.test(st.op));
+  const liveStep = liveSteps.find((st) => !/did not answer/.test(st.summary)) ?? null;
+  const failedProbe = Object.values(d?.probes ?? {}).find((p) => !p.ok);
   const req = probe
-    ? h("p", "req", `LIVE · ${probe.directory} · ${probe.ref} · `, h("span", "nb", `${probe.ms} ms`), " · as of ", h("span", "nb", hhmm(probe.asOf)))
+    ? h("p", "req", `LIVE · ${probe.directory.replace(/ provider directory/, "")} · ${requestLabel(probe.ref)} · `, h("span", "nb", `${probe.ms} ms`), " · as of ", h("span", "nb", hhmm(probe.asOf)))
     : h("p", "req", `LIVE · no live directory call in this run · directory mode: ${d?.directoryMode ?? "unknown"}`);
   state.devboard.probe = probe ? `${probe.directory} ${probe.ms} ms` : "none";
   const chain = h("p", "chain", "chain: ");
@@ -502,7 +518,7 @@ async function renderDevboard(): Promise<void> {
   const live = h("section", "strip strip--live card", req, chain);
   live.setAttribute("aria-label", "Live request");
 
-  const count = liveStep ? liveStep.summary : (() => {
+  const count = liveStep ? liveStep.summary : failedProbe ? `${failedProbe.directory.replace(/ provider directory.*$/, "")} didn't answer · ${failedProbe.error ?? "no answer"} · not confirmed` : (() => {
     const st = [...last.lookupSteps].reverse().find((x) => / · ZIP /.test(x.op));
     return st ? `${st.summary} · ${st.op}` : "no directory lookup in this session yet";
   })();
