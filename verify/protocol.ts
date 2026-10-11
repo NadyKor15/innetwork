@@ -141,7 +141,7 @@ export async function runProtocolChecks(opts: { mcpUrl: string; dataDir: string;
     const rr = await cA.readResource({ uri }).catch((e: Error) => ({ contents: [{ mimeType: `error: ${e.message.slice(0, 60)}`, text: "" }] }));
     const ct = rr.contents[0] as { mimeType?: string; text?: string };
     const v = uri.match(/ui:\/\/innetwork\/([\w-]+)\.html/)?.[1];
-    const ok = ct?.mimeType === "text/html;profile=mcp-app" && /^<!doctype html>/i.test(ct.text ?? "") && !!ct.text?.includes(`data-view="${v}"`);
+    const ok = ct?.mimeType === "text/html;profile=mcp-app" && /^<!doctype html>/i.test(ct.text ?? "") && !!ct.text?.includes(`data-file="${v}"`);
     readsOk &&= ok;
     reads.push(`${v}:${ok ? "ok" : "BAD"}(${Math.round((ct?.text?.length ?? 0) / 1024)}KB)`);
   }
