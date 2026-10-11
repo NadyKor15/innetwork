@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.pids/
+logs/
+data/*
+!data/README.md
+# raw site-audit inputs and per-site rows (names, addresses) stay local; only the aggregate is published
+audit-private/
+# video renders (large binaries)
+docs/video/*.webm
+docs/video/*.mp4
+docs/video/frame-*.png
+.DS_Store
