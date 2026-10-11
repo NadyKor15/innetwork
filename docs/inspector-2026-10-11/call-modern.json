@@ -1,0 +1,77 @@
+{
+  "_meta": {
+    "io.modelcontextprotocol/serverInfo": {
+      "name": "innetwork",
+      "title": "InNetwork",
+      "version": "0.1.0"
+    },
+    "steps": [
+      {
+        "service": "Household state",
+        "op": "read",
+        "mode": "sandbox",
+        "ms": 0,
+        "summary": "answered from saved state"
+      }
+    ]
+  },
+  "content": [
+    {
+      "type": "text",
+      "text": "Before we start, here's what I use and why. This information is not a substitute for professional medical advice. Consult a healthcare provider for personal medical decisions. Say allow to continue."
+    }
+  ],
+  "structuredContent": {
+    "speech": "Before we start, here's what I use and why. This information is not a substitute for professional medical advice. Consult a healthcare provider for personal medical decisions. Say allow to continue.",
+    "speechParts": [
+      "Before we start, here's what I use and why. This information is not a substitute for professional medical advice. Consult a healthcare provider for personal medical decisions. Say allow to continue."
+    ],
+    "seconds": [
+      12.4
+    ],
+    "view": "consent",
+    "card": {
+      "view": "consent",
+      "title": "Before we start",
+      "state": "ask",
+      "lines": [
+        {
+          "icon": "family",
+          "text": "I use your family's plan names and the age you tell me — only to find in-network doctors. I don't save ages."
+        },
+        {
+          "icon": "calendar",
+          "text": "I use your family routine, like daycare drop-off, only to pick visit times."
+        },
+        {
+          "icon": "note",
+          "text": "Notes you tell me about a doctor stay with your family. No ratings."
+        },
+        {
+          "icon": "lock",
+          "text": "I never read member IDs aloud."
+        },
+        {
+          "icon": "chat",
+          "text": "I don't give medical advice or pick a specialty for you."
+        }
+      ],
+      "disclaimer": "This information is not a substitute for professional medical advice. Consult a healthcare provider for personal medical decisions.",
+      "actions": [
+        {
+          "label": "Allow",
+          "message": "Allow.",
+          "style": "primary"
+        },
+        {
+          "label": "Not now",
+          "message": "Not now.",
+          "style": "secondary"
+        }
+      ]
+    },
+    "data": {
+      "consent": "asked"
+    }
+  }
+}

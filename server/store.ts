@@ -50,7 +50,7 @@ export type UserState = {
   family: Member[];
   routine: RoutineBlock[];
   notes: Note[];
-  checkup: { memberId: string; oopMetToldAt: number | null; planYearEnd: string; haveOrder: boolean } | null;
+  checkup: { memberId: string; oopMetToldAt: number | null; planYearEnd: string; haveOrder: boolean; /** index in visits[] where the checkup batch starts: visits before it were "booked earlier" (the sandbox clock does not move) */ batchFrom: number | null } | null;
   visits: Visit[];
   pending: Pending;
   outbox: OutboxItem[];
@@ -67,7 +67,7 @@ const fileOf = (userId: string) => {
 export function emptyUser(userId: string, now: number): UserState {
   return {
     version: 1, userId, createdAt: now, consent: null,
-    profile: { zip: process.env.DEMO_ZIP ?? "32801", timeZone: "America/New_York" },
+    profile: { zip: process.env.DEMO_ZIP ?? "32803", timeZone: "America/New_York" },
     family: [], routine: [], notes: [], checkup: null, visits: [], pending: null, outbox: [], seededFrom: null,
   };
 }

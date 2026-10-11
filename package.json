@@ -19,7 +19,11 @@
     "guard:names": "node scripts/guard-names.ts",
     "audit:directories": "node packages/plannet-directory-check/bin/audit-directories.ts",
     "audit:sites": "node scripts/audit-sites.ts",
-    "record": "node scripts/record-demo.ts"
+    "record": "node scripts/record-demo.ts",
+    "rough-cut": "node scripts/rough-cut.ts",
+    "skill:test": "node --test --test-timeout=60000 \"skill/test/*.test.ts\"",
+    "skill:start": "node skill/src/endpoint.ts",
+    "mutations": "node verify/mutations.ts"
   },
   "dependencies": {
     "@fontsource/nunito": "5.3.0",
@@ -28,6 +32,9 @@
     "@modelcontextprotocol/ext-apps": "2.0.3",
     "@modelcontextprotocol/node": "2.1.1",
     "@modelcontextprotocol/server": "2.3.1",
+    "ask-sdk-core": "^2.14.0",
+    "ask-sdk-express-adapter": "^2.14.0",
+    "ask-sdk-model": "^1.86.0",
     "zod": "4.6.5"
   },
   "devDependencies": {

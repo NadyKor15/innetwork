@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280, initial-scale=1">
+<title>InNetwork 04 Booked</title>
+<script>if(/[?&]theme=light/.test(location.search))document.documentElement.dataset.theme='light'</script>
+<style>
+/* InNetwork design tokens v2 (docs: STYLE.md §3). Form from the Alexa+ add-on design guide, colour ours.
+   Surfaces: option B "like Alexa" (Nadya's pick 2026-10-11T04:16:46Z). Dark is the default; light via [data-theme="light"].
+   Base canvas 768x480; Echo Show 8 renders it at zoom 1.667 (1280x800). All sizes below are base px. */
+:root {
+  /* surfaces */
+  --screen: #14181E;
+  --card: #14181E;
+  --card-inner: #1B2028;
+  --hairline: #2A303A;             /* decoration only (1.3:1) */
+  /* text (white with alpha on dark) */
+  --text-1: #FFFFFF;
+  --text-2: rgba(255, 255, 255, 0.72);
+  --text-3: rgba(255, 255, 255, 0.48); /* minimum for any text */
+  --on-accent: #17111C;            /* text on coral and any light tile (8.1:1) */
+  /* family members (thin frame, dot, left bar - never a large fill) */
+  --mom: #FF8C6B;
+  --older: #B49CFF;
+  --youngest: #4FD1C5;
+  /* statuses (always with an icon and a word, never colour alone) */
+  --fits: #7FE0A8;                 /* outline check, no filled circle */
+  --rose: #FF8FA3;                 /* set aside, reason text */
+  --unknown: #F2D06B;              /* "?" in an outline */
+  --file: #8CB8FF;                 /* source FILE */
+  /* the one bright fill in the product: the "Allow" action */
+  --accent: #FF8C6B;
+  --accent-text: #17111C;
+  /* mom's window under her visits: 15% coral on the card */
+  --mom-window: rgba(255, 140, 107, 0.15);
+  /* type scale (Alexa+ add-on guide, base px) */
+  --display1: 48px; --display2: 40px; --display3: 32px; --display4: 28px; --display5: 24px;
+  --headline1: 20px; --headline2: 18px;
+  --body1: 16px; --body2: 14px; --body3: 12px;  /* body3 = minimum for customer-facing text */
+  --label1: 10px;                                 /* badges and axis labels only; label2 (8) not used */
+  /* spacing, radii, icons */
+  --sp-2: 2px; --sp-6: 6px; --sp-8: 8px; --sp-12: 12px; --sp-16: 16px; --sp-20: 20px; --sp-24: 24px;
+  --r-card: 16px; --r-inner: 12px; --r-badge: 8px; --r-pill: 999px;
+  --icon-s: 16px; --icon-m: 20px; --icon-l: 24px;
+  --font: "Nunito", ui-rounded, system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme: dark;
+}
+:root[data-theme="light"] {
+  --screen: #FAF9FB;
+  --card: #FFFFFF;
+  --card-inner: #FAF9FB;
+  --hairline: #E6E2EA;
+  --text-1: #17111C;
+  --text-2: rgba(23, 17, 28, 0.72);
+  --text-3: rgba(23, 17, 28, 0.60);
+  --on-accent: #FFFFFF;
+  --mom: #B4462A;
+  --older: #6A4FCF;
+  --youngest: #0F7F76;
+  --fits: #1E7D4C;
+  --rose: #B42D4A;
+  --unknown: #8A6A00;
+  --file: #2F5FB3;
+  --accent: #B4462A;
+  --accent-text: #FFFFFF;
+  --mom-window: rgba(180, 70, 42, 0.10);
+  color-scheme: light;
+}
+/* own variables (derived from the tokens, theme-aware) */
+:root {
+  --routine: color-mix(in srgb, var(--text-1) 10%, var(--card-inner));
+  --dot-earlier: color-mix(in srgb, var(--mom) 40%, var(--card-inner));
+  --shift: 24px;            /* header row height; all content sits below it */
+}
+@font-face { font-family: "Nunito"; src: url("fonts/nunito-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+@font-face { font-family: "Nunito"; src: url("fonts/nunito-latin-600-normal.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
+@font-face { font-family: "Nunito"; src: url("fonts/nunito-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: block; }
+@font-face { font-family: "Nunito"; src: url("fonts/nunito-latin-800-normal.woff2") format("woff2"); font-weight: 800; font-style: normal; font-display: block; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { zoom: 1.667; overflow: hidden; background: var(--screen); }
+body {
+  width: 768px; height: 480px; overflow: hidden; position: relative;
+  background: var(--screen); color: var(--text-1);
+  font-family: var(--font); -webkit-font-smoothing: antialiased;
+}
+.nw { white-space: nowrap; }
+
+/* top bar: add-on logo top-left (guide), demo data top-right */
+.topbar {
+  height: var(--shift); padding: 0 var(--sp-24);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.brand { display: flex; align-items: center; gap: var(--sp-8); height: var(--shift); }
+.brand svg { display: block; height: 12px; width: auto; }
+.brand-name { font-size: var(--body2); font-weight: 700; line-height: 16px; color: var(--text-1); white-space: nowrap; }
+.demo { font-size: var(--label1); line-height: 12px; color: var(--text-3); white-space: nowrap; }
+
+/* hero */
+.hero { padding-left: 22.4px; margin-top: 20.7px; }
+.title {
+  display: flex; align-items: flex-start; height: 44px;
+  font-size: var(--display2); font-weight: 800; line-height: 44px; letter-spacing: 0.7px;
+  color: var(--text-1); white-space: nowrap;
+}
+.title-check { display: block; width: 32px; height: 27px; margin-left: 11.8px; margin-top: 7.4px; flex: none; }
+.subtitle {
+  height: 28px; margin-top: -0.2px; padding-left: 1.4px;
+  font-size: var(--display5); font-weight: 700; line-height: 28px; letter-spacing: -0.45px;
+  color: var(--text-2); white-space: nowrap;
+}
+
+/* cards */
+.card { background: var(--card); border: 1px solid var(--hairline); border-radius: var(--r-card); }
+.cards {
+  display: grid; grid-template-columns: 365.9px 374.3px; column-gap: var(--sp-6);
+  width: 746.2px; height: 191.3px; margin: 13.3px 0 0 11.1px;
+}
+
+/* visits list (left) */
+.visits { padding: 14.7px 10px 13px 11.1px; }
+.visit-list { list-style: none; display: flex; flex-direction: column; gap: 6.8px; }
+.visit {
+  height: 35.3px; display: flex; align-items: center;
+  background: var(--card-inner); border-radius: var(--r-inner);
+}
+.dot { flex: none; width: 11.1px; height: 11.1px; border-radius: var(--r-pill); background: var(--mom); margin-left: 10.2px; margin-right: 16px; }
+.visit-text { font-size: var(--body2); font-weight: 600; line-height: 17px; letter-spacing: 0.13px; color: var(--text-1); padding-right: var(--sp-8); }
+.visit--earlier .dot { background: var(--dot-earlier); }
+.visit--earlier .visit-text { font-size: var(--body3); font-weight: 400; line-height: 15px; letter-spacing: -0.25px; color: var(--text-2); }
+.visit-note { color: var(--text-3); }
+
+/* compact week (right) */
+.week { padding: 12.35px 0 0 5.8px; }
+.week-grid {
+  display: grid; grid-template-columns: 69.2px 63.7px 70px 68.5px 65.6px; column-gap: 5.6px;
+}
+.day { position: relative; display: flex; flex-direction: column; }
+.day + .day::before {
+  content: ""; position: absolute; left: -3.3px; top: -1.45px; width: 1px; height: 170.4px;
+  background: var(--hairline);
+}
+.day-head { height: 31.65px; text-align: center; font-size: var(--body3); font-weight: 600; line-height: 14px; color: var(--text-1); }
+.day-head span { display: block; white-space: nowrap; }
+.slot { border-radius: var(--r-inner); position: relative; }
+.slot--routine { height: 38px; background: var(--routine); }
+.slot--window { height: 45px; margin: 5.3px 0; background: var(--mom-window); }
+.routine-label {
+  padding: 2.5px 2px 0 5.2px;
+  font-size: var(--label1); font-weight: 600; line-height: 11px; color: var(--text-1);
+}
+.routine-label span { white-space: nowrap; }
+.routine-label .time { display: block; }
+.chip {
+  position: absolute; left: 5.6px; right: 5.6px; height: 18px;
+  background: var(--mom); color: var(--on-accent); border-radius: var(--r-badge);
+  font-size: var(--label1); font-weight: 700; line-height: 18px; text-align: center; white-space: nowrap;
+}
+
+/* confirmation bands */
+.band {
+  display: flex; align-items: center; width: 746px; margin-left: 11.1px;
+  padding-left: 19px;
+}
+.band--sent { height: 56.9px; margin-top: 10.4px; }
+.band--cancel { height: 56.6px; margin-top: 7px; }
+.band-icon { flex: none; width: 24px; height: 29px; display: flex; align-items: center; justify-content: center; color: var(--text-2); }
+.band-icon svg { display: block; }
+.band-text { margin-left: 23.8px; font-size: var(--headline1); font-weight: 600; line-height: 24px; color: var(--text-1); }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <svg class="logo-mark" viewBox="0 0 76 28" width="33" height="12" role="img" aria-label="InNetwork">
+      <circle cx="14" cy="14" r="13" fill="var(--mom)"/>
+      <circle cx="35" cy="14" r="13" fill="var(--older)"/>
+      <circle cx="56" cy="14" r="13" fill="var(--youngest)"/>
+    </svg>
+    <span class="brand-name">InNetwork</span>
+  </div>
+  <span class="demo">demo data</span>
+</header>
+
+<main class="screen">
+  <section class="hero">
+    <h1 class="title"><span class="title-text">Booked · 3 visits</span><svg class="title-check" viewBox="0 0 32 27" aria-label="booked"><path d="M3.4 15 L11.1 23.2 L29.1 2.9" fill="none" stroke="var(--fits)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round"/></svg></h1>
+    <p class="subtitle">All between 8:30 and 11, while he's at daycare</p>
+  </section>
+
+  <div class="cards">
+    <section class="card visits" aria-label="Booked visits">
+      <ul class="visit-list">
+        <li class="visit"><span class="dot"></span><span class="visit-text"><span class="nw">Tue Oct 20</span> · <span class="nw">9:00 AM</span> · <span>Primary care</span></span></li>
+        <li class="visit"><span class="dot"></span><span class="visit-text"><span class="nw">Tue Oct 20</span> · <span class="nw">10:15 AM</span> · <span>OB-GYN</span></span></li>
+        <li class="visit"><span class="dot"></span><span class="visit-text"><span class="nw">Fri Oct 23</span> · <span class="nw">9:30 AM</span> · <span>Dermatology</span></span></li>
+        <li class="visit visit--earlier"><span class="dot"></span><span class="visit-text"><span class="nw">Thu Oct 22</span> · <span class="nw">9:15 AM</span> · <span>Gastroenterology</span> · <span class="visit-note">booked earlier</span></span></li>
+      </ul>
+    </section>
+
+    <section class="card week" aria-label="Week Mon Oct 19 to Fri Oct 23">
+      <div class="week-grid">
+        <div class="day">
+          <div class="day-head"><span>Mon</span><span>Oct 19</span></div>
+          <div class="slot slot--routine"><div class="routine-label">Daycare <span>drop-off</span><span class="time">7:50–8:15</span></div></div>
+          <div class="slot slot--window"></div>
+          <div class="slot slot--routine"><div class="routine-label">Daycare <span>pick-up</span><span class="time">11:45–12:10</span></div></div>
+        </div>
+        <div class="day">
+          <div class="day-head"><span>Tue</span><span>Oct 20</span></div>
+          <div class="slot slot--routine"></div>
+          <div class="slot slot--window"><span class="chip" style="top:3.7px">9:00 AM</span><span class="chip" style="top:24px">10:15 AM</span></div>
+          <div class="slot slot--routine"></div>
+        </div>
+        <div class="day">
+          <div class="day-head"><span>Wed</span><span>Oct 21</span></div>
+          <div class="slot slot--routine"></div>
+          <div class="slot slot--window"></div>
+          <div class="slot slot--routine"></div>
+        </div>
+        <div class="day">
+          <div class="day-head"><span>Thu</span><span>Oct 22</span></div>
+          <div class="slot slot--routine"></div>
+          <div class="slot slot--window"><span class="chip" style="top:9px">9:15 AM</span></div>
+          <div class="slot slot--routine"></div>
+        </div>
+        <div class="day">
+          <div class="day-head"><span>Fri</span><span>Oct 23</span></div>
+          <div class="slot slot--routine"></div>
+          <div class="slot slot--window"><span class="chip" style="top:13px">9:30 AM</span></div>
+          <div class="slot slot--routine"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="card band band--sent">
+    <span class="band-icon"><svg viewBox="0 0 42 51" width="20.3" height="24.7" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2.2 H30 L40.6 13 V42.2 a6.7 6.7 0 0 1 -6.7 6.7 H8.9 a6.7 6.7 0 0 1 -6.7 -6.7 V8.9 a6.7 6.7 0 0 1 6.7 -6.7 Z"/><path d="M29.5 3 V13.6 H40"/><path d="M13 18.3 H23.3 M13 27.5 H31.5 M13 37 H23.3"/></svg></span>
+    <span class="band-text">Details sent to your Alexa app and email</span>
+  </section>
+  <section class="card band band--cancel">
+    <span class="band-icon"><svg viewBox="0 0 41 58" width="19.9" height="28.1" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.7" stroke-linecap="round" stroke-linejoin="round"><rect x="12.1" y="2.7" width="17" height="32.9" rx="8.5"/><path d="M2.05 26 A18.55 18.55 0 0 0 39.15 26"/><path d="M20.6 43.2 V55 M11 56.3 H29.7"/></svg></span>
+    <span class="band-text">Say "cancel" anytime</span>
+  </section>
+</main>
+</body>
+</html>

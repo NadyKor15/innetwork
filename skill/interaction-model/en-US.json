@@ -1,0 +1,19 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "in network",
+      "intents": [
+        { "name": "CheckupStatusIntent", "slots": [], "samples": [
+          "what's next on my checkup plan", "what is next on my checkup plan", "what's left on my checkup plan", "what is left on my checkup plan",
+          "what's left on my checkup", "what's on my checkup plan", "checkup plan", "my checkup year", "what's booked for my checkup" ] },
+        { "name": "AllowIntent", "slots": [], "samples": [ "allow", "I allow", "yes allow", "allow it" ] },
+        { "name": "AMAZON.HelpIntent", "samples": [] },
+        { "name": "AMAZON.StopIntent", "samples": [] },
+        { "name": "AMAZON.CancelIntent", "samples": [] },
+        { "name": "AMAZON.NavigateHomeIntent", "samples": [] },
+        { "name": "AMAZON.FallbackIntent", "samples": [] }
+      ],
+      "types": []
+    }
+  }
+}
