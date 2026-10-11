@@ -73,6 +73,8 @@ The parent is the user. A child appears as a relative label ("Youngest") and a p
 
 **0 of 8,506 public directory records (4,170 practitioner roles + 4,336 locations) state what patient ages are seen.** The counter is proven on a synthetic record ("Ages 3 and up" → counted; plain record → not). 283 requests, 3 errors (Molina's daily quota → "not measured" for Molina, said so in the report). Also measured: office hours on 16.8% of records; a "new patients" flag on 88.6%; 25 of 474 NPPES individuals found by ZIP practice somewhere else unless `address_purpose=LOCATION` is added. Full table: `docs/AUDIT-2026-10-11.md`.
 
+`npm run audit:sites` — 30 in-network orthopedists (Plan A, Orlando): the directory carries a website for none of them; of the practice pages we could find, 6 opened for an automated read and **0 of 6 state a patient age**, 10 refused automated reads (robots.txt or 403), 10 practitioners had no own page, and 4 of 30 are listed at Orlando addresses while their current profiles place them in another state. Only totals are published (`docs/AUDIT-SITES-2026-10-11.md`); the second measurement is thin and we say so.
+
 Public insurer directories don't say what age a doctor sees, so there is nowhere to check in advance — you find out on the phone.
 
 ## Platform findings
