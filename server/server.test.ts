@@ -92,6 +92,8 @@ test("demo story: opening for three people -> book -> checkup plan -> book -> ne
     ["Dermatology", "Dr. Ottilie Brennagh", "Fri Oct 23 · 9:30 AM", null],
   ]);
   assert.equal(card.week.window.label, "8:30–11:15 · while he's at daycare");
+  assert.deepEqual(card.week.days.map((d: any) => d.key), ["2026-10-19", "2026-10-20", "2026-10-21", "2026-10-22", "2026-10-23"], "the week of the visits, not of the sandbox clock");
+  assert.deepEqual(card.week.visits.filter((v: any) => v.state === "proposed").map((v: any) => [v.dayKey, v.start, v.label]), [["2026-10-20", "09:00", "Primary care"], ["2026-10-20", "10:15", "OB-GYN"], ["2026-10-23", "09:30", "Dermatology"]]);
   assert.equal(card.lab, "Lab work — may need an order from your doctor · after your primary care visit");
   assert.equal(card.prompt, 'Say "yes" to book these three');
   const kids = card.week.visits.filter((v: any) => v.state === "other_member").map((v: any) => [v.dayKey, v.start, v.label]);
@@ -100,6 +102,7 @@ test("demo story: opening for three people -> book -> checkup plan -> book -> ne
   assert.equal(b2.structuredContent.speech, "Booked. Details in your Alexa app and email. Say cancel anytime.");
   assert.equal(b2.structuredContent.card.title, "Booked · 3 visits");
   assert.equal(b2.structuredContent.card.subtitle, "All between 8:30 and 11, while he's at daycare");
+  assert.equal(b2.structuredContent.card.week.days[0].key, "2026-10-19");
   assert.deepEqual(b2.structuredContent.card.list.map((l: any) => [l.when, l.label, l.earlier]), [
     ["Tue Oct 20 · 9:00 AM", "Primary care", false], ["Tue Oct 20 · 10:15 AM", "OB-GYN", false], ["Fri Oct 23 · 9:30 AM", "Dermatology", false], ["Thu Oct 22 · 9:15 AM", "Gastroenterology", true],
   ]);

@@ -1,0 +1,10 @@
+{
+  "manifest": {
+    "publishingInformation": {
+      "locales": { "en-US": { "name": "In Network", "summary": "Your checkup year: in-network visits booked around your family routine (demo).", "description": "Development-mode demo of the InNetwork add-on: says and shows what is booked on the adult's checkup plan and what is left. Fictional household; not published.", "examplePhrases": ["Alexa, open in network", "what's next on my checkup plan"], "keywords": [] } },
+      "isAvailableWorldwide": false, "distributionCountries": ["US"], "testingInstructions": "Development only. Fictional household.", "category": "HEALTH_AND_FITNESS"
+    },
+    "apis": { "custom": { "endpoint": { "uri": "https://<your-tls-endpoint>/", "sslCertificateType": "Wildcard" }, "interfaces": [{ "type": "ALEXA_PRESENTATION_APL", "supportedViewports": [{ "mode": "HUB", "shape": "RECTANGLE", "minWidth": 960, "maxWidth": 1280, "minHeight": 480, "maxHeight": 800 }] }] } },
+    "privacyAndCompliance": { "allowsPurchases": false, "usesPersonalInfo": false, "isChildDirected": false, "isExportCompliant": true, "containsAds": false }
+  }
+}
