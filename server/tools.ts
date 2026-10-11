@@ -323,7 +323,7 @@ export function buildMcpServer({ era, services: sv, assetBase = "" }: BuildOptio
         // Every time shown passes the routine and the family calendar (N12), not just the proposal's.
         const placed = booked || proposal?.recordId === r.recordId ? null : placeVisit({ slots: slotsOf(sv, r), role: lk.member.role, routine: u.routine, tz, now, planYearEnd: sv.scenario.planYearEndMs, calendar: busyOf(u, now), officeId: r.officeId, bookOverRoutine: false });
         const when = booked ? booked.start : proposal?.recordId === r.recordId ? proposal.start : placed?.ok ? placed.slot.start : null;
-        return { name: r.name, specialtyLabel: r.specialtyLabel, checks: [d.network.reason, ...(child && d.age.status === "sees_this_age" ? ["sees this age"] : []), ...(!child && r.newPatients === "accepting" ? ["accepting new patients"] : [])], when: when ? C.whenLabel(when, tz) : null, booked: !!booked };
+        return { name: r.name, specialtyLabel: r.specialtyLabel, checks: [d.network.reason, ...(child && d.age.status === "sees_this_age" ? ["sees this age"] : []), ...(!child && r.newPatients === "accepting" ? ["accepting new patients"] : [])], when: when ? C.whenLabel(when, tz) : null, booked: !!booked, bookedLabel: booked ? "Booked" : null };
       });
       const kindOf = (d: Decision): C.SetAsideCard["setAside"][number]["kind"] => (d.network.status === "out_of_network" ? "network" : d.newPatients.status === "not_accepting" ? "new_patients" : "age");
       const card: C.SetAsideCard = {
@@ -356,9 +356,10 @@ export function buildMcpServer({ era, services: sv, assetBase = "" }: BuildOptio
       const kinds = new Set<string>();
       const compact = ranked.setAside.filter((d) => { const k = d.network.status === "out_of_network" ? "n" : d.newPatients.status === "not_accepting" ? "p" : "a"; if (kinds.has(k)) return false; kinds.add(k); return true; }).slice(0, 2);
       return {
-        member: C.colorOf(lk.member, u.family), memberLabel: lk.member.label, ageLabel: child && lk.ageBand ? lk.ageBand.label : null, planLabel: lk.plan.label, specialty: SPECIALTY_WORDS[lk.specialty].field,
+        // The age band is shown where it explains the row (someone was set aside for age), as in the picked design.
+        member: C.colorOf(lk.member, u.family), memberLabel: lk.member.label, ageLabel: child && lk.ageBand && ranked.setAside.some((d) => d.age.status === "does_not_see_this_age") ? lk.ageBand.label : null, planLabel: lk.plan.label, specialty: SPECIALTY_WORDS[lk.specialty].field,
         setAside: compact.map((d) => ({ name: lk.records.get(d.recordId)!.name, reason: d.customerReason! })),
-        fit: fitRec && fitDec ? { name: fitRec.name, detail: fitDetail(fitDec, fitRec, child), note: noteFor(u, fitRec), when: C.whenLabel(existing?.start ?? proposal!.start, tz), booked: !!existing } : null,
+        fit: fitRec && fitDec ? { name: fitRec.name, detail: fitDetail(fitDec, fitRec, child), note: noteFor(u, fitRec), when: C.whenLabel(existing?.start ?? proposal!.start, tz), booked: !!existing, bookedLabel: existing ? "Booked" : null } : null,
         askOffice: fitRec ? [] : ranked.askOffice.map((d) => ({ name: lk.records.get(d.recordId)!.name, reason: d.customerReason! })),
         none: fitRec ? null : lk.answer.ok ? "No doctor in this plan's network nearby yet" : "Not confirmed — directory didn't answer",
       };
@@ -470,7 +471,7 @@ export function buildMcpServer({ era, services: sv, assetBase = "" }: BuildOptio
       // Same screen as the proposal, rows now booked (screen 01 after "yes").
       const rows: C.FamilyRow[] = booked.map((v) => {
         const m = after.family.find((x) => x.memberId === v.memberId)!;
-        return { member: C.colorOf(m, after.family), memberLabel: m.label, ageLabel: null, planLabel: planOf(sv, m).label, specialty: itemField(v.item), setAside: [], fit: { name: v.doctorName, detail: `in ${planOf(sv, m).label}'s network`, note: after.notes.find((n) => n.doctorName === v.doctorName)?.text ?? null, when: C.whenLabel(v.start, tz), booked: true }, askOffice: [], none: null };
+        return { member: C.colorOf(m, after.family), memberLabel: m.label, ageLabel: null, planLabel: planOf(sv, m).label, specialty: itemField(v.item), setAside: [], fit: { name: v.doctorName, detail: `in ${planOf(sv, m).label}'s network`, note: after.notes.find((n) => n.doctorName === v.doctorName)?.text ?? null, when: C.whenLabel(v.start, tz), booked: true, bookedLabel: "Booked" }, askOffice: [], none: null };
       });
       const card: C.FamilyMatchCard = { view: "family-match", title: `${cap(S.numberWord(rows.length))} people · ${S.numberWord(rows.length)} doctors · ${S.numberWord(rows.length)} plans`, rows, footnote: "Details sent to your Alexa app and email", prompt: null, booked: true };
       return reply("family-match", [S.BOOKED_SHORT], card, { booked: booked.map((v) => ({ visitId: v.visitId, start: new Date(v.start).toISOString(), confirmation: v.sandboxConfirmation })) }, steps);
@@ -639,7 +640,7 @@ function bookedCard(sv: Services, u: UserState, made: Visit[], now: number): C.B
   return {
     view: "booked", title,
     subtitle: allIn && win ? `All between ${clock(win.startMin)} and ${clock(Math.ceil(lastEnd / 60) * 60)}, while ${win.whoPronoun} at ${win.routineWord}` : null,
-    list: [...made, ...earlier].map((v) => ({ when: `${C.whenLabel(v.start, tz)}`, label: itemField(v.item), earlier: !ids.has(v.visitId), member: adult ? C.colorOf(adult, u.family) : "mom" })),
+    list: [...made, ...earlier].map((v) => ({ when: `${C.whenLabel(v.start, tz)}`, label: itemField(v.item), earlier: !ids.has(v.visitId), note: ids.has(v.visitId) ? null : "booked earlier", member: adult ? C.colorOf(adult, u.family) : "mom" })),
     week: mine.length ? C.weekModel({ weekStart: C.mondayOf(mine[0].start, tz), tz, routine: u.routine, window: win, visits: mine.map((v) => C.weekVisitOf(v, tz, adult!, u.family, ids.has(v.visitId) ? "booked" : "booked_earlier")) }) : null,
     notices: [{ icon: "doc", text: "Details sent to your Alexa app and email" }, { icon: "mic", text: 'Say "cancel" anytime' }],
   };

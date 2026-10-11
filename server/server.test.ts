@@ -71,11 +71,13 @@ test("demo story: opening for three people -> book -> checkup plan -> book -> ne
   assert.equal(rows[0].fit.detail, "in Plan A's network · accepting new patients");
   assert.equal(rows[2].fit.detail, "in Plan C's network · sees this age");
   assert.equal(rows[2].ageLabel, "under 2");
+  assert.equal(rows[1].ageLabel, null, "the older child's age is not shown: nobody was set aside for age in that row");
   const n4 = () => { const f = JSON.parse(readFileSync(join(DATA, "users", `${user}.json`), "utf8")); assert.deepEqual(forbiddenKeys(f), []); assert.ok(!/under 2|under two|"5"/.test(JSON.stringify(f.pending ?? {})), "age band not in pending"); };
   n4(); // N4 holds while the proposal waits for a yes, not only at the end
   const booked = await s.call("book_visit", { confirm: true });
   assert.equal(booked.structuredContent.speech, "Booked.");
   assert.equal(booked.structuredContent.card.booked, true);
+  assert.deepEqual(booked.structuredContent.card.rows.map((r: any) => r.fit.bookedLabel), ["Booked", "Booked", "Booked"]);
 
   // Scene 1: checkup year
   const plan = await s.call("checkup_year", { action: "plan", items: ["primary_care", "ob_gyn", "dermatology", "gastroenterology", "lab_work"], oop_met: true });
@@ -106,6 +108,7 @@ test("demo story: opening for three people -> book -> checkup plan -> book -> ne
   assert.deepEqual(b2.structuredContent.card.list.map((l: any) => [l.when, l.label, l.earlier]), [
     ["Tue Oct 20 · 9:00 AM", "Primary care", false], ["Tue Oct 20 · 10:15 AM", "OB-GYN", false], ["Fri Oct 23 · 9:30 AM", "Dermatology", false], ["Thu Oct 22 · 9:15 AM", "Gastroenterology", true],
   ]);
+  assert.deepEqual(b2.structuredContent.card.list.map((l: any) => l.note), [null, null, null, "booked earlier"]);
 
   // New session: state lives on the server
   await s.transport.terminateSession(); await s.client.close();
@@ -130,6 +133,7 @@ test("demo story: opening for three people -> book -> checkup plan -> book -> ne
   const c = aside.structuredContent.card;
   assert.equal(c.view, "set-aside");
   assert.deepEqual(c.heading, { member: "youngest", specialty: "Orthopedics", forWhom: "for your youngest (under 2)", plan: "on Plan C" });
+  assert.deepEqual(c.fits.map((f: any) => f.bookedLabel), ["Booked", null]);
   assert.deepEqual(c.fits.map((f: any) => [f.name, f.specialtyLabel, f.checks, f.when, f.booked]), [
     ["Dr. Imogen Pellworth", "Pediatric orthopedics", ["in Plan C's network", "sees this age"], "Mon Oct 19 · 1:30 PM", true],
     ["Dr. Corwin Pembrook", "Orthopedics", ["in Plan C's network", "sees this age"], "Tue Oct 20 · 2:00 PM", false],
