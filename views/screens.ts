@@ -104,7 +104,6 @@ const CONSENT_ICON: Record<ConsentCard["lines"][number]["icon"], () => SVGElemen
   chat: () => svg("svg", { viewBox: "0 0 24 24" }, svg("path", { d: "M12.3 2.4C18.1 2.4 22.6 6.1 22.6 10.6C22.6 15.1 18.1 18.8 12.3 18.8C11 18.8 9.8 18.6 8.7 18.3L2.8 21L4.4 16.2C2.8 14.7 2 12.8 2 10.6C2 6.1 6.5 2.4 12.3 2.4Z" }), svg("circle", { class: "dot", cx: "8", cy: "10.6", r: "1.3" }), svg("circle", { class: "dot", cx: "12.3", cy: "10.6", r: "1.3" }), svg("circle", { class: "dot", cx: "16.6", cy: "10.6", r: "1.3" })),
 };
 const bookedTag = (word: string) => el("span", "booked-tag", ICON.booked(), word);
-const BOOKED_WORD = "Booked"; // SPEC §2: rows get "Booked" after the yes
 
 // ---------- 01 family match ----------
 function familyMatch(c: FamilyMatchCard): Node[] {
@@ -143,7 +142,7 @@ function lane(r: FamilyRow): HTMLElement {
     const bodyEl = el("div", "doctor-body", el("p", "doctor-name", r.fit.name), detail);
     if (r.fit.note) bodyEl.append(el("p", "note-chip", `Your note: "${r.fit.note}"`));
     bodyEl.append(el("p", "doctor-time", r.fit.when));
-    if (r.fit.booked) bodyEl.append(el("p", "booked-line", bookedTag(BOOKED_WORD)));
+    if (r.fit.bookedLabel) bodyEl.append(el("p", "booked-line", bookedTag(r.fit.bookedLabel)));
     doc.append(ICON.fmCheck(), bodyEl);
   } else {
     doc.append(ICON.fmUnknown(), el("div", "doctor-body", el("p", "doctor-detail", r.none ?? "")));
@@ -306,7 +305,7 @@ function booked(c: BookedCard): Node[] {
   for (const l of c.list) {
     const [date, time] = splitOnce(l.when, " · ");
     const text = el("span", "visit-text", nw(date), ...(time ? [" · ", nw(time)] : []), " · ", el("span", null, l.label));
-    if (l.earlier) text.append(" · ", el("span", "visit-note", "booked earlier"));
+    if (l.note) text.append(" · ", el("span", "visit-note", l.note));
     list.append(el("li", `visit${l.earlier ? " visit--earlier" : ""}${l.member !== "mom" ? ` visit--${l.member}` : ""}`, el("span", "dot"), text));
   }
   const visits = el("section", "card visits", list);
@@ -371,7 +370,7 @@ function setAside(c: SetAsideCard): Node[] {
       if (f.when) {
         const [date, time] = splitOnce(f.when, " · ");
         const slot = el("p", "doc-card__slot", date, ...(time ? [" ", dotSep(), " ", time] : []));
-        if (f.booked) slot.append(bookedTag(BOOKED_WORD));
+        if (f.bookedLabel) slot.append(bookedTag(f.bookedLabel));
         card.append(slot);
       }
       grid.append(card);

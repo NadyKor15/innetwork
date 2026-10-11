@@ -9,139 +9,139 @@
     {
       "beat": 1,
       "label": "consent",
-      "startMs": 2511,
-      "endMs": 20612
+      "startMs": 2532,
+      "endMs": 20643
     },
     {
       "beat": 2,
       "label": "opening: three people, three plans",
-      "startMs": 20612,
-      "endMs": 31083
+      "startMs": 20643,
+      "endMs": 31119
     },
     {
       "beat": 3,
       "label": "checkup year around the routine",
-      "startMs": 31083,
-      "endMs": 75061
+      "startMs": 31119,
+      "endMs": 75117
     },
     {
       "beat": 4,
       "label": "new session: state kept",
-      "startMs": 75061,
-      "endMs": 81791
+      "startMs": 75117,
+      "endMs": 81842
     },
     {
       "beat": 5,
       "label": "set aside before you call",
-      "startMs": 81791,
-      "endMs": 91879
+      "startMs": 81842,
+      "endMs": 91925
     },
     {
       "beat": 6,
       "label": "behind the scenes",
-      "startMs": 91879,
-      "endMs": 99108
+      "startMs": 91925,
+      "endMs": 99121
     }
   ],
   "cues": [
     {
-      "atMs": 2512,
+      "atMs": 2534,
       "who": "mom",
       "text": "Alexa, open In Network.",
       "beat": 1
     },
     {
-      "atMs": 3517,
+      "atMs": 3543,
       "who": "alexa",
       "text": "Before we start, here's what I use and why. This information is not a substitute for professional medical advice. Consult a healthcare provider for personal medical decisions. Say allow to continue.",
       "beat": 1
     },
     {
-      "atMs": 16821,
+      "atMs": 16846,
       "who": "mom",
       "text": "Allow.",
       "beat": 1
     },
     {
-      "atMs": 17309,
+      "atMs": 17339,
       "who": "alexa",
       "text": "Thanks. You can change this anytime.",
       "beat": 1
     },
     {
-      "atMs": 20613,
+      "atMs": 20643,
       "who": "mom",
       "text": "Alexa, I need a gastroenterologist, an allergist for my five-year-old, and an orthopedist for my little one. He's under two.",
       "beat": 2
     },
     {
-      "atMs": 24442,
+      "atMs": 24475,
       "who": "alexa",
       "text": "One doctor each, in their own plan. Book all three?",
       "beat": 2
     },
     {
-      "atMs": 29345,
+      "atMs": 29379,
       "who": "mom",
       "text": "Yes.",
       "beat": 2
     },
     {
-      "atMs": 29779,
+      "atMs": 29816,
       "who": "alexa",
       "text": "Booked.",
       "beat": 2
     },
     {
-      "atMs": 31083,
+      "atMs": 31120,
       "who": "mom",
       "text": "Alexa, I've met my out-of-pocket max this year. I want a full checkup: primary care, OB-GYN, a dermatologist, a gastroenterologist and lab work. Book them all before my plan resets.",
       "beat": 3
     },
     {
-      "atMs": 36514,
+      "atMs": 36559,
       "who": "alexa",
       "text": "After the out-of-pocket max, plans usually pay 100% of covered in-network care until the plan year ends — per HealthCare.gov.",
       "beat": 3
     },
     {
-      "atMs": 44467,
+      "atMs": 44516,
       "who": "alexa",
       "text": "Your gastroenterologist is already booked for Thursday. Tuesday, same clinic: primary care, then OB-GYN. Friday: dermatology. All between 8:30 and 11, while he's at daycare. Lab work may need an order — I'll add it after primary care. Book these three?",
       "beat": 3
     },
     {
-      "atMs": 69320,
+      "atMs": 69370,
       "who": "mom",
       "text": "Yes.",
       "beat": 3
     },
     {
-      "atMs": 69758,
+      "atMs": 69813,
       "who": "alexa",
       "text": "Booked. Details in your Alexa app and email. Say cancel anytime.",
       "beat": 3
     },
     {
-      "atMs": 76281,
+      "atMs": 76337,
       "who": "mom",
       "text": "Alexa, what's left on my checkup plan?",
       "beat": 4
     },
     {
-      "atMs": 77687,
+      "atMs": 77738,
       "who": "alexa",
       "text": "Four booked. Lab work comes after Tuesday's visit.",
       "beat": 4
     },
     {
-      "atMs": 81791,
+      "atMs": 81843,
       "who": "mom",
       "text": "Alexa, find an orthopedist for my youngest. He's under two.",
       "beat": 5
     },
     {
-      "atMs": 83776,
+      "atMs": 83822,
       "who": "alexa",
       "text": "I checked six nearby. Two don't see children under three, one isn't in his plan. These two fit.",
       "beat": 5

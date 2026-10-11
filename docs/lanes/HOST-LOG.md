@@ -1,6 +1,6 @@
 # HOST lane log: Echo Show 8 simulator, MCP App views, demo, recording, browser checks
 
-Branch `lane/host` (worktree `innetwork-alexa-wt-host`). Started 2026-10-11 04:47:55Z, this entry 05:19Z (`date -u`).
+Branch `lane/host` (worktree `innetwork-alexa-wt-host`). Started 2026-10-11 04:47:55Z; entry 05:19Z, updated 05:23Z after main brought `src/directory` and the card labels (`date -u`).
 
 ## What is built
 
@@ -13,42 +13,45 @@ Branch `lane/host` (worktree `innetwork-alexa-wt-host`). Started 2026-10-11 04:4
 | Browser checks | `verify/browser.ts`, `verify/tools/{render,dom_check,_pw}.cjs`, `verify/tools/compare_to_image.py` | `runBrowserChecks({hostUrl, screensDir, mcpUrl})` -> Row[] (B1–B19). It is also standalone: `node verify/browser.ts --host <url> [--out docs/screens]`. |
 | Recording | `scripts/record-demo.ts` (`npm run record`) | Silent 1920x1080 capture of Play demo -> `docs/video/innetwork-demo-silent.webm` + `.mp4` (ffmpeg), `innetwork-demo-alexa-lines.srt`, `innetwork-demo-beats.json` `{video, durationMs, beats[{beat,label,startMs,endMs}], cues[{atMs, who, text, beat}]}`. Subtitles are not burned in. |
 
-## Checks run (all on the server's test double `server/dev-directory.ts`: `src/directory` is not in this tree yet)
+## Checks run
 
-- `npm test`: 34/34 pass.
-- `node verify/guards.ts`: G5–G8 PASS. G5 runs over views/host/fixtures/demo.ts with 0 placeholder hits; the control finds 5.
-- `node verify/browser.ts --host http://127.0.0.1:5288/` (dev host on 8897/5288/5289): **19/19 PASS**.
-  - B1 protocol 2025-11-25, session, 9 tools.
-  - B2 frame: 1280x800, caption + simulated mark, no img, no page scroll.
-  - B3 tap Allow -> ui/message -> consent.
-  - B4 N1/N7: fixed lines, 0 tools/call.
-  - B5 "no": 0 book_visit.
-  - B6 second origin; CSP `default-src 'none'`, `font-src` = MCP origin, `connect-src 'none'`; host unreachable from the view.
-  - B7 demo done; views in order.
-  - B8 scene 1 parts shown in order: 7.6 s, then 16.0 s.
-  - B9 renders 11 = initialized 11; teardowns 10.
-  - B10 theme 7/7 via host-context-changed.
-  - B11 zoom 1.667 / echo-show-8 everywhere; Nunito loaded.
-  - B12 dom_check 15 documents clean.
-  - B13 host page clean at every step.
-  - B14 0 forbidden strings.
-  - B15 07 lines match /devinfo.
-  - B16 compares (table below).
-  - B17 0 console errors.
-  - B18 bands 7/7.
-  - B19 controls light on synthetic defects and stay dark on clean text.
+On `src/directory` (recorded samples, `DIRECTORY_MODE=fixture`), after `git merge main` (d483919: lane/data + card labels):
+- `npm test`: 48 tests, 47 pass, 0 fail, 1 skipped (live).
+- `node verify/guards.ts`: G5–G8 PASS. G5 covers views/host/fixtures/demo.ts with 0 placeholder hits; the control finds 5.
+- Clean install: in a throwaway worktree (lane/host + lane/data, since removed), `npm ci` then `npm run demo` came up: `/healthz` ok, host 200.
+- `node scripts/demo.ts` on 8897/5288/5289 + `node verify/browser.ts --host http://127.0.0.1:5288/`: **19/19 PASS**.
+  - B1: protocol 2025-11-25, session, 9 tools.
+  - B2: frame is 1280x800 with the caption and the simulated mark; no img; no page scroll.
+  - B3: tapping Allow -> ui/message -> consent.
+  - B4: N1/N7 give fixed lines with 0 tools/call.
+  - B5: "no" makes 0 book_visit calls.
+  - B6: second origin. CSP has `default-src 'none'`, `font-src` = the MCP origin, `connect-src 'none'`. The host is unreachable from the view.
+  - B7: the demo reaches done; views come in order.
+  - B8: scene 1 parts appear in order, 7.6 s then 16.0 s.
+  - B9: renders 11 = initialized 11; teardowns 10.
+  - B10: theme 7/7 via host-context-changed.
+  - B11: zoom 1.667 / echo-show-8 everywhere; Nunito loaded.
+  - B12: dom_check clean in 15 documents.
+  - B13: host page clean at every step, nothing below 1080.
+  - B14: 0 forbidden strings.
+  - B15: the 07 lines match /devinfo.
+  - B16: compares, see the table.
+  - B17: 0 console errors.
+  - B18: bands 7/7.
+  - B19: the controls light on synthetic defects and stay dark on clean text.
+- Earlier, the same 19/19 also passed on the test double `server/dev-directory.ts` (`node scripts/dev-host.ts`).
 
 | Screen | Snapshot | vs reference screen.html, edgeF1 / lumaMAE | light vs reference light | vs picked reference.png | dom_check in the view |
 |---|---|---|---|---|---|
-| 01 family match | `docs/screens/beat-2-family-match.png` | 0.994 / 0.2 | 0.993 / 0.2 | 0.349 / 21.8 | 0 wrapped · 0 clipped · 0 overlaps · fits |
+| 01 family match | `docs/screens/beat-2-family-match.png` | 1.000 / 0.0 | 1.000 / 0.0 | 0.349 / 21.8 | 0 wrapped · 0 clipped · 0 overlaps · fits |
 | 02 checkup year | `docs/screens/beat-4-checkup-year.png` | 1.000 / 1.2 | 0.970 / 1.3 | 0.254 / 24.9 | 0 · 0 · 0 · fits |
-| 03 visit plan | `docs/screens/beat-3-visit-plan.png` | 0.957 / 1.6 | 0.969 / 1.7 | 0.374 / 22.3 | 0 · 0 · 0 · fits |
+| 03 visit plan | `docs/screens/beat-3-visit-plan.png` | 0.963 / 1.5 | 0.976 / 1.6 | 0.378 / 22.4 | 0 · 0 · 0 · fits |
 | 04 booked | `docs/screens/beat-3-booked.png` | 0.999 / 0.1 | 1.000 / 0.2 | 0.280 / 23.8 | 0 · 0 · 0 · fits |
 | 05 set aside | `docs/screens/beat-5-set-aside.png` | 0.996 / 0.2 | 0.996 / 0.2 | 0.370 / 18.5 | 0 · 0 · 0 · fits |
 | 06 before we start | `docs/screens/beat-1-consent.png` | 1.000 / 0.0 | 1.000 / 0.0 | 0.330 / 18.9 | 0 · 0 · 0 · fits |
-| 07 behind the scenes | `docs/screens/beat-6-developer.png` | 0.951 / 2.4 | 0.963 / 2.3 | 0.825 / 9.6 | 0 · 0 · 0 · fits (board) |
+| 07 behind the scenes | `docs/screens/beat-6-developer.png` | 0.947 / 2.3 | 0.958 / 2.3 | 0.821 / 9.5 | 0 · 0 · 0 · fits (board) |
 
-The "picked image" numbers are low on purpose; the reference notes give the same 0.25–0.37. The picked images have no 24-px top row, a purple background and filled check circles; STYLE removed all three. The light shots are `docs/screens/light-<view>.png`. Extra steps: `beat-1-consent-allowed.png`, `beat-2-family-match-booked.png`. Side-by-side compares are in `logs/screens-compare/compare-0N-{dark,light,picked}.png` and `metrics.json` (not committed).
+The "picked image" numbers are low on purpose; the reference notes give the same 0.25–0.37. The picked images have no 24-px top row, a purple background and filled check circles; STYLE removed all three. The light shots are `docs/screens/light-<view>.png`. Extra steps: `beat-1-consent-allowed.png`, `beat-2-family-match-booked.png`. Side-by-side compares are in `logs/screens-compare/compare-0N-{dark,light,picked}.png` and `metrics.json` (not committed). On 07 the live strip says "no live directory call in this run" and every plan shows FIXTURE: that is the truth in fixture mode.
 
 Checked by eye (Read), 3 rounds:
 1. Every beat against its reference shot. The 06 font was off and the view fell back to the 600 weight. Cause: a CSS comment containing `*/` swallowed the 400 `@font-face`. Fixed.
@@ -57,20 +60,17 @@ Checked by eye (Read), 3 rounds:
 
 Differences from the references that remain on purpose:
 - 03 tiles sit strictly by their times. The `--nudge` of the reference is not carried over.
-- 01/05 show "Booked" after the yes (SPEC §2).
-- The 03 source line is the directory's provenance ("test double" on the double).
-- 01 shows "Older child (5)" because the card carries `ageLabel: "5"` (see below).
+- 01/05 show `bookedLabel` and 04 shows `list[].note` from the card. The view has no words of its own.
+- The 03 source line is the record provenance from the data ("In-network · directory record captured Oct 11, names and offices changed").
 
-Recording (dev double, normal pace): `npm run record` -> demo done, 6 beats, 17 cues (9 Alexa), 108.0 s. Frames at 20/45/70/100 s were looked at.
+Recording (on `src/directory`, fixture, normal pace, 05:24Z): `node scripts/record-demo.ts --host http://127.0.0.1:5288/` -> demo done, 6 beats, 17 cues (8 mom, 9 Alexa), 108.0 s; webm 11.7 MB, mp4 10.9 MB (git-ignored); `docs/video/innetwork-demo-alexa-lines.srt` and `docs/video/innetwork-demo-beats.json` are committed. I looked at the frames at 25/60/95 s (and at 20/45/70/100 s of the first take on the double); the first take showed the 3-line subtitle problem, which is fixed.
 
-## Not done yet / needs the tree to move
+## Not done / not checked
 
-- `npm run demo` and `npm run verify` on `src/directory` (recorded samples, live probes) have not been run here: `src/directory/index.ts` is not in main yet. As soon as it lands: `git merge main` -> `npm ci` -> `npm run demo` -> `node verify/browser.ts` -> replace `docs/screens/*` and re-record. The snapshots in `docs/screens` are from the test double (source line "test double", every step FIXTURE).
-- The 07 LIVE strip and the per-plan LIVE FHIR badge come from `/devinfo.probes[planId].ok`. They were only exercised with no probes (fixture). In auto mode they should show the live line; check with `DIRECTORY_MODE=auto`.
+- The 07 LIVE strip and the per-plan LIVE FHIR badge come from `/devinfo.probes[planId].ok` and the live step summary. They have only been seen with no probes (fixture). I did not run `DIRECTORY_MODE=auto` here, to spare the Molina daily quota for the recording. Check in auto mode: the live line must show the directory, ref, ms and time; the count line must show the live step summary.
+- The full `npm run verify` (verify/run.ts on 8797/5188) was not run from this lane, so as not to collide with the build lane's ports. `runBrowserChecks` has the signature that run.ts imports.
 
 ## Needed from the server (build lane)
 
 1. ✅ done in main 56df6cd: `checkup_year` plan week started from "now + 1 day" (Mon Oct 12) instead of the week of the visits.
-2. Screen 04, earlier booking: the card has only `earlier: boolean`, and the view writes "booked earlier" itself (the same word the server uses on 02). Better: give a string in `BookedCard.list[].note`, so that the view writes nothing from its own head.
-3. Screen 01: the older child's row gets `ageLabel: "5"` -> the view shows "Older child (5)". SPEC §2/§8 show "Older child · Plan B · Allergy" with no age, and only the youngest shows "(under 2)". If the age should not be shown for the older child, pass `ageLabel: null` there. The view only renders what comes in.
-4. Screens 01/05 after booking: "Booked" is a host-side word for `fit.booked` / `fits[].booked`. If you want it in the data, add a `bookedLabel`.
+2. ✅ done in main b30cabf: `BookedCard.list[].note`, `fit.bookedLabel` / `fits[].bookedLabel`, `ageLabel` only where it explains a set-aside. The view now renders them from data. "Older child (5)" is gone; 01 vs reference = 1.000.
