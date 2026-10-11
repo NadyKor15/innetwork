@@ -1,0 +1,38 @@
+{
+ "planId": "plan-a",
+ "specialty": "gastroenterology",
+ "capturedAt": "2026-10-11T05:13:06.897Z",
+ "zip": "32803",
+ "source": {
+  "directory": "Florida Blue provider directory (FHIR Plan-Net)",
+  "request": "https://apigw.bcbsfl.com/interop/interop-developer-portal/emr/api/v1/fhir/PractitionerRole?location.address-postalcode=32803&_count=100&identifier=https%3A%2F%2Fwww.edifecs.com%2Ffhir%2Fcms-organization%2Fplan_id%7CBCHPPO&specialty%3Atext=INTERNAL+MEDICINE&_include=PractitionerRole%3Alocation&_include=PractitionerRole%3Apractitioner",
+  "capturedFromZip": "32803"
+ },
+ "realFieldsKept": [
+  "PractitionerRole structure and profile",
+  "network-reference (Organization/8139751 = PPC-2026-BCHPPO)",
+  "plan_id identifier (BCHPPO)",
+  "newpatients extension",
+  "specialty as the directory states it (INTERNAL MEDICINE)",
+  "Location and Practitioner structure"
+ ],
+ "changed": [
+  "practitioner name (fictional, passed guard:names)",
+  "gender (to match the fictional name)",
+  "NPI (replaced by an impossible number starting with 0)",
+  "office: name, street address, ZIP, phone and resource ids (fictional office)",
+  "the role's other locations removed",
+  "vendor hash identifiers zeroed"
+ ],
+ "nppesTaxonomy": {
+  "PractitionerRole/fx-a-gastroenterology": [
+   "207RG0100X"
+  ]
+ },
+ "nppesNote": "The directory files gastroenterologists under INTERNAL MEDICINE; the captured practitioner's NPPES taxonomy was 207RG0100X (Gastroenterology) at capture time.",
+ "distances": {
+  "PractitionerRole/fx-a-gastroenterology": 3.4
+ },
+ "distanceNote": "Fictional office: the distance is fictional too (the directory's Location has no position).",
+ "provenance": "directory record captured Oct 11, names and offices changed"
+}

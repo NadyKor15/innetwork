@@ -60,7 +60,7 @@ export const whenLabel = (t: number, tz: string) => { const z = toZoned(t, tz); 
 export type FamilyRow = {
   member: MemberColor; memberLabel: string; ageLabel: string | null; planLabel: string; specialty: string;
   setAside: { name: string; reason: string }[];
-  fit: { name: string; detail: string; note: string | null; when: string; booked: boolean } | null;
+  fit: { name: string; detail: string; note: string | null; when: string; booked: boolean; bookedLabel: string | null } | null;
   askOffice: { name: string; reason: string }[];
   none: string | null;
 };
@@ -71,7 +71,7 @@ export type SetAsideCard = {
   view: "set-aside";
   heading: { member: MemberColor; specialty: string; forWhom: string; plan: string };
   fitsTitle: string;
-  fits: { name: string; specialtyLabel: string; checks: string[]; when: string | null; booked: boolean }[];
+  fits: { name: string; specialtyLabel: string; checks: string[]; when: string | null; booked: boolean; bookedLabel: string | null }[];
   setAsideTitle: string;
   setAside: { name: string; reason: string; kind: "age" | "network" | "new_patients" | "ask_office" | "not_confirmed" }[];
   footer: string | null;
@@ -89,7 +89,7 @@ export type VisitPlanCard = {
 // ---------- 04 booked ----------
 export type BookedCard = {
   view: "booked"; title: string; subtitle: string | null;
-  list: { when: string; label: string; earlier: boolean; member: MemberColor }[];
+  list: { when: string; label: string; earlier: boolean; note: string | null; member: MemberColor }[];
   week: WeekModel | null;
   notices: { icon: "doc" | "mic"; text: string }[];
 };

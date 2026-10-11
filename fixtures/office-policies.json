@@ -1,0 +1,7 @@
+[
+  { "officeId": "fx:office:c1", "minAgeMonths": 0, "maxAgeMonths": 215, "source": "office_confirmed_at_booking", "learnedAt": "2026-09-02", "demo": true },
+  { "officeId": "fx:office:c2", "minAgeMonths": 0, "maxAgeMonths": null, "source": "office_confirmed_at_booking", "learnedAt": "2026-09-14", "demo": true },
+  { "officeId": "fx:office:c3", "minAgeMonths": 36, "maxAgeMonths": null, "source": "office_confirmed_at_booking", "learnedAt": "2026-08-21", "demo": true },
+  { "officeId": "fx:office:c4", "minAgeMonths": 36, "maxAgeMonths": null, "source": "office_confirmed_at_booking", "learnedAt": "2026-09-30", "demo": true },
+  { "officeId": "fx:office:b1", "minAgeMonths": 24, "maxAgeMonths": 215, "source": "office_confirmed_at_booking", "learnedAt": "2026-09-09", "demo": true }
+]
