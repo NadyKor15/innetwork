@@ -36,7 +36,7 @@ export function molinaToRecord(r: NormalizedRole, specialty: Specialty, asOf: st
   };
 }
 
-export type MolinaOptions = { timeoutMs?: number; fetchImpl?: FetchLike; counters?: Counters; maxLocations?: number };
+export type MolinaOptions = { timeoutMs?: number; fetchImpl?: FetchLike; counters?: Counters; maxLocations?: number; deadlineMs?: number };
 
 /** Plan C lookup (slow: one request per location). Never throws: failure -> ok:false (N8). */
 export async function lookupMolina(q: { specialty: Specialty; zip: string; network: string; networkIds: string[] }, opts: MolinaOptions = {}): Promise<DirectoryAnswer> {
@@ -46,7 +46,11 @@ export async function lookupMolina(q: { specialty: Specialty; zip: string; netwo
   const client = new FhirClient(MOLINA.base, { timeoutMs: opts.timeoutMs ?? 6000, fetchImpl: opts.fetchImpl, counters });
   const ref = client.url("Location", { "address-postalcode": q.zip });
   try {
-    const res = await rolesInZip(MOLINA, client, { zip: q.zip, network: q.network, maxLocations: opts.maxLocations ?? 120 });
+    const res = await rolesInZip(MOLINA, client, { zip: q.zip, network: q.network, maxLocations: opts.maxLocations ?? 120, deadlineMs: opts.deadlineMs });
+    if (res.deadlineHit) {
+      // A partial count is not a count: report it as not answered (N8) with how far we got.
+      return { ok: false, error: `deadline ${opts.deadlineMs} ms: asked ${res.locationsAsked} of ${res.locationsSeen} locations (one request per location)`, mode: "live", directory: MOLINA_LABEL, ms: Math.round(performance.now() - t0), asOf, ref };
+    }
     const records = res.roles.filter((r) => isSpecialty(q.specialty, r.specialtyCodes, r.specialtyTexts)).map((r) => molinaToRecord(r, q.specialty, asOf, `${ref} -> PractitionerRole?location=<id>&network=${q.network}`));
     const failed = res.failures.length;
     if (failed > 0 && res.locationsSeen > 0 && failed >= res.locationsSeen) {
