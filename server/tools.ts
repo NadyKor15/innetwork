@@ -590,7 +590,8 @@ export function buildMcpServer({ era, services: sv, assetBase = "" }: BuildOptio
       ...earlierLines.map((l) => C.weekVisitOf({ start: l.visit.start, end: l.visit.end, item: l.item }, tz, adult, u.family, "booked_earlier")),
       ...others.map((v) => C.weekVisitOf(v, tz, u.family.find((m) => m.memberId === v.memberId)!, u.family, "other_member")),
     ];
-    const firstStart = Math.min(...[...proposals.map((p) => p.start), ...earlierLines.map((l) => l.visit.start), now + 86400000]);
+    const starts = [...proposals.map((p) => p.start), ...earlierLines.map((l) => l.visit.start)];
+    const firstStart = starts.length ? Math.min(...starts) : now + 86400000; // the week of the visits, not of "now"
     const docRows: C.VisitPlanCard["doctors"] = [
       ...proposals.map((p) => { const l = lines.find((x) => x.status === "proposed" && x.item === p.item) as Extract<CheckupLine, { status: "proposed" }>; const d = lookups.get(p.item as Specialty)?.decisions.find((x) => x.recordId === p.recordId); return { start: p.start, row: { specialty: itemField(p.item), name: p.doctorName, when: C.whenLabel(p.start, tz), detail: [d?.network.reason ?? "in network", l.record.newPatients === "accepting" ? "accepting new patients" : null, p.distanceMi !== null ? `${p.distanceMi} mi` : null].filter(Boolean).join(" · "), tag: l.sameClinicWith ? "same clinic" : null, quiet: false } }; }),
       ...earlierLines.map((l) => { const v = u.visits.find((x) => x.recordId === l.visit.recordId && x.start === l.visit.start)!; return { start: v.start, row: { specialty: itemField(v.item), name: v.doctorName, when: C.whenLabel(v.start, tz), detail: [`in ${planOf(sv, adult).label}'s network`, "accepting new patients", v.distanceMi !== null ? `${v.distanceMi} mi` : null].filter(Boolean).join(" · "), tag: "Already booked", quiet: true } }; }),

@@ -2,7 +2,7 @@
   "_about": "Demo household (fictional family) and the sandbox booking partner. The household is what the parent set up earlier (plans, routine, one note); the developer view shows it as SANDBOX. Slots are the sandbox partner's offered times for the fictional doctors; real doctors never get slots (SPEC §4.4, N11). The routine is a weekday routine as label + time only (no names, no places).",
   "now": "2026-10-16T19:45:00-04:00",
   "timeZone": "America/New_York",
-  "zip": "32801",
+  "zip": "32803",
   "planYearEnd": "2026-12-31",
   "visitMinutes": 45,
   "family": [

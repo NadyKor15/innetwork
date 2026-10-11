@@ -67,7 +67,7 @@ const fileOf = (userId: string) => {
 export function emptyUser(userId: string, now: number): UserState {
   return {
     version: 1, userId, createdAt: now, consent: null,
-    profile: { zip: process.env.DEMO_ZIP ?? "32801", timeZone: "America/New_York" },
+    profile: { zip: process.env.DEMO_ZIP ?? "32803", timeZone: "America/New_York" },
     family: [], routine: [], notes: [], checkup: null, visits: [], pending: null, outbox: [], seededFrom: null,
   };
 }
