@@ -61,6 +61,15 @@ re-counted by `npm run audit:directories`.
 - **Workaround:** per-location strategy with a pause (300 ms) and a deadline; warm cache.
 - **Suggestion:** support OR lists and chained `location.address-postalcode`, or document the rate limit.
 
+### F6b. Molina: an undocumented daily call-volume quota stops every request until 00:00 UTC
+- **Task:** capture orthopedic roles of the MMA network around ZIP 32803 (one request per location, paced 250–350 ms, one client at a time).
+- **Steps:** per-location sweep from 04:46Z; at ~05:09Z every request (including `Location?address-postalcode=32806`) → **HTTP 403** `{"statusCode":403,"message":"Out of call volume quota. Quota will be replenished in 18:51:37."}`; re-checked 05:14:55Z → "18:45:05" left, i.e. reset at 2026-10-12 00:00Z. Roughly 1–1.5 thousand Molina requests had been made since 04:40Z (estimate from the sweep logs; not counted exactly).
+- **Expected:** a documented rate/volume limit (headers such as `RateLimit-*` / `Retry-After`), or limits sized for a directory meant for public apps.
+- **Actual:** no header, no documentation; one ZIP costs 40–430 requests (F6), so a few ZIPs exhaust the day.
+- **Severity:** high for a live consumer (the directory is gone for the rest of the UTC day; the add-on must show "not confirmed — directory didn't answer", N8).
+- **Workaround:** probe for Plan C uses the live answer of `npm run directory:warm` (its own asOf) and otherwise a deadline; the samples were built from Molina answers captured before the stop (`fixtures/directory/plan-c.orthopedics.meta.json` says which fields changed).
+- **Suggestion:** publish the quota and send `Retry-After`; support OR lists / chained search so a ZIP is one request (F6).
+
 ### F7. Molina: Florida Medicaid MMA plan has an empty `network`; roles carry the program as network
 - **Task:** link "Plan C" (Florida Medicaid managed care) to the practitioners in its network.
 - **Steps:** `GET {molina}/InsurancePlan?name=MMA` → 3 plans (`FL-QMXBP1516` "MANAGED MEDICAL ASSISTANCE (MMA) BENEFIT PLAN", `FL-QMXBP8053`, `FL-QMXBP8115`), all with `network: []`; `GET {molina}/Organization/15` = plannet-Network "Medicaid-Managed Medical Assistance (MMA)"; `PractitionerRole?network=15` total **189,732**; 2026-10-11 04:4xZ.

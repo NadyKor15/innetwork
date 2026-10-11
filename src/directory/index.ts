@@ -6,7 +6,8 @@
 //            otherwise from a live request with the timeout. Plan B is never streamed inside a voice turn (minutes):
 //            without a warm cache it answers ok:false with the reason.
 //   auto     cards from the recorded samples; probe() asks the live directory how many in-network practitioners it
-//            has for the specialty in the ZIP (Plan A Florida Blue; Plan C Molina with a deadline; Plan B has no API).
+//            has for the specialty in the ZIP: Plan A Florida Blue (live, ~0.1-10 s); Plan C Molina (the live answer
+//            `directory:warm` fetched, with its own asOf, else live with a deadline); Plan B has no API (null).
 //
 // Nothing here throws to the caller: a directory that fails or times out comes back as ok:false (N8).
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
@@ -120,6 +121,13 @@ export function createDirectory(opts: DirectoryOptions = {}): DirectoryService {
       const src = PLAN_SOURCES[plan.planId];
       if (!src || src.kind === "qhp-file") return null; // marketplace plans publish files, not an API (no live probe)
       const asOf = new Date().toISOString();
+      if (src.directory === "molina") {
+        // Molina answers one location per request and has a daily call quota: a ZIP costs ~40-200 requests. The probe
+        // uses the live answer `directory:warm` fetched (fresh within cacheMaxAgeMs, its own asOf), else asks live
+        // with a deadline; a partial sweep is reported as not answered, never as a count.
+        const cached = readCache(cacheDir, plan.planId, specialty, zip, cacheMaxAgeMs);
+        if (cached && cached.ok) return { ok: true, mode: "live", directory: cached.directory, ms: cached.ms, asOf: cached.asOf, ref: cached.ref, inNetworkCount: cached.inNetworkCount ?? cached.records.length };
+      }
       try {
         const a = await liveLookup(plan, specialty, zip, { timeoutMs, fetchImpl: opts.fetchImpl, withNames: false, molinaDeadlineMs });
         if (!a.ok) return { ok: false, mode: "live", directory: a.directory, ms: a.ms, asOf: a.asOf, ref: a.ref, error: a.error };

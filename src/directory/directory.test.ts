@@ -245,6 +245,18 @@ test("specialty mapping: gastroenterology is never matched by 'INTERNAL MEDICINE
   assert.equal(isSpecialty("pediatrics", [], ["Pediatric Dentist"]), false);
 });
 
+test("Plan C probe: Molina's live answer from directory:warm (own asOf) when fresh; otherwise live, and a failure is ok:false", async () => {
+  const cacheDir = mkdtempSync(join(tmpdir(), "dircache-"));
+  const failing: FetchLike = async () => new Response(JSON.stringify({ statusCode: 403, message: "Out of call volume quota." }), { status: 403 });
+  const d = createDirectory({ mode: "auto", cacheDir, fetchImpl: failing, molinaDeadlineMs: 2000 });
+  const cold = await d.probe!(plan("plan-c"), "orthopedics", "32803");
+  assert.ok(cold && cold.ok === false && /403/.test(cold.error), JSON.stringify(cold));
+  const asOf = new Date(Date.now() - 3600_000).toISOString();
+  writeCache(cacheDir, "plan-c", "orthopedics", "32803", { ok: true, records: [], mode: "live", directory: "Molina", ms: 41000, asOf, ref: "molina sweep", inNetworkCount: 7 });
+  const warm = await d.probe!(plan("plan-c"), "orthopedics", "32803");
+  assert.ok(warm && warm.ok && warm.inNetworkCount === 7 && warm.asOf === asOf && /warm cache/.test(warm.ref), JSON.stringify(warm));
+});
+
 const LIVE = process.env.LIVE === "1";
 test("LIVE: Florida Blue answers for Plan A (dermatology, ZIP 32803) with a non-zero in-network count", { skip: !LIVE }, async () => {
   _resetNetworkIndexCache();
