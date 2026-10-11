@@ -1,0 +1,833 @@
+{
+ "command": "audit-directories --zips 32801,32803,32806 --max-locations 30 --max-pages 10 --out-dir docs",
+ "startedAt": "2026-10-11T05:23:00.172Z",
+ "finishedAt": "2026-10-11T05:27:05.852Z",
+ "zips": [
+  "32801",
+  "32803",
+  "32806"
+ ],
+ "specialties": [
+  "primary_care",
+  "ob_gyn",
+  "gastroenterology",
+  "dermatology",
+  "allergy",
+  "orthopedics"
+ ],
+ "directories": [
+  {
+   "key": "florida-blue",
+   "label": "Florida Blue provider directory (FHIR Plan-Net)",
+   "base": "https://apigw.bcbsfl.com/interop/interop-developer-portal/emr/api/v1/fhir",
+   "strategy": "chain",
+   "records": 4932,
+   "roles": 1618,
+   "locations": 3314,
+   "age_policy_published": 0,
+   "age_examples": [],
+   "hours_present": 0,
+   "hours_conflict": 0,
+   "newpatients_present": 4932,
+   "newpatients_values": {
+    "newpt": 4932
+   },
+   "scene_roles": 614,
+   "scene_by_specialty": {
+    "primary_care": 271,
+    "ob_gyn": 179,
+    "dermatology": 53,
+    "orthopedics": 108,
+    "allergy": 3
+   },
+   "npis": 1592,
+   "roles_per_npi_mean": 1.02,
+   "roles_per_npi_max": 3,
+   "duplicate_role_triples": 19,
+   "roles_with_specialty": 1618,
+   "roles_with_npi": 1618,
+   "zips": [
+    {
+     "zip": "32801",
+     "roles": 29,
+     "locations": 607,
+     "failures": 0,
+     "truncated": false,
+     "ms": 1271,
+     "ref": "https://apigw.bcbsfl.com/interop/interop-developer-portal/emr/api/v1/fhir/PractitionerRole?location.address-postalcode=32801&_count=100&identifier=https%3A%2F%2Fwww.edifecs.com%2Ffhir%2Fcms-organization%2Fplan_id%7CBCHPPO&specialty%3Atext=FAMILY&_include=PractitionerRole%3Alocation&_include=PractitionerRole%3Apractitioner"
+    },
+    {
+     "zip": "32803",
+     "roles": 1373,
+     "locations": 2811,
+     "failures": 0,
+     "truncated": false,
+     "ms": 16990,
+     "ref": "https://apigw.bcbsfl.com/interop/interop-developer-portal/emr/api/v1/fhir/PractitionerRole?location.address-postalcode=32803&_count=100&identifier=https%3A%2F%2Fwww.edifecs.com%2Ffhir%2Fcms-organization%2Fplan_id%7CBCHPPO&specialty%3Atext=FAMILY&_include=PractitionerRole%3Alocation&_include=PractitionerRole%3Apractitioner"
+    },
+    {
+     "zip": "32806",
+     "roles": 372,
+     "locations": 1373,
+     "failures": 0,
+     "truncated": false,
+     "ms": 5475,
+     "ref": "https://apigw.bcbsfl.com/interop/interop-developer-portal/emr/api/v1/fhir/PractitionerRole?location.address-postalcode=32806&_count=100&identifier=https%3A%2F%2Fwww.edifecs.com%2Ffhir%2Fcms-organization%2Fplan_id%7CBCHPPO&specialty%3Atext=FAMILY&_include=PractitionerRole%3Alocation&_include=PractitionerRole%3Apractitioner"
+    }
+   ],
+   "errors": {
+    "network": 0,
+    "timeout": 0,
+    "http": 0,
+    "parse": 0,
+    "outcome": 0
+   },
+   "http_status": {},
+   "requests": 34,
+   "ms": 23763,
+   "notes": [
+    "roles filtered by https://www.edifecs.com/fhir/cms-organization/plan_id|BCHPPO (one plan, so a practitioner is not counted once per plan)",
+    "server-side specialty:text per specialty: FAMILY, GENERAL PRACTICE, OBSTETRICS, INTERNAL MEDICINE, DERMATOLOGY, ALLERGY, ORTHOPAEDIC"
+   ]
+  },
+  {
+   "key": "molina",
+   "label": "Molina Healthcare provider directory (FHIR Plan-Net)",
+   "base": "https://api.interop.molinahealthcare.com/providerdirectory",
+   "strategy": "per-location",
+   "records": 0,
+   "roles": 0,
+   "locations": 0,
+   "age_policy_published": 0,
+   "age_examples": [],
+   "hours_present": 0,
+   "hours_conflict": 0,
+   "newpatients_present": 0,
+   "newpatients_values": {},
+   "scene_roles": 0,
+   "scene_by_specialty": {},
+   "npis": 0,
+   "roles_per_npi_mean": null,
+   "roles_per_npi_max": null,
+   "duplicate_role_triples": 0,
+   "roles_with_specialty": 0,
+   "roles_with_npi": 0,
+   "zips": [
+    {
+     "zip": "32801",
+     "roles": 0,
+     "locations": 0,
+     "failures": 1,
+     "truncated": false,
+     "ms": 339,
+     "ref": "https://api.interop.molinahealthcare.com/providerdirectory/Location?address-postalcode=32801&_count=100"
+    },
+    {
+     "zip": "32803",
+     "roles": 0,
+     "locations": 0,
+     "failures": 1,
+     "truncated": false,
+     "ms": 292,
+     "ref": "https://api.interop.molinahealthcare.com/providerdirectory/Location?address-postalcode=32803&_count=100"
+    },
+    {
+     "zip": "32806",
+     "roles": 0,
+     "locations": 0,
+     "failures": 1,
+     "truncated": false,
+     "ms": 71,
+     "ref": "https://api.interop.molinahealthcare.com/providerdirectory/Location?address-postalcode=32806&_count=100"
+    }
+   ],
+   "errors": {
+    "network": 0,
+    "timeout": 0,
+    "http": 3,
+    "parse": 0,
+    "outcome": 0
+   },
+   "http_status": {
+    "403": 3
+   },
+   "requests": 3,
+   "ms": 702,
+   "notes": [
+    "up to 30 locations per ZIP, one request per location"
+   ]
+  },
+  {
+   "key": "uhc-optum",
+   "label": "UnitedHealthcare / Optum provider directory (FHIR Plan-Net)",
+   "base": "https://flex.optum.com/fhirpublic/R4",
+   "strategy": "chain",
+   "records": 1604,
+   "roles": 1500,
+   "locations": 104,
+   "age_policy_published": 0,
+   "age_examples": [],
+   "hours_present": 776,
+   "hours_conflict": 0,
+   "newpatients_present": 1500,
+   "newpatients_values": {
+    "newpt": 1500
+   },
+   "scene_roles": 149,
+   "scene_by_specialty": {
+    "dermatology": 11,
+    "orthopedics": 32,
+    "ob_gyn": 28,
+    "primary_care": 40,
+    "gastroenterology": 33,
+    "allergy": 5
+   },
+   "npis": 149,
+   "roles_per_npi_mean": 2.29,
+   "roles_per_npi_max": 14,
+   "duplicate_role_triples": 113,
+   "roles_with_specialty": 435,
+   "roles_with_npi": 341,
+   "zips": [
+    {
+     "zip": "32801",
+     "roles": 500,
+     "locations": 25,
+     "failures": 0,
+     "truncated": true,
+     "ms": 23836,
+     "ref": "https://flex.optum.com/fhirpublic/R4/PractitionerRole?location.address-postalcode=32801&_count=50&_include=PractitionerRole%3Alocation&_include=PractitionerRole%3Apractitioner"
+    },
+    {
+     "zip": "32803",
+     "roles": 500,
+     "locations": 37,
+     "failures": 0,
+     "truncated": true,
+     "ms": 29678,
+     "ref": "https://flex.optum.com/fhirpublic/R4/PractitionerRole?location.address-postalcode=32803&_count=50&_include=PractitionerRole%3Alocation&_include=PractitionerRole%3Apractitioner"
+    },
+    {
+     "zip": "32806",
+     "roles": 500,
+     "locations": 42,
+     "failures": 0,
+     "truncated": true,
+     "ms": 36180,
+     "ref": "https://flex.optum.com/fhirpublic/R4/PractitionerRole?location.address-postalcode=32806&_count=50&_include=PractitionerRole%3Alocation&_include=PractitionerRole%3Apractitioner"
+    }
+   ],
+   "errors": {
+    "network": 0,
+    "timeout": 0,
+    "http": 0,
+    "parse": 0,
+    "outcome": 0
+   },
+   "http_status": {},
+   "requests": 30,
+   "ms": 89721,
+   "notes": []
+  },
+  {
+   "key": "cigna",
+   "label": "Cigna provider directory (FHIR Plan-Net)",
+   "base": "https://fhir.cigna.com/ProviderDirectory/v1",
+   "strategy": "per-location",
+   "records": 210,
+   "roles": 120,
+   "locations": 90,
+   "age_policy_published": 0,
+   "age_examples": [],
+   "hours_present": 50,
+   "hours_conflict": 0,
+   "newpatients_present": 208,
+   "newpatients_values": {
+    "newpt": 202,
+    "existptonly": 23
+   },
+   "scene_roles": 19,
+   "scene_by_specialty": {
+    "dermatology": 2,
+    "primary_care": 3,
+    "ob_gyn": 10,
+    "orthopedics": 4
+   },
+   "npis": 63,
+   "roles_per_npi_mean": 1.9,
+   "roles_per_npi_max": 7,
+   "duplicate_role_triples": 20,
+   "roles_with_specialty": 116,
+   "roles_with_npi": 120,
+   "zips": [
+    {
+     "zip": "32801",
+     "roles": 23,
+     "locations": 30,
+     "failures": 0,
+     "truncated": true,
+     "ms": 28364,
+     "ref": "https://fhir.cigna.com/ProviderDirectory/v1/Location?address-postalcode=32801&_count=50"
+    },
+    {
+     "zip": "32803",
+     "roles": 56,
+     "locations": 30,
+     "failures": 0,
+     "truncated": true,
+     "ms": 20676,
+     "ref": "https://fhir.cigna.com/ProviderDirectory/v1/Location?address-postalcode=32803&_count=50"
+    },
+    {
+     "zip": "32806",
+     "roles": 41,
+     "locations": 30,
+     "failures": 0,
+     "truncated": true,
+     "ms": 28786,
+     "ref": "https://fhir.cigna.com/ProviderDirectory/v1/Location?address-postalcode=32806&_count=50"
+    }
+   ],
+   "errors": {
+    "network": 0,
+    "timeout": 0,
+    "http": 0,
+    "parse": 0,
+    "outcome": 0
+   },
+   "http_status": {},
+   "requests": 105,
+   "ms": 77829,
+   "notes": [
+    "up to 30 locations per ZIP, one request per location"
+   ]
+  },
+  {
+   "key": "humana",
+   "label": "Humana provider directory (FHIR Plan-Net)",
+   "base": "https://fhir.humana.com/api",
+   "strategy": "revinclude",
+   "records": 1650,
+   "roles": 912,
+   "locations": 738,
+   "age_policy_published": 0,
+   "age_examples": [],
+   "hours_present": 565,
+   "hours_conflict": 0,
+   "newpatients_present": 837,
+   "newpatients_values": {
+    "newpt": 836,
+    "nopt": 22,
+    "existptonly": 7
+   },
+   "scene_roles": 47,
+   "scene_by_specialty": {
+    "ob_gyn": 1,
+    "dermatology": 21,
+    "primary_care": 15,
+    "orthopedics": 3,
+    "gastroenterology": 7
+   },
+   "npis": 0,
+   "roles_per_npi_mean": null,
+   "roles_per_npi_max": null,
+   "duplicate_role_triples": 0,
+   "roles_with_specialty": 722,
+   "roles_with_npi": 0,
+   "zips": [
+    {
+     "zip": "32801",
+     "roles": 278,
+     "locations": 138,
+     "failures": 0,
+     "truncated": false,
+     "ms": 1789,
+     "ref": "https://fhir.humana.com/api/Location?address-postalcode=32801&_revinclude=PractitionerRole%3Alocation&_count=50"
+    },
+    {
+     "zip": "32803",
+     "roles": 343,
+     "locations": 300,
+     "failures": 0,
+     "truncated": true,
+     "ms": 3390,
+     "ref": "https://fhir.humana.com/api/Location?address-postalcode=32803&_revinclude=PractitionerRole%3Alocation&_count=50"
+    },
+    {
+     "zip": "32806",
+     "roles": 291,
+     "locations": 300,
+     "failures": 0,
+     "truncated": true,
+     "ms": 3484,
+     "ref": "https://fhir.humana.com/api/Location?address-postalcode=32806&_revinclude=PractitionerRole%3Alocation&_count=50"
+    }
+   ],
+   "errors": {
+    "network": 0,
+    "timeout": 0,
+    "http": 0,
+    "parse": 0,
+    "outcome": 0
+   },
+   "http_status": {},
+   "requests": 15,
+   "ms": 8673,
+   "notes": []
+  },
+  {
+   "key": "centene",
+   "label": "Centene (Ambetter, Sunshine Health, Wellcare) provider directory (FHIR Plan-Net)",
+   "base": "https://iopc-pd.api.centene.com/iopc/pd/fhir/providerdirectory",
+   "strategy": "per-location",
+   "records": 110,
+   "roles": 20,
+   "locations": 90,
+   "age_policy_published": 0,
+   "age_examples": [],
+   "hours_present": 40,
+   "hours_conflict": 0,
+   "newpatients_present": 60,
+   "newpatients_values": {
+    "newpt": 55,
+    "existptonly": 5
+   },
+   "scene_roles": 10,
+   "scene_by_specialty": {
+    "primary_care": 10
+   },
+   "npis": 7,
+   "roles_per_npi_mean": 1,
+   "roles_per_npi_max": 1,
+   "duplicate_role_triples": 0,
+   "roles_with_specialty": 17,
+   "roles_with_npi": 7,
+   "zips": [
+    {
+     "zip": "32801",
+     "roles": 14,
+     "locations": 30,
+     "failures": 0,
+     "truncated": true,
+     "ms": 10488,
+     "ref": "https://iopc-pd.api.centene.com/iopc/pd/fhir/providerdirectory/Location?address-postalcode=32801&_count=200"
+    },
+    {
+     "zip": "32803",
+     "roles": 5,
+     "locations": 30,
+     "failures": 0,
+     "truncated": true,
+     "ms": 10380,
+     "ref": "https://iopc-pd.api.centene.com/iopc/pd/fhir/providerdirectory/Location?address-postalcode=32803&_count=200"
+    },
+    {
+     "zip": "32806",
+     "roles": 3,
+     "locations": 30,
+     "failures": 0,
+     "truncated": true,
+     "ms": 10124,
+     "ref": "https://iopc-pd.api.centene.com/iopc/pd/fhir/providerdirectory/Location?address-postalcode=32806&_count=200"
+    }
+   ],
+   "errors": {
+    "network": 0,
+    "timeout": 0,
+    "http": 0,
+    "parse": 0,
+    "outcome": 0
+   },
+   "http_status": {},
+   "requests": 96,
+   "ms": 30992,
+   "notes": [
+    "up to 30 locations per ZIP, one request per location"
+   ]
+  }
+ ],
+ "notOpen": [
+  {
+   "key": "aetna",
+   "base": "https://apif1.aetna.com/fhir/v1/providerdirectorydata",
+   "observed": "401 Invalid client id or secret (registration required)"
+  },
+  {
+   "key": "elevance",
+   "base": "https://totalview.healthos.elevancehealth.com/resources/unregistered/api/v1/fhir/cms_mandate/mcd/",
+   "observed": "500 without a token; their document says production requires registration"
+  }
+ ],
+ "nppes": {
+  "rows": [
+   {
+    "zip": "32801",
+    "specialty": "primary_care",
+    "any_address": 30,
+    "location_elsewhere": 17,
+    "location_only": 24,
+    "url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&taxonomy_description=Family+Medicine&postal_code=32801&enumeration_type=NPI-1&limit=200"
+   },
+   {
+    "zip": "32801",
+    "specialty": "ob_gyn",
+    "any_address": 30,
+    "location_elsewhere": 27,
+    "location_only": 30,
+    "url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&taxonomy_description=Obstetrics+%26+Gynecology&postal_code=32801&enumeration_type=NPI-1&limit=200"
+   },
+   {
+    "zip": "32801",
+    "specialty": "gastroenterology",
+    "any_address": 0,
+    "location_elsewhere": 0,
+    "location_only": 0,
+    "url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&taxonomy_description=Gastroenterology&postal_code=32801&enumeration_type=NPI-1&limit=200"
+   },
+   {
+    "zip": "32801",
+    "specialty": "dermatology",
+    "any_address": 4,
+    "location_elsewhere": 1,
+    "location_only": 4,
+    "url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&taxonomy_description=Dermatology&postal_code=32801&enumeration_type=NPI-1&limit=200"
+   },
+   {
+    "zip": "32801",
+    "specialty": "allergy",
+    "any_address": 0,
+    "location_elsewhere": 0,
+    "location_only": 0,
+    "url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&taxonomy_description=Allergy&postal_code=32801&enumeration_type=NPI-1&limit=200"
+   },
+   {
+    "zip": "32801",
+    "specialty": "orthopedics",
+    "any_address": 8,
+    "location_elsewhere": 0,
+    "location_only": 8,
+    "url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&taxonomy_description=Orthopaedic+Surgery&postal_code=32801&enumeration_type=NPI-1&limit=200"
+   },
+   {
+    "zip": "32803",
+    "specialty": "primary_care",
+    "any_address": 49,
+    "location_elsewhere": 14,
+    "location_only": 48,
+    "url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&taxonomy_description=Family+Medicine&postal_code=32803&enumeration_type=NPI-1&limit=200"
+   },
+   {
+    "zip": "32803",
+    "specialty": "ob_gyn",
+    "any_address": 20,
+    "location_elsewhere": 6,
+    "location_only": 19,
+    "url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&taxonomy_description=Obstetrics+%26+Gynecology&postal_code=32803&enumeration_type=NPI-1&limit=200"
+   },
+   {
+    "zip": "32803",
+    "specialty": "gastroenterology",
+    "any_address": 19,
+    "location_elsewhere": 2,
+    "location_only": 19,
+    "url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&taxonomy_description=Gastroenterology&postal_code=32803&enumeration_type=NPI-1&limit=200"
+   },
+   {
+    "zip": "32803",
+    "specialty": "dermatology",
+    "any_address": 4,
+    "location_elsewhere": 0,
+    "location_only": 4,
+    "url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&taxonomy_description=Dermatology&postal_code=32803&enumeration_type=NPI-1&limit=200"
+   },
+   {
+    "zip": "32803",
+    "specialty": "allergy",
+    "any_address": 1,
+    "location_elsewhere": 0,
+    "location_only": 1,
+    "url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&taxonomy_description=Allergy&postal_code=32803&enumeration_type=NPI-1&limit=200"
+   },
+   {
+    "zip": "32803",
+    "specialty": "orthopedics",
+    "any_address": 3,
+    "location_elsewhere": 1,
+    "location_only": 2,
+    "url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&taxonomy_description=Orthopaedic+Surgery&postal_code=32803&enumeration_type=NPI-1&limit=200"
+   },
+   {
+    "zip": "32806",
+    "specialty": "primary_care",
+    "any_address": 97,
+    "location_elsewhere": 36,
+    "location_only": 90,
+    "url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&taxonomy_description=Family+Medicine&postal_code=32806&enumeration_type=NPI-1&limit=200"
+   },
+   {
+    "zip": "32806",
+    "specialty": "ob_gyn",
+    "any_address": 70,
+    "location_elsewhere": 11,
+    "location_only": 70,
+    "url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&taxonomy_description=Obstetrics+%26+Gynecology&postal_code=32806&enumeration_type=NPI-1&limit=200"
+   },
+   {
+    "zip": "32806",
+    "specialty": "gastroenterology",
+    "any_address": 29,
+    "location_elsewhere": 8,
+    "location_only": 25,
+    "url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&taxonomy_description=Gastroenterology&postal_code=32806&enumeration_type=NPI-1&limit=200"
+   },
+   {
+    "zip": "32806",
+    "specialty": "dermatology",
+    "any_address": 17,
+    "location_elsewhere": 8,
+    "location_only": 16,
+    "url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&taxonomy_description=Dermatology&postal_code=32806&enumeration_type=NPI-1&limit=200"
+   },
+   {
+    "zip": "32806",
+    "specialty": "allergy",
+    "any_address": 3,
+    "location_elsewhere": 0,
+    "location_only": 3,
+    "url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&taxonomy_description=Allergy&postal_code=32806&enumeration_type=NPI-1&limit=200"
+   },
+   {
+    "zip": "32806",
+    "specialty": "orthopedics",
+    "any_address": 90,
+    "location_elsewhere": 21,
+    "location_only": 86,
+    "url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&taxonomy_description=Orthopaedic+Surgery&postal_code=32806&enumeration_type=NPI-1&limit=200"
+   }
+  ],
+  "errors": {
+   "network": 0,
+   "timeout": 0,
+   "http": 0,
+   "parse": 0,
+   "outcome": 0
+  },
+  "requests": 36
+ },
+ "qhp": {
+  "rows": [
+   {
+    "issuerId": "13887",
+    "url": "https://22healthplan.com/machine-readable-files/cms-data-index.json",
+    "status": 200,
+    "provider_files": 1,
+    "ms": 1818
+   },
+   {
+    "issuerId": "15833",
+    "url": "https://dentalexchange.guardiandirect.com/secure/json/index.json",
+    "status": 200,
+    "provider_files": 32,
+    "ms": 502
+   },
+   {
+    "issuerId": "15980",
+    "url": "https://apis.humana.com/v1/cms/index.json",
+    "status": 200,
+    "provider_files": 4042,
+    "ms": 724
+   },
+   {
+    "issuerId": "16842",
+    "url": "https://www.bcbsfl.com/DocumentLibrary/Providers/cms/index.json",
+    "status": 200,
+    "provider_files": 52,
+    "ms": 76
+   },
+   {
+    "issuerId": "17121",
+    "url": "https://json.bestlife.com/cms/cms-data-index.json",
+    "status": 200,
+    "provider_files": 2,
+    "ms": 321
+   },
+   {
+    "issuerId": "19898",
+    "url": "https://shc-p-001.sitecorecontenthub.cloud/api/public/content/indexfile.json",
+    "status": 200,
+    "provider_files": 24,
+    "ms": 699
+   },
+   {
+    "issuerId": "21525",
+    "url": "https://d3ul0st9g52g6o.cloudfront.net/ffm/cms-data-index.json",
+    "status": 200,
+    "provider_files": 35,
+    "ms": 180
+   },
+   {
+    "issuerId": "30115",
+    "url": "https://fl-d4h.dentaltotalhealth.com/healthcare-data/FL/cms-data-index.json",
+    "status": 200,
+    "provider_files": 10,
+    "ms": 331
+   },
+   {
+    "issuerId": "30252",
+    "url": "https://www.bcbsfl.com/DocumentLibrary/Providers/cms/index.json",
+    "status": 200,
+    "provider_files": 52,
+    "ms": 76
+   },
+   {
+    "issuerId": "36194",
+    "url": "https://apps.hf.org/applications/dn/cms_json/index.json",
+    "status": 200,
+    "provider_files": 1,
+    "ms": 130
+   },
+   {
+    "issuerId": "43274",
+    "url": "https://api.solsticebenefits.com/v1/Providers/Cms/GetIndex.json",
+    "status": 200,
+    "provider_files": 1,
+    "ms": 250
+   },
+   {
+    "issuerId": "44228",
+    "url": "https://www22.elevancehealth.com/cms-data-index-json/Elevance-Health-Data-Index.json",
+    "status": 200,
+    "provider_files": 31,
+    "ms": 738
+   },
+   {
+    "issuerId": "48121",
+    "url": "https://www.cigna.com/sites/json/cms-data-index.json",
+    "status": 200,
+    "provider_files": 1,
+    "ms": 998
+   },
+   {
+    "issuerId": "48129",
+    "url": "https://cmsdata.providers4you.com/cms-data-index.json",
+    "status": 200,
+    "provider_files": 15,
+    "ms": 620
+   },
+   {
+    "issuerId": "49004",
+    "url": "https://api.centene.com/ambetter/reference/cms-data-index.json",
+    "status": 200,
+    "provider_files": 128,
+    "ms": 252
+   },
+   {
+    "issuerId": "54172",
+    "url": "https://www.molinahealthcare.com/cms/json/index.json",
+    "status": 200,
+    "provider_files": 21,
+    "ms": 522
+   },
+   {
+    "issuerId": "56503",
+    "url": "https://www.fhcp.com/xml/cms-data-index.json",
+    "status": 200,
+    "provider_files": 1,
+    "ms": 251
+   },
+   {
+    "issuerId": "59667",
+    "url": "https://dentaquest.com/getattachment/Marketplace/CMSDataIndex/cms-data-index.json",
+    "status": 200,
+    "provider_files": 3,
+    "ms": 887
+   },
+   {
+    "issuerId": "66966",
+    "url": "https://capitalhealth.com/cms-data-index.json",
+    "status": 200,
+    "provider_files": 1,
+    "ms": 263
+   },
+   {
+    "issuerId": "67926",
+    "url": "https://www.amerihealthcaritasnext.com/cms-data-index.json",
+    "status": 200,
+    "provider_files": 1,
+    "ms": 257
+   },
+   {
+    "issuerId": "68398",
+    "url": "https://www.uhc.com/content/dam/uhcdotcom/en/general/cms-data-index.json",
+    "status": 403,
+    "provider_files": null,
+    "ms": 115
+   },
+   {
+    "issuerId": "74243",
+    "url": "https://www.dominionnational.com/Resources/dominion/index.json",
+    "status": 200,
+    "provider_files": 1,
+    "ms": 225
+   },
+   {
+    "issuerId": "79850",
+    "url": "https://www.cigna.com/sites/json/cms-data-index.json",
+    "status": 200,
+    "provider_files": 1,
+    "ms": 998
+   },
+   {
+    "issuerId": "86382",
+    "url": "https://api.centene.com/ambetter/reference/cms-data-index.json",
+    "status": 200,
+    "provider_files": 128,
+    "ms": 252
+   },
+   {
+    "issuerId": "97725",
+    "url": "https://cms.deltadental.com/index.json",
+    "status": 200,
+    "provider_files": 1,
+    "ms": 137
+   },
+   {
+    "issuerId": "98869",
+    "url": "https://emihealth.com/Services/providerdata/cms-data-index.json",
+    "status": 200,
+    "provider_files": 20,
+    "ms": 324
+   }
+  ],
+  "errors": {
+   "network": 0,
+   "timeout": 0,
+   "http": 1,
+   "parse": 0,
+   "outcome": 0
+  },
+  "requests": 23
+ },
+ "totals": {
+  "records": 8506,
+  "roles": 4170,
+  "locations": 4336,
+  "age_policy_published": 0,
+  "age_examples": [],
+  "hours_present": 1431,
+  "hours_conflict": 0,
+  "newpatients_present": 7537,
+  "newpatients_values": {
+   "newpt": 7525,
+   "existptonly": 35,
+   "nopt": 22
+  },
+  "scene_roles": 839,
+  "errors": 3,
+  "requests": 283
+ },
+ "control": {
+  "synthetic_age_record_counted": true,
+  "synthetic_plain_record_counted": false
+ }
+}
