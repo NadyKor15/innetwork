@@ -1,0 +1,4395 @@
+{
+ "planId": "plan-c",
+ "specialty": "orthopedics",
+ "zip": "32803",
+ "format": "fhir-roles-per-location",
+ "directory": "molina",
+ "data": {
+  "locations": [
+   {
+    "id": "fx-c-office-c1",
+    "meta": {
+     "profile": [
+      "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location"
+     ]
+    },
+    "extension": [
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/newpatients",
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/AcceptingPatientsCS",
+         "code": "newpt",
+         "display": "Accepting New Patients"
+        }
+       ]
+      }
+     },
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/accessibility",
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/AccessibilityCS",
+         "code": "HA"
+        }
+       ]
+      }
+     }
+    ],
+    "identifier": [
+     {
+      "type": {
+       "coding": [
+        {
+         "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+         "code": "INID"
+        }
+       ],
+       "text": "Internal location ID"
+      },
+      "value": "fx-c-office-c1"
+     }
+    ],
+    "status": "active",
+    "name": "Little Heron Pediatric Orthopedics",
+    "alias": [
+     "LITTLE HERON PEDIATRIC ORTHOPEDICS"
+    ],
+    "description": "45 Little Heron Ct",
+    "type": [
+     {
+      "coding": [
+       {
+        "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        "code": "S",
+        "display": "Site address"
+       }
+      ]
+     }
+    ],
+    "telecom": [
+     {
+      "extension": [
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "21:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "08:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "12:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sat"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sun"
+         },
+         {
+          "url": "allDay",
+          "valueBoolean": true
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/via-intermediary",
+        "valueReference": {
+         "reference": "There is no data for this location."
+        }
+       }
+      ],
+      "system": "phone",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 1
+     },
+     {
+      "extension": [
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "21:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "08:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "12:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sat"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sun"
+         },
+         {
+          "url": "allDay",
+          "valueBoolean": true
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/via-intermediary",
+        "valueReference": {
+         "reference": "There is no data for this location."
+        }
+       }
+      ],
+      "system": "fax",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 2
+     }
+    ],
+    "address": {
+     "line": [
+      "45 Little Heron Ct"
+     ],
+     "city": "Orlando",
+     "state": "FL",
+     "postalCode": "32806"
+    },
+    "managingOrganization": {
+     "reference": "Organization/fx-c-org-c1",
+     "identifier": {
+      "value": "fx-c-org-c1"
+     },
+     "display": "Little Heron Pediatric Orthopedics"
+    },
+    "partOf": {
+     "reference": "Location/fx-c-office-c1-site",
+     "identifier": {
+      "value": "fx-c-office-c1-site"
+     }
+    },
+    "hoursOfOperation": [
+     {
+      "daysOfWeek": [
+       "mon",
+       "wed"
+      ],
+      "allDay": false,
+      "openingTime": "07:00",
+      "closingTime": "21:00"
+     },
+     {
+      "daysOfWeek": [
+       "mon",
+       "tue",
+       "wed",
+       "thu",
+       "fri"
+      ],
+      "allDay": false,
+      "openingTime": "08:00",
+      "closingTime": "17:00"
+     },
+     {
+      "daysOfWeek": [
+       "tue",
+       "thu"
+      ],
+      "allDay": false,
+      "openingTime": "07:00",
+      "closingTime": "17:00"
+     },
+     {
+      "daysOfWeek": [
+       "fri"
+      ],
+      "allDay": false,
+      "openingTime": "07:00",
+      "closingTime": "12:00"
+     }
+    ],
+    "availabilityExceptions": {
+     "display": "There is no data for this location."
+    },
+    "endpoint": [
+     {
+      "display": "There is no data for this location."
+     }
+    ],
+    "resourceType": "Location"
+   },
+   {
+    "id": "fx-c-office-c2",
+    "meta": {
+     "profile": [
+      "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location"
+     ]
+    },
+    "extension": [
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/newpatients",
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/AcceptingPatientsCS",
+         "code": "newpt",
+         "display": "Accepting New Patients"
+        }
+       ]
+      }
+     },
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/accessibility",
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/AccessibilityCS",
+         "code": "HA"
+        }
+       ]
+      }
+     }
+    ],
+    "identifier": [
+     {
+      "type": {
+       "coding": [
+        {
+         "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+         "code": "INID"
+        }
+       ],
+       "text": "Internal location ID"
+      },
+      "value": "fx-c-office-c2"
+     }
+    ],
+    "status": "active",
+    "name": "Sawgrass Bend Orthopedics",
+    "alias": [
+     "SAWGRASS BEND ORTHOPEDICS"
+    ],
+    "description": "980 Sawgrass Bend Rd",
+    "type": [
+     {
+      "coding": [
+       {
+        "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        "code": "S",
+        "display": "Site address"
+       }
+      ]
+     }
+    ],
+    "telecom": [
+     {
+      "extension": [
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "21:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "08:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "12:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sat"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sun"
+         },
+         {
+          "url": "allDay",
+          "valueBoolean": true
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/via-intermediary",
+        "valueReference": {
+         "reference": "There is no data for this location."
+        }
+       }
+      ],
+      "system": "phone",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 1
+     },
+     {
+      "extension": [
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "21:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "08:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "12:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sat"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sun"
+         },
+         {
+          "url": "allDay",
+          "valueBoolean": true
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/via-intermediary",
+        "valueReference": {
+         "reference": "There is no data for this location."
+        }
+       }
+      ],
+      "system": "fax",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 2
+     }
+    ],
+    "address": {
+     "line": [
+      "980 Sawgrass Bend Rd"
+     ],
+     "city": "Orlando",
+     "state": "FL",
+     "postalCode": "32803"
+    },
+    "managingOrganization": {
+     "reference": "Organization/fx-c-org-c2",
+     "identifier": {
+      "value": "fx-c-org-c2"
+     },
+     "display": "Sawgrass Bend Orthopedics"
+    },
+    "partOf": {
+     "reference": "Location/fx-c-office-c2-site",
+     "identifier": {
+      "value": "fx-c-office-c2-site"
+     }
+    },
+    "hoursOfOperation": [
+     {
+      "daysOfWeek": [
+       "mon",
+       "wed"
+      ],
+      "allDay": false,
+      "openingTime": "07:00",
+      "closingTime": "21:00"
+     },
+     {
+      "daysOfWeek": [
+       "mon",
+       "tue",
+       "wed",
+       "thu",
+       "fri"
+      ],
+      "allDay": false,
+      "openingTime": "08:00",
+      "closingTime": "17:00"
+     },
+     {
+      "daysOfWeek": [
+       "tue",
+       "thu"
+      ],
+      "allDay": false,
+      "openingTime": "07:00",
+      "closingTime": "17:00"
+     },
+     {
+      "daysOfWeek": [
+       "fri"
+      ],
+      "allDay": false,
+      "openingTime": "07:00",
+      "closingTime": "12:00"
+     }
+    ],
+    "availabilityExceptions": {
+     "display": "There is no data for this location."
+    },
+    "endpoint": [
+     {
+      "display": "There is no data for this location."
+     }
+    ],
+    "resourceType": "Location"
+   },
+   {
+    "id": "fx-c-office-c3",
+    "meta": {
+     "profile": [
+      "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location"
+     ]
+    },
+    "extension": [
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/newpatients",
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/AcceptingPatientsCS",
+         "code": "newpt",
+         "display": "Accepting New Patients"
+        }
+       ]
+      }
+     },
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/accessibility",
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/AccessibilityCS",
+         "code": "HA"
+        }
+       ]
+      }
+     }
+    ],
+    "identifier": [
+     {
+      "type": {
+       "coding": [
+        {
+         "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+         "code": "INID"
+        }
+       ],
+       "text": "Internal location ID"
+      },
+      "value": "fx-c-office-c3"
+     }
+    ],
+    "status": "active",
+    "name": "Marigold Court Orthopedic Group",
+    "alias": [
+     "MARIGOLD COURT ORTHOPEDIC GROUP"
+    ],
+    "description": "1720 Marigold Ct",
+    "type": [
+     {
+      "coding": [
+       {
+        "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        "code": "S",
+        "display": "Site address"
+       }
+      ]
+     }
+    ],
+    "telecom": [
+     {
+      "extension": [
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "21:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "08:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "12:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sat"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sun"
+         },
+         {
+          "url": "allDay",
+          "valueBoolean": true
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/via-intermediary",
+        "valueReference": {
+         "reference": "There is no data for this location."
+        }
+       }
+      ],
+      "system": "phone",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 1
+     },
+     {
+      "extension": [
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "21:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "08:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "12:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sat"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sun"
+         },
+         {
+          "url": "allDay",
+          "valueBoolean": true
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/via-intermediary",
+        "valueReference": {
+         "reference": "There is no data for this location."
+        }
+       }
+      ],
+      "system": "fax",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 2
+     }
+    ],
+    "address": {
+     "line": [
+      "1720 Marigold Ct"
+     ],
+     "city": "Orlando",
+     "state": "FL",
+     "postalCode": "32801"
+    },
+    "managingOrganization": {
+     "reference": "Organization/fx-c-org-c3",
+     "identifier": {
+      "value": "fx-c-org-c3"
+     },
+     "display": "Marigold Court Orthopedic Group"
+    },
+    "partOf": {
+     "reference": "Location/fx-c-office-c3-site",
+     "identifier": {
+      "value": "fx-c-office-c3-site"
+     }
+    },
+    "hoursOfOperation": [
+     {
+      "daysOfWeek": [
+       "mon",
+       "wed"
+      ],
+      "allDay": false,
+      "openingTime": "07:00",
+      "closingTime": "21:00"
+     },
+     {
+      "daysOfWeek": [
+       "mon",
+       "tue",
+       "wed",
+       "thu",
+       "fri"
+      ],
+      "allDay": false,
+      "openingTime": "08:00",
+      "closingTime": "17:00"
+     },
+     {
+      "daysOfWeek": [
+       "tue",
+       "thu"
+      ],
+      "allDay": false,
+      "openingTime": "07:00",
+      "closingTime": "17:00"
+     },
+     {
+      "daysOfWeek": [
+       "fri"
+      ],
+      "allDay": false,
+      "openingTime": "07:00",
+      "closingTime": "12:00"
+     }
+    ],
+    "availabilityExceptions": {
+     "display": "There is no data for this location."
+    },
+    "endpoint": [
+     {
+      "display": "There is no data for this location."
+     }
+    ],
+    "resourceType": "Location"
+   },
+   {
+    "id": "fx-c-office-c4",
+    "meta": {
+     "profile": [
+      "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location"
+     ]
+    },
+    "extension": [
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/newpatients",
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/AcceptingPatientsCS",
+         "code": "newpt",
+         "display": "Accepting New Patients"
+        }
+       ]
+      }
+     },
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/accessibility",
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/AccessibilityCS",
+         "code": "HA"
+        }
+       ]
+      }
+     }
+    ],
+    "identifier": [
+     {
+      "type": {
+       "coding": [
+        {
+         "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+         "code": "INID"
+        }
+       ],
+       "text": "Internal location ID"
+      },
+      "value": "fx-c-office-c4"
+     }
+    ],
+    "status": "active",
+    "name": "Tallow Creek Bone & Joint",
+    "alias": [
+     "TALLOW CREEK BONE & JOINT"
+    ],
+    "description": "2604 Tallow Creek Blvd",
+    "type": [
+     {
+      "coding": [
+       {
+        "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        "code": "S",
+        "display": "Site address"
+       }
+      ]
+     }
+    ],
+    "telecom": [
+     {
+      "extension": [
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "21:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "08:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "12:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sat"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sun"
+         },
+         {
+          "url": "allDay",
+          "valueBoolean": true
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/via-intermediary",
+        "valueReference": {
+         "reference": "There is no data for this location."
+        }
+       }
+      ],
+      "system": "phone",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 1
+     },
+     {
+      "extension": [
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "21:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "08:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "12:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sat"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sun"
+         },
+         {
+          "url": "allDay",
+          "valueBoolean": true
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/via-intermediary",
+        "valueReference": {
+         "reference": "There is no data for this location."
+        }
+       }
+      ],
+      "system": "fax",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 2
+     }
+    ],
+    "address": {
+     "line": [
+      "2604 Tallow Creek Blvd"
+     ],
+     "city": "Orlando",
+     "state": "FL",
+     "postalCode": "32806"
+    },
+    "managingOrganization": {
+     "reference": "Organization/fx-c-org-c4",
+     "identifier": {
+      "value": "fx-c-org-c4"
+     },
+     "display": "Tallow Creek Bone & Joint"
+    },
+    "partOf": {
+     "reference": "Location/fx-c-office-c4-site",
+     "identifier": {
+      "value": "fx-c-office-c4-site"
+     }
+    },
+    "hoursOfOperation": [
+     {
+      "daysOfWeek": [
+       "mon",
+       "wed"
+      ],
+      "allDay": false,
+      "openingTime": "07:00",
+      "closingTime": "21:00"
+     },
+     {
+      "daysOfWeek": [
+       "mon",
+       "tue",
+       "wed",
+       "thu",
+       "fri"
+      ],
+      "allDay": false,
+      "openingTime": "08:00",
+      "closingTime": "17:00"
+     },
+     {
+      "daysOfWeek": [
+       "tue",
+       "thu"
+      ],
+      "allDay": false,
+      "openingTime": "07:00",
+      "closingTime": "17:00"
+     },
+     {
+      "daysOfWeek": [
+       "fri"
+      ],
+      "allDay": false,
+      "openingTime": "07:00",
+      "closingTime": "12:00"
+     }
+    ],
+    "availabilityExceptions": {
+     "display": "There is no data for this location."
+    },
+    "endpoint": [
+     {
+      "display": "There is no data for this location."
+     }
+    ],
+    "resourceType": "Location"
+   },
+   {
+    "id": "fx-c-office-c5",
+    "meta": {
+     "profile": [
+      "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location"
+     ]
+    },
+    "extension": [
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/newpatients",
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/AcceptingPatientsCS",
+         "code": "newpt",
+         "display": "Accepting New Patients"
+        }
+       ]
+      }
+     },
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/accessibility",
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/AccessibilityCS",
+         "code": "HA"
+        }
+       ]
+      }
+     }
+    ],
+    "identifier": [
+     {
+      "type": {
+       "coding": [
+        {
+         "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+         "code": "INID"
+        }
+       ],
+       "text": "Internal location ID"
+      },
+      "value": "fx-c-office-c5"
+     }
+    ],
+    "status": "active",
+    "name": "Quarry Lane Orthopedics",
+    "alias": [
+     "QUARRY LANE ORTHOPEDICS"
+    ],
+    "description": "455 Quarry Ln",
+    "type": [
+     {
+      "coding": [
+       {
+        "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        "code": "S",
+        "display": "Site address"
+       }
+      ]
+     }
+    ],
+    "telecom": [
+     {
+      "extension": [
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "21:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "08:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "12:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sat"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sun"
+         },
+         {
+          "url": "allDay",
+          "valueBoolean": true
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/via-intermediary",
+        "valueReference": {
+         "reference": "There is no data for this location."
+        }
+       }
+      ],
+      "system": "phone",
+      "value": "4075550109",
+      "use": "work",
+      "rank": 1
+     },
+     {
+      "extension": [
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "21:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "08:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "12:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sat"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sun"
+         },
+         {
+          "url": "allDay",
+          "valueBoolean": true
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/via-intermediary",
+        "valueReference": {
+         "reference": "There is no data for this location."
+        }
+       }
+      ],
+      "system": "fax",
+      "value": "4075550109",
+      "use": "work",
+      "rank": 2
+     }
+    ],
+    "address": {
+     "line": [
+      "455 Quarry Ln"
+     ],
+     "city": "Orlando",
+     "state": "FL",
+     "postalCode": "32801"
+    },
+    "managingOrganization": {
+     "reference": "Organization/fx-c-org-c5",
+     "identifier": {
+      "value": "fx-c-org-c5"
+     },
+     "display": "Quarry Lane Orthopedics"
+    },
+    "partOf": {
+     "reference": "Location/fx-c-office-c5-site",
+     "identifier": {
+      "value": "fx-c-office-c5-site"
+     }
+    },
+    "hoursOfOperation": [
+     {
+      "daysOfWeek": [
+       "mon",
+       "wed"
+      ],
+      "allDay": false,
+      "openingTime": "07:00",
+      "closingTime": "21:00"
+     },
+     {
+      "daysOfWeek": [
+       "mon",
+       "tue",
+       "wed",
+       "thu",
+       "fri"
+      ],
+      "allDay": false,
+      "openingTime": "08:00",
+      "closingTime": "17:00"
+     },
+     {
+      "daysOfWeek": [
+       "tue",
+       "thu"
+      ],
+      "allDay": false,
+      "openingTime": "07:00",
+      "closingTime": "17:00"
+     },
+     {
+      "daysOfWeek": [
+       "fri"
+      ],
+      "allDay": false,
+      "openingTime": "07:00",
+      "closingTime": "12:00"
+     }
+    ],
+    "availabilityExceptions": {
+     "display": "There is no data for this location."
+    },
+    "endpoint": [
+     {
+      "display": "There is no data for this location."
+     }
+    ],
+    "resourceType": "Location"
+   },
+   {
+    "id": "fx-c-office-c6",
+    "meta": {
+     "profile": [
+      "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location"
+     ]
+    },
+    "extension": [
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/newpatients",
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/AcceptingPatientsCS",
+         "code": "newpt",
+         "display": "Accepting New Patients"
+        }
+       ]
+      }
+     },
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/accessibility",
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/AccessibilityCS",
+         "code": "HA"
+        }
+       ]
+      }
+     }
+    ],
+    "identifier": [
+     {
+      "type": {
+       "coding": [
+        {
+         "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+         "code": "INID"
+        }
+       ],
+       "text": "Internal location ID"
+      },
+      "value": "fx-c-office-c6"
+     }
+    ],
+    "status": "active",
+    "name": "Foxglove Hill Orthopedics",
+    "alias": [
+     "FOXGLOVE HILL ORTHOPEDICS"
+    ],
+    "description": "3300 Foxglove Hill Rd",
+    "type": [
+     {
+      "coding": [
+       {
+        "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+        "code": "S",
+        "display": "Site address"
+       }
+      ]
+     }
+    ],
+    "telecom": [
+     {
+      "extension": [
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "21:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "08:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "12:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sat"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sun"
+         },
+         {
+          "url": "allDay",
+          "valueBoolean": true
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/via-intermediary",
+        "valueReference": {
+         "reference": "There is no data for this location."
+        }
+       }
+      ],
+      "system": "phone",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 1
+     },
+     {
+      "extension": [
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "21:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "08:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "07:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "12:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sat"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "sun"
+         },
+         {
+          "url": "allDay",
+          "valueBoolean": true
+         }
+        ],
+        "url": "http://hl7.org/fhir/StructureDefinition/contactpoint-availableTime"
+       },
+       {
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/via-intermediary",
+        "valueReference": {
+         "reference": "There is no data for this location."
+        }
+       }
+      ],
+      "system": "fax",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 2
+     }
+    ],
+    "address": {
+     "line": [
+      "3300 Foxglove Hill Rd"
+     ],
+     "city": "Orlando",
+     "state": "FL",
+     "postalCode": "32804"
+    },
+    "managingOrganization": {
+     "reference": "Organization/fx-c-org-c6",
+     "identifier": {
+      "value": "fx-c-org-c6"
+     },
+     "display": "Foxglove Hill Orthopedics"
+    },
+    "partOf": {
+     "reference": "Location/fx-c-office-c6-site",
+     "identifier": {
+      "value": "fx-c-office-c6-site"
+     }
+    },
+    "hoursOfOperation": [
+     {
+      "daysOfWeek": [
+       "mon",
+       "wed"
+      ],
+      "allDay": false,
+      "openingTime": "07:00",
+      "closingTime": "21:00"
+     },
+     {
+      "daysOfWeek": [
+       "mon",
+       "tue",
+       "wed",
+       "thu",
+       "fri"
+      ],
+      "allDay": false,
+      "openingTime": "08:00",
+      "closingTime": "17:00"
+     },
+     {
+      "daysOfWeek": [
+       "tue",
+       "thu"
+      ],
+      "allDay": false,
+      "openingTime": "07:00",
+      "closingTime": "17:00"
+     },
+     {
+      "daysOfWeek": [
+       "fri"
+      ],
+      "allDay": false,
+      "openingTime": "07:00",
+      "closingTime": "12:00"
+     }
+    ],
+    "availabilityExceptions": {
+     "display": "There is no data for this location."
+    },
+    "endpoint": [
+     {
+      "display": "There is no data for this location."
+     }
+    ],
+    "resourceType": "Location"
+   }
+  ],
+  "roles": [
+   {
+    "id": "fx-c-pellworth",
+    "meta": {
+     "profile": [
+      "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-PractitionerRole"
+     ]
+    },
+    "extension": [
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/network-reference",
+      "valueReference": {
+       "reference": "15",
+       "display": "Medicaid-Managed Medical Assistance (MMA)"
+      }
+     },
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/newpatients",
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/AcceptingPatientsCS",
+         "code": "newpt",
+         "display": "Accepting New Patients"
+        }
+       ]
+      }
+     },
+     {
+      "extension": [
+       {
+        "url": "code",
+        "valueCodeableConcept": {
+         "coding": [
+          {
+           "system": "https://hl7.org/fhir/R4/datatypes.html#CodeableConcept",
+           "code": [
+            "MD"
+           ]
+          },
+          {
+           "system": "https://hl7.org/fhir/R4/datatypes.html#CodeableConcept",
+           "code": "207XP3100X",
+           "display": "Pediatric Orthopaedic Surgery"
+          }
+         ]
+        }
+       },
+       {
+        "url": "identifier",
+        "valueIdentifier": {
+         "value": [
+          "MD"
+         ]
+        }
+       },
+       {
+        "url": "issuer",
+        "valueReference": {
+         "display": "There is no data for this practitioner role."
+        }
+       }
+      ],
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/qualification"
+     }
+    ],
+    "identifier": [
+     {
+      "type": {
+       "coding": [
+        {
+         "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+         "code": "NPI"
+        }
+       ]
+      },
+      "value": "0900000006"
+     }
+    ],
+    "active": true,
+    "period": {
+     "start": "1111-01-01",
+     "end": "9999-09-09"
+    },
+    "practitioner": {
+     "reference": "Practitioner/fx-c-prac-pellworth",
+     "identifier": {
+      "value": "fx-c-prac-pellworth"
+     },
+     "display": "Imogen Pellworth"
+    },
+    "organization": {
+     "reference": "Organization/fx-c-org-c1",
+     "identifier": {
+      "value": "fx-c-org-c1"
+     },
+     "display": "Little Heron Pediatric Orthopedics"
+    },
+    "code": [
+     {
+      "coding": [
+       {
+        "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/ProviderRoleCS",
+        "code": [
+         "MD"
+        ]
+       }
+      ]
+     }
+    ],
+    "specialty": [
+     {
+      "coding": [
+       {
+        "system": "https://molina.sapphirethreesixtyfive.com/fhir/specialties",
+        "code": "710000427",
+        "display": "Pediatric Orthopaedic Surgery"
+       }
+      ]
+     }
+    ],
+    "location": [
+     {
+      "reference": "Location/fx-c-office-c1",
+      "identifier": {
+       "value": "fx-c-office-c1"
+      },
+      "display": "Little Heron Pediatric Orthopedics"
+     }
+    ],
+    "healthcareService": [
+     {
+      "display": "We do not collect this data."
+     }
+    ],
+    "telecom": [
+     {
+      "extension": [
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "08:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/contactpoint-availabletime"
+       },
+       {
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/via-intermediary",
+        "valueString": "There is no data for this practitioner role."
+       }
+      ],
+      "system": "fax",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 2
+     },
+     {
+      "system": "phone",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 3
+     },
+     {
+      "system": "phone",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 4
+     },
+     {
+      "system": "fax",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 5
+     },
+     {
+      "system": "phone",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 6
+     },
+     {
+      "system": "fax",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 7
+     },
+     {
+      "system": "phone",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 8
+     },
+     {
+      "system": "fax",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 9
+     },
+     {
+      "system": "fax",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 10
+     },
+     {
+      "system": "phone",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 11
+     },
+     {
+      "system": "fax",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 12
+     },
+     {
+      "system": "phone",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 13
+     },
+     {
+      "system": "fax",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 14
+     },
+     {
+      "system": "phone",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 15
+     },
+     {
+      "system": "fax",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 16
+     },
+     {
+      "system": "phone",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 17
+     },
+     {
+      "system": "fax",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 18
+     },
+     {
+      "system": "phone",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 19
+     },
+     {
+      "system": "fax",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 20
+     },
+     {
+      "system": "phone",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 21
+     },
+     {
+      "system": "fax",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 22
+     },
+     {
+      "system": "phone",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 23
+     },
+     {
+      "system": "fax",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 24
+     },
+     {
+      "system": "phone",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 25
+     },
+     {
+      "system": "fax",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 26
+     },
+     {
+      "system": "phone",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 27
+     },
+     {
+      "system": "fax",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 28
+     },
+     {
+      "system": "fax",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 29
+     },
+     {
+      "system": "phone",
+      "value": "4075550105",
+      "use": "work",
+      "rank": 30
+     }
+    ],
+    "availableTime": [
+     {
+      "daysOfWeek": [
+       "mon",
+       "tue",
+       "wed",
+       "thu",
+       "fri"
+      ],
+      "allDay": false,
+      "availableStartTime": "07:30",
+      "availableEndTime": "16:30"
+     }
+    ],
+    "notAvailable": [
+     {
+      "description": "There is no data for this practitioner role."
+     }
+    ],
+    "endpoint": [
+     {
+      "display": "There is no data for this practitioner role."
+     }
+    ],
+    "resourceType": "PractitionerRole"
+   },
+   {
+    "id": "fx-c-pembrook",
+    "meta": {
+     "profile": [
+      "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-PractitionerRole"
+     ]
+    },
+    "extension": [
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/network-reference",
+      "valueReference": {
+       "reference": "15",
+       "display": "Medicaid-Managed Medical Assistance (MMA)"
+      }
+     },
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/newpatients",
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/AcceptingPatientsCS",
+         "code": "newpt",
+         "display": "Accepting New Patients"
+        }
+       ]
+      }
+     },
+     {
+      "extension": [
+       {
+        "url": "code",
+        "valueCodeableConcept": {
+         "coding": [
+          {
+           "system": "https://hl7.org/fhir/R4/datatypes.html#CodeableConcept",
+           "code": [
+            "DO"
+           ]
+          },
+          {
+           "system": "https://hl7.org/fhir/R4/datatypes.html#CodeableConcept",
+           "code": "207X00000X",
+           "display": "Orthopaedic Surgery"
+          }
+         ]
+        }
+       },
+       {
+        "url": "identifier",
+        "valueIdentifier": {
+         "value": [
+          "DO"
+         ]
+        }
+       },
+       {
+        "url": "issuer",
+        "valueReference": {
+         "display": "There is no data for this practitioner role."
+        }
+       }
+      ],
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/qualification"
+     }
+    ],
+    "identifier": [
+     {
+      "type": {
+       "coding": [
+        {
+         "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+         "code": "NPI"
+        }
+       ]
+      },
+      "value": "0900000008"
+     }
+    ],
+    "active": true,
+    "period": {
+     "start": "1111-01-01",
+     "end": "9999-09-09"
+    },
+    "practitioner": {
+     "reference": "Practitioner/fx-c-prac-pembrook",
+     "identifier": {
+      "value": "fx-c-prac-pembrook"
+     },
+     "display": "Corwin Pembrook"
+    },
+    "organization": {
+     "reference": "Organization/fx-c-org-c2",
+     "identifier": {
+      "value": "fx-c-org-c2"
+     },
+     "display": "Sawgrass Bend Orthopedics"
+    },
+    "code": [
+     {
+      "coding": [
+       {
+        "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/ProviderRoleCS",
+        "code": [
+         "MD"
+        ]
+       }
+      ]
+     }
+    ],
+    "specialty": [
+     {
+      "coding": [
+       {
+        "system": "https://molina.sapphirethreesixtyfive.com/fhir/specialties",
+        "code": "710000433",
+        "display": "Orthopaedic Surgery"
+       }
+      ]
+     }
+    ],
+    "location": [
+     {
+      "reference": "Location/fx-c-office-c2",
+      "identifier": {
+       "value": "fx-c-office-c2"
+      },
+      "display": "Sawgrass Bend Orthopedics"
+     }
+    ],
+    "healthcareService": [
+     {
+      "display": "We do not collect this data."
+     }
+    ],
+    "telecom": [
+     {
+      "extension": [
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "08:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/contactpoint-availabletime"
+       },
+       {
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/via-intermediary",
+        "valueString": "There is no data for this practitioner role."
+       }
+      ],
+      "system": "fax",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 2
+     },
+     {
+      "system": "phone",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 3
+     },
+     {
+      "system": "phone",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 4
+     },
+     {
+      "system": "fax",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 5
+     },
+     {
+      "system": "phone",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 6
+     },
+     {
+      "system": "fax",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 7
+     },
+     {
+      "system": "phone",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 8
+     },
+     {
+      "system": "fax",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 9
+     },
+     {
+      "system": "fax",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 10
+     },
+     {
+      "system": "phone",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 11
+     },
+     {
+      "system": "fax",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 12
+     },
+     {
+      "system": "phone",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 13
+     },
+     {
+      "system": "fax",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 14
+     },
+     {
+      "system": "phone",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 15
+     },
+     {
+      "system": "fax",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 16
+     },
+     {
+      "system": "phone",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 17
+     },
+     {
+      "system": "fax",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 18
+     },
+     {
+      "system": "phone",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 19
+     },
+     {
+      "system": "fax",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 20
+     },
+     {
+      "system": "phone",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 21
+     },
+     {
+      "system": "fax",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 22
+     },
+     {
+      "system": "phone",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 23
+     },
+     {
+      "system": "fax",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 24
+     },
+     {
+      "system": "phone",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 25
+     },
+     {
+      "system": "fax",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 26
+     },
+     {
+      "system": "phone",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 27
+     },
+     {
+      "system": "fax",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 28
+     },
+     {
+      "system": "fax",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 29
+     },
+     {
+      "system": "phone",
+      "value": "4075550106",
+      "use": "work",
+      "rank": 30
+     }
+    ],
+    "availableTime": [
+     {
+      "daysOfWeek": [
+       "mon",
+       "tue",
+       "wed",
+       "thu",
+       "fri",
+       "sat",
+       "sun"
+      ],
+      "allDay": false,
+      "availableStartTime": "00:00",
+      "availableEndTime": "00:00"
+     }
+    ],
+    "notAvailable": [
+     {
+      "description": "There is no data for this practitioner role."
+     }
+    ],
+    "endpoint": [
+     {
+      "display": "There is no data for this practitioner role."
+     }
+    ],
+    "resourceType": "PractitionerRole"
+   },
+   {
+    "id": "fx-c-wrenfield",
+    "meta": {
+     "profile": [
+      "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-PractitionerRole"
+     ]
+    },
+    "extension": [
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/network-reference",
+      "valueReference": {
+       "reference": "15",
+       "display": "Medicaid-Managed Medical Assistance (MMA)"
+      }
+     },
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/newpatients",
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/AcceptingPatientsCS",
+         "code": "newpt",
+         "display": "Accepting New Patients"
+        }
+       ]
+      }
+     },
+     {
+      "extension": [
+       {
+        "url": "code",
+        "valueCodeableConcept": {
+         "coding": [
+          {
+           "system": "https://hl7.org/fhir/R4/datatypes.html#CodeableConcept",
+           "code": [
+            "DO"
+           ]
+          },
+          {
+           "system": "https://hl7.org/fhir/R4/datatypes.html#CodeableConcept",
+           "code": "207X00000X",
+           "display": "Orthopaedic Surgery"
+          }
+         ]
+        }
+       },
+       {
+        "url": "identifier",
+        "valueIdentifier": {
+         "value": [
+          "DO"
+         ]
+        }
+       },
+       {
+        "url": "issuer",
+        "valueReference": {
+         "display": "There is no data for this practitioner role."
+        }
+       }
+      ],
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/qualification"
+     }
+    ],
+    "identifier": [
+     {
+      "type": {
+       "coding": [
+        {
+         "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+         "code": "NPI"
+        }
+       ]
+      },
+      "value": "0900000008"
+     }
+    ],
+    "active": true,
+    "period": {
+     "start": "1111-01-01",
+     "end": "9999-09-09"
+    },
+    "practitioner": {
+     "reference": "Practitioner/fx-c-prac-wrenfield",
+     "identifier": {
+      "value": "fx-c-prac-wrenfield"
+     },
+     "display": "Tobias Wrenfield"
+    },
+    "organization": {
+     "reference": "Organization/fx-c-org-c3",
+     "identifier": {
+      "value": "fx-c-org-c3"
+     },
+     "display": "Marigold Court Orthopedic Group"
+    },
+    "code": [
+     {
+      "coding": [
+       {
+        "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/ProviderRoleCS",
+        "code": [
+         "MD"
+        ]
+       }
+      ]
+     }
+    ],
+    "specialty": [
+     {
+      "coding": [
+       {
+        "system": "https://molina.sapphirethreesixtyfive.com/fhir/specialties",
+        "code": "710000433",
+        "display": "Orthopaedic Surgery"
+       }
+      ]
+     }
+    ],
+    "location": [
+     {
+      "reference": "Location/fx-c-office-c3",
+      "identifier": {
+       "value": "fx-c-office-c3"
+      },
+      "display": "Marigold Court Orthopedic Group"
+     }
+    ],
+    "healthcareService": [
+     {
+      "display": "We do not collect this data."
+     }
+    ],
+    "telecom": [
+     {
+      "extension": [
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "08:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/contactpoint-availabletime"
+       },
+       {
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/via-intermediary",
+        "valueString": "There is no data for this practitioner role."
+       }
+      ],
+      "system": "fax",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 2
+     },
+     {
+      "system": "phone",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 3
+     },
+     {
+      "system": "phone",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 4
+     },
+     {
+      "system": "fax",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 5
+     },
+     {
+      "system": "phone",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 6
+     },
+     {
+      "system": "fax",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 7
+     },
+     {
+      "system": "phone",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 8
+     },
+     {
+      "system": "fax",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 9
+     },
+     {
+      "system": "fax",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 10
+     },
+     {
+      "system": "phone",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 11
+     },
+     {
+      "system": "fax",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 12
+     },
+     {
+      "system": "phone",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 13
+     },
+     {
+      "system": "fax",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 14
+     },
+     {
+      "system": "phone",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 15
+     },
+     {
+      "system": "fax",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 16
+     },
+     {
+      "system": "phone",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 17
+     },
+     {
+      "system": "fax",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 18
+     },
+     {
+      "system": "phone",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 19
+     },
+     {
+      "system": "fax",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 20
+     },
+     {
+      "system": "phone",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 21
+     },
+     {
+      "system": "fax",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 22
+     },
+     {
+      "system": "phone",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 23
+     },
+     {
+      "system": "fax",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 24
+     },
+     {
+      "system": "phone",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 25
+     },
+     {
+      "system": "fax",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 26
+     },
+     {
+      "system": "phone",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 27
+     },
+     {
+      "system": "fax",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 28
+     },
+     {
+      "system": "fax",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 29
+     },
+     {
+      "system": "phone",
+      "value": "4075550107",
+      "use": "work",
+      "rank": 30
+     }
+    ],
+    "availableTime": [
+     {
+      "daysOfWeek": [
+       "mon",
+       "tue",
+       "wed",
+       "thu",
+       "fri"
+      ],
+      "allDay": false,
+      "availableStartTime": "09:00",
+      "availableEndTime": "17:00"
+     }
+    ],
+    "notAvailable": [
+     {
+      "description": "There is no data for this practitioner role."
+     }
+    ],
+    "endpoint": [
+     {
+      "display": "There is no data for this practitioner role."
+     }
+    ],
+    "resourceType": "PractitionerRole"
+   },
+   {
+    "id": "fx-c-ashgrove",
+    "meta": {
+     "profile": [
+      "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-PractitionerRole"
+     ]
+    },
+    "extension": [
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/network-reference",
+      "valueReference": {
+       "reference": "15",
+       "display": "Medicaid-Managed Medical Assistance (MMA)"
+      }
+     },
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/newpatients",
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/AcceptingPatientsCS",
+         "code": "newpt",
+         "display": "Accepting New Patients"
+        }
+       ]
+      }
+     },
+     {
+      "extension": [
+       {
+        "url": "code",
+        "valueCodeableConcept": {
+         "coding": [
+          {
+           "system": "https://hl7.org/fhir/R4/datatypes.html#CodeableConcept",
+           "code": [
+            "DO"
+           ]
+          },
+          {
+           "system": "https://hl7.org/fhir/R4/datatypes.html#CodeableConcept",
+           "code": "207X00000X",
+           "display": "Orthopaedic Surgery"
+          }
+         ]
+        }
+       },
+       {
+        "url": "identifier",
+        "valueIdentifier": {
+         "value": [
+          "DO"
+         ]
+        }
+       },
+       {
+        "url": "issuer",
+        "valueReference": {
+         "display": "There is no data for this practitioner role."
+        }
+       }
+      ],
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/qualification"
+     }
+    ],
+    "identifier": [
+     {
+      "type": {
+       "coding": [
+        {
+         "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+         "code": "NPI"
+        }
+       ]
+      },
+      "value": "0900000009"
+     }
+    ],
+    "active": true,
+    "period": {
+     "start": "1111-01-01",
+     "end": "9999-09-09"
+    },
+    "practitioner": {
+     "reference": "Practitioner/fx-c-prac-ashgrove",
+     "identifier": {
+      "value": "fx-c-prac-ashgrove"
+     },
+     "display": "Percival Ashgrove"
+    },
+    "organization": {
+     "reference": "Organization/fx-c-org-c4",
+     "identifier": {
+      "value": "fx-c-org-c4"
+     },
+     "display": "Tallow Creek Bone & Joint"
+    },
+    "code": [
+     {
+      "coding": [
+       {
+        "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/ProviderRoleCS",
+        "code": [
+         "MD"
+        ]
+       }
+      ]
+     }
+    ],
+    "specialty": [
+     {
+      "coding": [
+       {
+        "system": "https://molina.sapphirethreesixtyfive.com/fhir/specialties",
+        "code": "710000433",
+        "display": "Orthopaedic Surgery"
+       }
+      ]
+     }
+    ],
+    "location": [
+     {
+      "reference": "Location/fx-c-office-c4",
+      "identifier": {
+       "value": "fx-c-office-c4"
+      },
+      "display": "Tallow Creek Bone & Joint"
+     }
+    ],
+    "healthcareService": [
+     {
+      "display": "We do not collect this data."
+     }
+    ],
+    "telecom": [
+     {
+      "extension": [
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "08:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/contactpoint-availabletime"
+       },
+       {
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/via-intermediary",
+        "valueString": "There is no data for this practitioner role."
+       }
+      ],
+      "system": "fax",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 2
+     },
+     {
+      "system": "phone",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 3
+     },
+     {
+      "system": "phone",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 4
+     },
+     {
+      "system": "fax",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 5
+     },
+     {
+      "system": "phone",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 6
+     },
+     {
+      "system": "fax",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 7
+     },
+     {
+      "system": "phone",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 8
+     },
+     {
+      "system": "fax",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 9
+     },
+     {
+      "system": "fax",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 10
+     },
+     {
+      "system": "phone",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 11
+     },
+     {
+      "system": "fax",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 12
+     },
+     {
+      "system": "phone",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 13
+     },
+     {
+      "system": "fax",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 14
+     },
+     {
+      "system": "phone",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 15
+     },
+     {
+      "system": "fax",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 16
+     },
+     {
+      "system": "phone",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 17
+     },
+     {
+      "system": "fax",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 18
+     },
+     {
+      "system": "phone",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 19
+     },
+     {
+      "system": "fax",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 20
+     },
+     {
+      "system": "phone",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 21
+     },
+     {
+      "system": "fax",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 22
+     },
+     {
+      "system": "phone",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 23
+     },
+     {
+      "system": "fax",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 24
+     },
+     {
+      "system": "phone",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 25
+     },
+     {
+      "system": "fax",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 26
+     },
+     {
+      "system": "phone",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 27
+     },
+     {
+      "system": "fax",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 28
+     },
+     {
+      "system": "fax",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 29
+     },
+     {
+      "system": "phone",
+      "value": "4075550108",
+      "use": "work",
+      "rank": 30
+     }
+    ],
+    "availableTime": [
+     {
+      "daysOfWeek": [
+       "mon",
+       "tue",
+       "wed",
+       "thu",
+       "fri"
+      ],
+      "allDay": false,
+      "availableStartTime": "09:00",
+      "availableEndTime": "17:00"
+     }
+    ],
+    "notAvailable": [
+     {
+      "description": "There is no data for this practitioner role."
+     }
+    ],
+    "endpoint": [
+     {
+      "display": "There is no data for this practitioner role."
+     }
+    ],
+    "resourceType": "PractitionerRole"
+   },
+   {
+    "id": "fx-c-ardley",
+    "meta": {
+     "profile": [
+      "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-PractitionerRole"
+     ]
+    },
+    "extension": [
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/network-reference",
+      "valueReference": {
+       "reference": "2",
+       "display": "Molina Marketplace"
+      }
+     },
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/newpatients",
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/AcceptingPatientsCS",
+         "code": "newpt",
+         "display": "Accepting New Patients"
+        }
+       ]
+      }
+     },
+     {
+      "extension": [
+       {
+        "url": "code",
+        "valueCodeableConcept": {
+         "coding": [
+          {
+           "system": "https://hl7.org/fhir/R4/datatypes.html#CodeableConcept",
+           "code": [
+            "DO"
+           ]
+          },
+          {
+           "system": "https://hl7.org/fhir/R4/datatypes.html#CodeableConcept",
+           "code": "207X00000X",
+           "display": "Orthopaedic Surgery"
+          }
+         ]
+        }
+       },
+       {
+        "url": "identifier",
+        "valueIdentifier": {
+         "value": [
+          "DO"
+         ]
+        }
+       },
+       {
+        "url": "issuer",
+        "valueReference": {
+         "display": "There is no data for this practitioner role."
+        }
+       }
+      ],
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/qualification"
+     }
+    ],
+    "identifier": [
+     {
+      "type": {
+       "coding": [
+        {
+         "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+         "code": "NPI"
+        }
+       ]
+      },
+      "value": "0900000010"
+     }
+    ],
+    "active": true,
+    "period": {
+     "start": "1111-01-01",
+     "end": "9999-09-09"
+    },
+    "practitioner": {
+     "reference": "Practitioner/fx-c-prac-ardley",
+     "identifier": {
+      "value": "fx-c-prac-ardley"
+     },
+     "display": "Caspian Ardley"
+    },
+    "organization": {
+     "reference": "Organization/fx-c-org-c5",
+     "identifier": {
+      "value": "fx-c-org-c5"
+     },
+     "display": "Quarry Lane Orthopedics"
+    },
+    "code": [
+     {
+      "coding": [
+       {
+        "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/ProviderRoleCS",
+        "code": [
+         "DO"
+        ]
+       }
+      ]
+     }
+    ],
+    "specialty": [
+     {
+      "coding": [
+       {
+        "system": "https://molina.sapphirethreesixtyfive.com/fhir/specialties",
+        "code": "710000433",
+        "display": "Orthopaedic Surgery"
+       }
+      ]
+     }
+    ],
+    "location": [
+     {
+      "reference": "Location/fx-c-office-c5",
+      "identifier": {
+       "value": "fx-c-office-c5"
+      },
+      "display": "Quarry Lane Orthopedics"
+     }
+    ],
+    "healthcareService": [
+     {
+      "display": "We do not collect this data."
+     }
+    ],
+    "telecom": [
+     {
+      "extension": [
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "08:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/contactpoint-availabletime"
+       },
+       {
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/via-intermediary",
+        "valueString": "There is no data for this practitioner role."
+       }
+      ],
+      "system": "fax",
+      "value": "4075550109",
+      "use": "work",
+      "rank": 2
+     },
+     {
+      "system": "phone",
+      "value": "4075550109",
+      "use": "work",
+      "rank": 3
+     }
+    ],
+    "availableTime": [
+     {
+      "daysOfWeek": [
+       "mon",
+       "tue",
+       "wed",
+       "thu",
+       "fri"
+      ],
+      "allDay": false,
+      "availableStartTime": "08:00",
+      "availableEndTime": "17:00"
+     }
+    ],
+    "notAvailable": [
+     {
+      "description": "There is no data for this practitioner role."
+     }
+    ],
+    "endpoint": [
+     {
+      "display": "There is no data for this practitioner role."
+     }
+    ],
+    "resourceType": "PractitionerRole"
+   },
+   {
+    "id": "fx-c-hartsworth",
+    "meta": {
+     "profile": [
+      "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-PractitionerRole"
+     ]
+    },
+    "extension": [
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/network-reference",
+      "valueReference": {
+       "reference": "15",
+       "display": "Medicaid-Managed Medical Assistance (MMA)"
+      }
+     },
+     {
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/newpatients",
+      "valueCodeableConcept": {
+       "coding": [
+        {
+         "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/AcceptingPatientsCS",
+         "code": "newpt",
+         "display": "Accepting New Patients"
+        }
+       ]
+      }
+     },
+     {
+      "extension": [
+       {
+        "url": "code",
+        "valueCodeableConcept": {
+         "coding": [
+          {
+           "system": "https://hl7.org/fhir/R4/datatypes.html#CodeableConcept",
+           "code": [
+            "DO"
+           ]
+          },
+          {
+           "system": "https://hl7.org/fhir/R4/datatypes.html#CodeableConcept",
+           "code": "207X00000X",
+           "display": "Orthopaedic Surgery"
+          }
+         ]
+        }
+       },
+       {
+        "url": "identifier",
+        "valueIdentifier": {
+         "value": [
+          "DO"
+         ]
+        }
+       },
+       {
+        "url": "issuer",
+        "valueReference": {
+         "display": "There is no data for this practitioner role."
+        }
+       }
+      ],
+      "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/qualification"
+     }
+    ],
+    "identifier": [
+     {
+      "type": {
+       "coding": [
+        {
+         "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+         "code": "NPI"
+        }
+       ]
+      },
+      "value": "0900000011"
+     }
+    ],
+    "active": true,
+    "period": {
+     "start": "1111-01-01",
+     "end": "9999-09-09"
+    },
+    "practitioner": {
+     "reference": "Practitioner/fx-c-prac-hartsworth",
+     "identifier": {
+      "value": "fx-c-prac-hartsworth"
+     },
+     "display": "Wendeline Hartsworth"
+    },
+    "organization": {
+     "reference": "Organization/fx-c-org-c6",
+     "identifier": {
+      "value": "fx-c-org-c6"
+     },
+     "display": "Foxglove Hill Orthopedics"
+    },
+    "code": [
+     {
+      "coding": [
+       {
+        "system": "http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/ProviderRoleCS",
+        "code": [
+         "MD"
+        ]
+       }
+      ]
+     }
+    ],
+    "specialty": [
+     {
+      "coding": [
+       {
+        "system": "https://molina.sapphirethreesixtyfive.com/fhir/specialties",
+        "code": "710000433",
+        "display": "Orthopaedic Surgery"
+       }
+      ]
+     }
+    ],
+    "location": [
+     {
+      "reference": "Location/fx-c-office-c6",
+      "identifier": {
+       "value": "fx-c-office-c6"
+      },
+      "display": "Foxglove Hill Orthopedics"
+     }
+    ],
+    "healthcareService": [
+     {
+      "display": "We do not collect this data."
+     }
+    ],
+    "telecom": [
+     {
+      "extension": [
+       {
+        "extension": [
+         {
+          "url": "daysOfWeek",
+          "valueCode": "mon"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "tue"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "wed"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "thu"
+         },
+         {
+          "url": "daysOfWeek",
+          "valueCode": "fri"
+         },
+         {
+          "url": "availableStartTime",
+          "valueTime": "08:00"
+         },
+         {
+          "url": "availableEndTime",
+          "valueTime": "17:00"
+         }
+        ],
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/contactpoint-availabletime"
+       },
+       {
+        "url": "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/via-intermediary",
+        "valueString": "There is no data for this practitioner role."
+       }
+      ],
+      "system": "fax",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 2
+     },
+     {
+      "system": "phone",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 3
+     },
+     {
+      "system": "phone",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 4
+     },
+     {
+      "system": "fax",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 5
+     },
+     {
+      "system": "phone",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 6
+     },
+     {
+      "system": "fax",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 7
+     },
+     {
+      "system": "phone",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 8
+     },
+     {
+      "system": "fax",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 9
+     },
+     {
+      "system": "fax",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 10
+     },
+     {
+      "system": "phone",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 11
+     },
+     {
+      "system": "fax",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 12
+     },
+     {
+      "system": "phone",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 13
+     },
+     {
+      "system": "fax",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 14
+     },
+     {
+      "system": "phone",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 15
+     },
+     {
+      "system": "fax",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 16
+     },
+     {
+      "system": "phone",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 17
+     },
+     {
+      "system": "fax",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 18
+     },
+     {
+      "system": "phone",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 19
+     },
+     {
+      "system": "fax",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 20
+     },
+     {
+      "system": "phone",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 21
+     },
+     {
+      "system": "fax",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 22
+     },
+     {
+      "system": "phone",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 23
+     },
+     {
+      "system": "fax",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 24
+     },
+     {
+      "system": "phone",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 25
+     },
+     {
+      "system": "fax",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 26
+     },
+     {
+      "system": "phone",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 27
+     },
+     {
+      "system": "fax",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 28
+     },
+     {
+      "system": "fax",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 29
+     },
+     {
+      "system": "phone",
+      "value": "4075550110",
+      "use": "work",
+      "rank": 30
+     }
+    ],
+    "availableTime": [
+     {
+      "daysOfWeek": [
+       "mon",
+       "tue",
+       "wed",
+       "thu",
+       "fri"
+      ],
+      "allDay": false,
+      "availableStartTime": "08:00",
+      "availableEndTime": "17:00"
+     }
+    ],
+    "notAvailable": [
+     {
+      "description": "There is no data for this practitioner role."
+     }
+    ],
+    "endpoint": [
+     {
+      "display": "There is no data for this practitioner role."
+     }
+    ],
+    "resourceType": "PractitionerRole"
+   }
+  ]
+ }
+}
