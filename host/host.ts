@@ -529,8 +529,11 @@ async function renderDevboard(): Promise<void> {
   countStrip.setAttribute("aria-label", "Result");
 
   const auditKeys = Object.keys(d?.audits ?? {});
+  const auditVals = Object.values(d?.audits ?? {}) as ({ records?: number; agePublished?: number; controlLit?: boolean } | null)[];
+  const dirAudit = auditVals.find((a) => a && typeof a.records === "number" && typeof a.agePublished === "number" && a.controlLit);
+  const auditText = dirAudit ? `audit: ${dirAudit.agePublished!.toLocaleString("en-US")} of ${dirAudit.records!.toLocaleString("en-US")} directory records state a patient age` : auditKeys.length ? `audits: ${auditKeys.join(", ")}` : null;
   const foot = h("footer", "foot", s("svg", { class: "logo-mark", viewBox: "0 0 76 28", width: "38", height: "14", role: "img", "aria-label": "InNetwork" }, s("circle", { class: "c1", cx: "14", cy: "14", r: "13" }), s("circle", { class: "c2", cx: "35", cy: "14", r: "13" }), s("circle", { class: "c3", cx: "56", cy: "14", r: "13" })),
-    h("span", "brand", "InNetwork"), auditKeys.length ? h("span", "audit", `audits: ${auditKeys.join(", ")}`) : null, h("span", "demo", "demo data"));
+    h("span", "brand", "InNetwork"), auditText ? h("span", "audit", auditText) : null, h("span", "demo", "demo data"));
   board.replaceChildren(h("div", "db", hdr, boardEl, live, countStrip, foot));
   state.devboard.shown += 1;
   board.dataset.rendered = String(state.devboard.shown);
