@@ -1,0 +1,189 @@
+{
+ "planId": "plan-b",
+ "specialty": "allergy",
+ "zip": "32801",
+ "format": "qhp-providers",
+ "directory": "oscar-qhp",
+ "data": [
+  {
+   "npi": "0900000005",
+   "type": "INDIVIDUAL",
+   "plans": [
+    {
+     "plan_id_type": "HIOS-PLAN-ID",
+     "plan_id": "21525FL0010013",
+     "network_tier": "PREFERRED",
+     "years": [
+      2026,
+      2027
+     ]
+    },
+    {
+     "plan_id_type": "HIOS-PLAN-ID",
+     "plan_id": "21525FL0010008",
+     "network_tier": "PREFERRED",
+     "years": [
+      2026,
+      2027
+     ]
+    },
+    {
+     "plan_id_type": "HIOS-PLAN-ID",
+     "plan_id": "21525FL0010001",
+     "network_tier": "PREFERRED",
+     "years": [
+      2026,
+      2027
+     ]
+    },
+    {
+     "plan_id_type": "HIOS-PLAN-ID",
+     "plan_id": "21525FL0010018",
+     "network_tier": "PREFERRED",
+     "years": [
+      2026,
+      2027
+     ]
+    },
+    {
+     "plan_id_type": "HIOS-PLAN-ID",
+     "plan_id": "21525FL0010007",
+     "network_tier": "PREFERRED",
+     "years": [
+      2026,
+      2027
+     ]
+    },
+    {
+     "plan_id_type": "HIOS-PLAN-ID",
+     "plan_id": "21525FL0010019",
+     "network_tier": "PREFERRED",
+     "years": [
+      2026,
+      2027
+     ]
+    },
+    {
+     "plan_id_type": "HIOS-PLAN-ID",
+     "plan_id": "21525FL0010017",
+     "network_tier": "PREFERRED",
+     "years": [
+      2026,
+      2027
+     ]
+    },
+    {
+     "plan_id_type": "HIOS-PLAN-ID",
+     "plan_id": "21525FL0010009",
+     "network_tier": "PREFERRED",
+     "years": [
+      2026,
+      2027
+     ]
+    },
+    {
+     "plan_id_type": "HIOS-PLAN-ID",
+     "plan_id": "21525FL0010025",
+     "network_tier": "PREFERRED",
+     "years": [
+      2027
+     ]
+    },
+    {
+     "plan_id_type": "HIOS-PLAN-ID",
+     "plan_id": "21525FL0010045",
+     "network_tier": "PREFERRED",
+     "years": [
+      2027
+     ]
+    },
+    {
+     "plan_id_type": "HIOS-PLAN-ID",
+     "plan_id": "21525FL0010027",
+     "network_tier": "PREFERRED",
+     "years": [
+      2027
+     ]
+    },
+    {
+     "plan_id_type": "HIOS-PLAN-ID",
+     "plan_id": "21525FL0010075",
+     "network_tier": "PREFERRED",
+     "years": [
+      2027
+     ]
+    },
+    {
+     "plan_id_type": "HIOS-PLAN-ID",
+     "plan_id": "21525FL0010065",
+     "network_tier": "PREFERRED",
+     "years": [
+      2027
+     ]
+    },
+    {
+     "plan_id_type": "HIOS-PLAN-ID",
+     "plan_id": "21525FL0010067",
+     "network_tier": "PREFERRED",
+     "years": [
+      2027
+     ]
+    },
+    {
+     "plan_id_type": "HIOS-PLAN-ID",
+     "plan_id": "21525FL0010043",
+     "network_tier": "PREFERRED",
+     "years": [
+      2027
+     ]
+    },
+    {
+     "plan_id_type": "HIOS-PLAN-ID",
+     "plan_id": "21525FL0010074",
+     "network_tier": "PREFERRED",
+     "years": [
+      2027
+     ]
+    },
+    {
+     "plan_id_type": "HIOS-PLAN-ID",
+     "plan_id": "21525FL0010044",
+     "network_tier": "PREFERRED",
+     "years": [
+      2027
+     ]
+    },
+    {
+     "plan_id_type": "HIOS-PLAN-ID",
+     "plan_id": "21525FL0010068",
+     "network_tier": "PREFERRED",
+     "years": [
+      2027
+     ]
+    }
+   ],
+   "name": {
+    "first": "Ansel",
+    "last": "Quillfeather"
+   },
+   "specialty": [
+    "Allergist"
+   ],
+   "languages": [
+    "English"
+   ],
+   "gender": "Male",
+   "accepting": "accepting",
+   "addresses": [
+    {
+     "address": "3120 Kestrel Point Dr",
+     "city": "Orlando",
+     "state": "FL",
+     "zip": "32804",
+     "phone": "4075550104"
+    }
+   ],
+   "last_updated_on": "2026-10-10"
+  }
+ ]
+}
