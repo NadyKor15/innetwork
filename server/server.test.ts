@@ -71,6 +71,8 @@ test("demo story: opening for three people -> book -> checkup plan -> book -> ne
   assert.equal(rows[0].fit.detail, "in Plan A's network · accepting new patients");
   assert.equal(rows[2].fit.detail, "in Plan C's network · sees this age");
   assert.equal(rows[2].ageLabel, "under 2");
+  const n4 = () => { const f = JSON.parse(readFileSync(join(DATA, "users", `${user}.json`), "utf8")); assert.deepEqual(forbiddenKeys(f), []); assert.ok(!/under 2|under two|"5"/.test(JSON.stringify(f.pending ?? {})), "age band not in pending"); };
+  n4(); // N4 holds while the proposal waits for a yes, not only at the end
   const booked = await s.call("book_visit", { confirm: true });
   assert.equal(booked.structuredContent.speech, "Booked.");
   assert.equal(booked.structuredContent.card.booked, true);
@@ -134,6 +136,7 @@ test("demo story: opening for three people -> book -> checkup plan -> book -> ne
     ["Dr. Caspian Ardley", "Not in his plan's network"], ["Dr. Wendeline Hartsworth", "Age not listed · we'll ask the office when booking"],
   ]);
   assert.equal(c.footer, "Age used for this search only · not saved");
+  n4();
   await s.client.close();
 
   // N4: the household file holds no ages, names, dates of birth or program types
@@ -238,4 +241,63 @@ test("inputs: no symptoms field, specialty from the closed list only (N1)", asyn
   assert.equal(bad2.isError, true);
   await s.client.close();
   assert.ok(readdirSync(join(DATA, "users")).length > 0);
+});
+
+test("N11: a live directory record (a real doctor) never gets slots, an age policy or a booking", async () => {
+  const base = devDirectory();
+  const live = {
+    ...base, mode: "live" as const,
+    async lookup(plan: any, specialty: any, zip: string) {
+      const a = await base.lookup(plan, specialty, zip);
+      if (!a.ok) return a;
+      return { ...a, mode: "live" as const, records: a.records.map((r) => ({ ...r, source: { ...r.source, mode: "live" as const, provenance: undefined } })) };
+    },
+  };
+  const services = await createServices({ directory: live });
+  services.policiesSeed = SEED;
+  const local = await startMcpServer({ port: 0, quiet: true, services });
+  try {
+    const client = new Client({ name: "t", version: "1" });
+    await client.connect(new StreamableHTTPClientTransport(new URL(local.url), { requestInit: { headers: { Authorization: "Bearer innet-sandbox-u-n11" } } }));
+    await client.callTool({ name: "consent", arguments: { action: "allow" } });
+    const adult = (await client.callTool({ name: "find_in_network", arguments: { requests: [{ member: "Mom", specialty: "gastroenterology" }] } })) as any;
+    assert.ok(adult.structuredContent.card.fits.length >= 1, "a real in-network doctor is shown");
+    assert.equal(adult.structuredContent.data.proposal, null, "no proposal for real doctors");
+    assert.ok(adult.structuredContent.card.fits.every((f: any) => f.when === null), "no times for real doctors");
+    const r = (await client.callTool({ name: "find_in_network", arguments: { requests: [{ member: "Youngest", specialty: "orthopedics", age_for_this_search: "under 2" }] } })) as any;
+    // the demo office policies are never matched to live records: no "Doesn't see children under 3" on a real doctor
+    assert.ok(!JSON.stringify(r.structuredContent.card).includes("Doesn't see children"));
+    const b = (await client.callTool({ name: "book_visit", arguments: { confirm: true } })) as any;
+    assert.equal(b.isError, true);
+    await client.close();
+  } finally { await local.close(); }
+});
+
+test("N2: an out-of-network proposal is booked only after a second explicit yes", async () => {
+  const s = await connect("u-n2");
+  await s.call("consent", { action: "allow" });
+  const { loadUser, saveUser } = await import("./store.ts");
+  const { loadScenario } = await import("./scenario.ts");
+  const sc = loadScenario();
+  const u = loadUser("u-n2", () => { throw new Error("must exist"); });
+  const slot = sc.slotsFor("Dr. Caspian Ardley")[0];
+  u.pending = { kind: "book", from: "find_in_network", at: sc.now, proposals: [{ memberId: "m3", item: "orthopedics", recordId: "t:ortho-5", doctorName: "Dr. Caspian Ardley", specialtyLabel: "Orthopedics", officeId: "ortho-5", officeName: "Office ortho-5", distanceMi: 1.5, start: slot.start, end: slot.end, networkStatus: "out_of_network", overRoutine: null }] };
+  saveUser(u);
+  const first = await s.call("book_visit", { confirm: true });
+  assert.equal(first.isError, true);
+  assert.equal(first.structuredContent.data.refused, "N2");
+  assert.equal(first.content[0].text, "That doctor is out of network for his plan. Book anyway?");
+  const second = await s.call("book_visit", { confirm: true, book_anyway: true });
+  assert.equal(second.isError, undefined);
+  const after = loadUser("u-n2", () => { throw new Error("must exist"); });
+  assert.equal(after.visits.at(-1)!.outOfNetworkConfirmed, true);
+  await s.client.close();
+});
+
+test("N13: an office policy keeps only its six fields, whatever the caller passes", async () => {
+  const { savePolicy } = await import("./store.ts");
+  savePolicy({ officeId: "x-office", minAgeMonths: 12, maxAgeMonths: null, source: "office_confirmed_at_booking", learnedAt: "2026-10-16", demo: true, note: "great with kids", memberId: "m3", family: "u-1" } as never, SEED);
+  const all = JSON.parse(readFileSync(join(DATA, "office-policies.json"), "utf8")) as Record<string, unknown>[];
+  const p = all.find((x) => x.officeId === "x-office")!;
+  assert.deepEqual(Object.keys(p).sort(), ["demo", "learnedAt", "maxAgeMonths", "minAgeMonths", "officeId", "source"]);
 });
