@@ -75,7 +75,7 @@ function devinfo(sv: Services, sessions: number) {
     plans: sv.directory.plans.map((p) => ({ planId: p.planId, label: p.label, ...p.dev })),
     probes: Object.fromEntries(sv.probes),
     verify: verify ? { total: verify.length, pass: verify.filter((r) => r.pass).length, file: "logs/verify-latest.json" } : null,
-    audits: Object.fromEntries(audits.map((f) => [f, readJson(join(ROOT, "docs", f))?.summary ?? null])),
+    audits: Object.fromEntries(audits.map((f) => { const j = readJson(join(ROOT, "docs", f)); return [f, j?.totals ? { records: j.totals.records, agePublished: j.totals.age_policy_published, errors: j.totals.errors, controlLit: j.control?.synthetic_age_record_counted === true } : (j?.summary ?? null)]; })),
     sessions,
     now: new Date(sv.now()).toISOString(),
   };

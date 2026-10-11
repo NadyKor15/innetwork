@@ -12,7 +12,7 @@ An Alexa+ add-on: a self-hosted **MCP server (spec 2025-11-25, Streamable HTTP; 
 |---|---|---|---|---|
 | **Tech Implementation** — "How well is the project built, and how effectively does it use the required tech?" | MCP 2025-11-25 + 2026-07-28 on one endpoint through the SDK's own era routing; 9 tools, 6 MCP Apps views; deterministic network gate (no model) with 13 refusals, each guarded by a test and a mutation check (16/16 killed); live FHIR Plan-Net query for the network step; state across sessions and restarts; independent Inspector CLI check on both eras | Built | `server/`, `src/core/`, `src/directory/`, `verify/`, `docs/inspector-2026-10-11/` | 0:00, 1:53 |
 | **Design** — "complete, coherent product experience … interaction model intuitive … for the target device" | Voice first, screen second: one sentence → one screen for three people; read-back before booking, voice + written confirmation, cancel anytime (§15); short replies (107 words of Alexa in the whole video); screens follow the Alexa+ add-on design guide (768×480 base ×1.667, light and dark, type scale, one bright action) and were picked by the author from image-first mockups | Built | `views/`, `host/`, `design/screens/` | 0:00–1:53 |
-| **Potential Impact** — "credible, specific case for solving customer needs … audience beyond the hackathon" | A real family's problem (three plans, a referral that failed on age, an hour per call); a reproducible audit of public insurer directories (`npm run audit:directories`, ⏳ number); any family whose members are on different plans | Built / ⏳ number | `packages/plannet-directory-check/`, `docs/AUDIT-*.md` | 0:18 |
+| **Potential Impact** — "credible, specific case for solving customer needs … audience beyond the hackathon" | A real family's problem (three plans, a referral that failed on age, an hour per call); a reproducible audit: **0 of 8,506 public directory records state what age a doctor sees** (`npm run audit:directories`, 6 insurers, 3 Orlando ZIPs); any family whose members are on different plans | Built | `packages/plannet-directory-check/`, `docs/AUDIT-*.md` | 0:18 |
 | **Quality of the Idea** — "creative, imaginative use of the required tools … understanding of the developer ecosystem and the end-user needs" | Agentic workflow across services (directory → booking → calendar → Alexa app + email), context that persists (checkup year, family routine, the parent's own notes), MCP Apps; why native Alexa+ doesn't do this today (see below) | Built | `server/tools.ts` | 0:18, 0:35 |
 
 | Submission rule | Status | Where |
@@ -59,9 +59,9 @@ Every refusal is a deterministic check (no model) with a test, and a mutation ch
 ## Data: what is live, what is a file, what is a sample
 | Person | Plan on screen | Source | Mode |
 |---|---|---|---|
-| Mom | Plan A | Florida Blue provider directory, FHIR Plan-Net (network `BCHPPO`) | LIVE in `auto`; recorded sample (names changed) on the cards |
-| Older child | Plan B | Oscar machine-readable provider file, CMS QHP JSON (HIOS `21525FL0010009`) | FILE |
-| Youngest | Plan C | ⏳ state program directory | ⏳ |
+| Mom | Plan A | Florida Blue provider directory, FHIR Plan-Net — BlueChoice PPO (plan_id `BCHPPO`, network `PPC-2026-BCHPPO`) | LIVE in `auto`; recorded sample (names and offices changed) on the cards |
+| Older child | Plan B | Oscar Health (FL) machine-readable provider file, CMS QHP JSON — Silver Classic Standard (HIOS `21525FL0010009`) | FILE (no API exists for marketplace plans); recorded sample on the cards |
+| Youngest | Plan C | Molina Healthcare of Florida provider directory, FHIR Plan-Net — Medicaid Managed Medical Assistance (network `15`) | LIVE in `auto`; recorded sample (names, offices and the specialty label changed — disclosed per record) on the cards |
 
 Office age policies ("doesn't see children under 3") are not in any directory. In production they are learned once at a booking and kept as a property of the office — no family data — so the next family is spared the call. In this demo they are sandbox data and every line built from them says "demo data". Slots, booking, calendar and the written confirmation are a sandbox partner.
 
@@ -69,10 +69,18 @@ Office age policies ("doesn't see children under 3") are not in any directory. I
 The parent is the user. A child appears as a relative label ("Youngest") and a plan label ("Plan C"). The age band the parent says ("under two") is used for that one search and never stored; verify scans every household file for age, name, date-of-birth and program-type keys. Policy §4 vs §13 for a parent-directed health navigator is unclear — we minimized, simulated, and filed a clarification request (`docs/FEATURE-REQUESTS.md` FR3). We do not claim policy compliance; the design follows the policy and is simulated.
 
 ## The number
-⏳ `npm run audit:directories` — public insurer directories, 3 Orlando ZIPs × 5 specialties: how many records say what age a doctor sees. ⏳ `npm run audit:sites` — practices' own websites.
+`npm run audit:directories` (package `plannet-directory-check`), 2026-10-11, 3 Orlando ZIPs (32801, 32803, 32806) × the six specialties of the demo, anonymous GETs to six public insurer directories:
+
+**0 of 8,506 public directory records (4,170 practitioner roles + 4,336 locations) state what patient ages are seen.** The counter is proven on a synthetic record ("Ages 3 and up" → counted; plain record → not). 283 requests, 3 errors (Molina's daily quota → "not measured" for Molina, said so in the report). Also measured: office hours on 16.8% of records; a "new patients" flag on 88.6%; 25 of 474 NPPES individuals found by ZIP practice somewhere else unless `address_purpose=LOCATION` is added. Full table: `docs/AUDIT-2026-10-11.md`.
+
+Public insurer directories don't say what age a doctor sees, so there is nowhere to check in advance — you find out on the phone.
 
 ## Platform findings
-⏳ (from the directory audit and the friction log)
+1. **Alexa+ has no health-care booking path**: Local Booking SPI names salons, spas and fitness; no clinic profile, no plan or patient-age fields (`docs/FEATURE-REQUESTS.md` FR1, friction A4).
+2. **FHIR Plan-Net has no structured patient-age field** (`newpatients.characteristics` is free text) — and in 8,506 records nobody fills it (FR2, friction F12).
+3. **Marketplace plans publish files, not APIs**: one provider file is up to 1.5 GB; the demo reads Oscar's Florida file (friction F9).
+4. **Directories disagree with themselves**: an insurance plan that points to a network no practitioner uses (Florida Blue, 5 of 14 plans, F3); a Medicaid plan record with an empty network (Molina, F7); an undocumented daily quota (Molina, F6b); `/metadata` hidden behind a gateway (Florida Blue, F1).
+5. **Policy for a parent-directed health navigator is unclear** (§4 vs §13; FR3, friction A5).
 
 ## License
 MIT — see `LICENSE`. Font: Nunito (SIL Open Font License 1.1, `@fontsource/nunito`).

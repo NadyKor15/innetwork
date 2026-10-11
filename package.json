@@ -21,6 +21,8 @@
     "audit:sites": "node scripts/audit-sites.ts",
     "record": "node scripts/record-demo.ts",
     "rough-cut": "node scripts/rough-cut.ts",
+    "tts": "node scripts/tts-alexa.ts",
+    "tts:mom": "node scripts/tts-mom-fallback.ts",
     "skill:test": "node --test --test-timeout=60000 \"skill/test/*.test.ts\"",
     "skill:start": "node skill/src/endpoint.ts",
     "mutations": "node verify/mutations.ts"
