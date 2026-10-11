@@ -50,7 +50,7 @@ export type UserState = {
   family: Member[];
   routine: RoutineBlock[];
   notes: Note[];
-  checkup: { memberId: string; oopMetToldAt: number | null; planYearEnd: string; haveOrder: boolean } | null;
+  checkup: { memberId: string; oopMetToldAt: number | null; planYearEnd: string; haveOrder: boolean; /** index in visits[] where the checkup batch starts: visits before it were "booked earlier" (the sandbox clock does not move) */ batchFrom: number | null } | null;
   visits: Visit[];
   pending: Pending;
   outbox: OutboxItem[];

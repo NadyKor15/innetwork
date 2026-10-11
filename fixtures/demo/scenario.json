@@ -11,8 +11,8 @@
     { "memberId": "m3", "label": "Youngest", "role": "child", "pronoun": "he", "planId": "plan-c" }
   ],
   "routine": [
-    { "label": "Daycare drop-off", "days": [1, 2, 3, 4, 5], "start": "07:50", "end": "08:15" },
-    { "label": "Daycare pick-up", "days": [1, 2, 3, 4, 5], "start": "11:45", "end": "12:10" }
+    { "label": "Daycare drop-off", "days": [1, 2, 3, 4, 5], "start": "07:50", "end": "08:15", "memberId": "m3" },
+    { "label": "Daycare pick-up", "days": [1, 2, 3, 4, 5], "start": "11:45", "end": "12:10", "memberId": "m3" }
   ],
   "notes": [
     { "doctorName": "Dr. Ansel Quillfeather", "text": "great with kids" }

@@ -97,7 +97,7 @@ export type DirectoryAnswer =
   | { ok: false; error: string; mode: SourceMode; directory: string; ms: number; asOf: string; ref: string };
 
 /** A weekday routine block (N12): label + time only, no names, no addresses. days: 1=Mon..5=Fri. */
-export type RoutineBlock = { label: string; days: number[]; start: string; end: string };
+export type RoutineBlock = { label: string; days: number[]; start: string; end: string; /** member the block is for (pronoun in "while he's at daycare"); no name */ memberId?: string };
 
 export type Slot = { start: number; end: number };
 
