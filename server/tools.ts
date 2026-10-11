@@ -63,16 +63,30 @@ class Steps {
   }
 }
 
-type Reply = { content: { type: "text"; text: string }[]; structuredContent: Record<string, unknown>; _meta: { steps: Step[] }; isError?: boolean };
-function reply(view: C.ViewName | null, parts: string[], card: C.CardModel | null, data: Record<string, unknown>, steps: Steps, isError = false): Reply {
+type Reply = { content: { type: "text"; text: string }[]; structuredContent: Record<string, unknown>; _meta: { steps: Step[]; gate?: string[] }; isError?: boolean };
+function reply(view: C.ViewName | null, parts: string[], card: C.CardModel | null, data: Record<string, unknown>, steps: Steps, isError = false, gate?: string[]): Reply {
   if (!steps.list.length) steps.add({ service: "Household state", op: "read", mode: "sandbox", ms: 0, summary: "answered from saved state" });
   const speech = parts.join(" ");
   return {
     content: [{ type: "text", text: speech }],
     structuredContent: { speech, speechParts: parts, seconds: parts.map(seconds), view, card, data },
-    _meta: { steps: steps.list },
+    _meta: { steps: steps.list, ...(gate ? { gate } : {}) },
     ...(isError ? { isError: true } : {}),
   };
+}
+
+/** Developer-view lines that show the deterministic gate at work (never on customer cards). */
+function gateLines(lookups: Lookup[], u: UserState): string[] {
+  const out: string[] = [];
+  for (const lk of lookups) {
+    const d = lk.decisions.find((x) => x.age.status === "does_not_see_this_age") ?? lk.decisions.find((x) => x.network.status === "out_of_network");
+    if (!d) continue;
+    out.push(d.age.status === "does_not_see_this_age" ? `check_doctor → does_not_see_this_age (${d.age.source})` : `check_doctor → out_of_network (${d.network.source})`);
+    break;
+  }
+  out.push(`family_routine → ${u.routine.length} weekday blocks · slots inside them skipped`);
+  out.push("doctor_notes → private to this family · not used for ranking");
+  return out;
 }
 
 // ---------- helpers ----------
@@ -330,7 +344,7 @@ export function buildMcpServer({ era, services: sv, assetBase = "" }: BuildOptio
       const speech = lk.answer.ok
         ? S.searchSummary({ checked: lk.records.size, ageSetAside: { count: ageAside.length, under: ageAside.every((d) => d.customerReason === ageAside[0]?.customerReason) ? under : null }, network: ranked.setAside.filter((d) => d.network.status === "out_of_network").length, notAccepting: ranked.setAside.filter((d) => d.network.status === "in_network" && d.newPatients.status === "not_accepting").length, fits: ranked.fits.length, askOffice: ranked.askOffice.length, pronoun: lk.member.pronoun, adult: !child })
         : `I couldn't reach ${lk.plan.label}'s directory just now, so I can't confirm who's in network. Try again in a minute.`;
-      return reply("set-aside", [speech], card, { member: lk.member.label, plan: lk.plan.label, checked: lk.records.size, fits: ranked.fits.length, setAside: ranked.setAside.length, askOffice: ranked.askOffice.length, proposal: proposal ? { doctor: proposal.doctorName, start: new Date(proposal.start).toISOString() } : null, ageUsedForThisSearchOnly: !!lk.ageBand }, steps);
+      return reply("set-aside", [speech], card, { member: lk.member.label, plan: lk.plan.label, checked: lk.records.size, fits: ranked.fits.length, setAside: ranked.setAside.length, askOffice: ranked.askOffice.length, proposal: proposal ? { doctor: proposal.doctorName, start: new Date(proposal.start).toISOString() } : null, ageUsedForThisSearchOnly: !!lk.ageBand }, steps, false, gateLines(lookups, u));
     }
 
     // ---- several people (screen 01) ----
@@ -355,7 +369,7 @@ export function buildMcpServer({ era, services: sv, assetBase = "" }: BuildOptio
       footnote: "Times fit your family routine", prompt: proposals.length ? `Say "yes" to book ${proposals.length === 1 ? "it" : proposals.length === 2 ? "both" : `all ${S.numberWord(proposals.length)}`}` : null, booked: false,
     };
     const speech = S.familyReadBack(withFit, rows.length, picks.filter((p) => !p.proposal && !p.existing).map((p) => ({ label: p.lk.member.label, pronoun: p.lk.member.pronoun })));
-    return reply("family-match", [speech], card, { people: rows.length, proposals: proposals.map((p) => ({ member: p.memberId, doctor: p.doctorName, start: new Date(p.start).toISOString(), overRoutine: p.overRoutine })) }, steps);
+    return reply("family-match", [speech], card, { people: rows.length, proposals: proposals.map((p) => ({ member: p.memberId, doctor: p.doctorName, start: new Date(p.start).toISOString(), overRoutine: p.overRoutine })) }, steps, false, gateLines(lookups, u));
   });
 
   // ---------- check_doctor ----------

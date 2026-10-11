@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>InNetwork 05 Set aside</title>
+<script>if(/[?&]theme=light/.test(location.search))document.documentElement.dataset.theme='light'</script>
+<style>
+:root {
+  /* surfaces */
+  --screen: #14181E;
+  --card: #14181E;
+  --card-inner: #1B2028;
+  --hairline: #2A303A;             /* decoration only (1.3:1) */
+  /* text (white with alpha on dark) */
+  --text-1: #FFFFFF;
+  --text-2: rgba(255, 255, 255, 0.72);
+  --text-3: rgba(255, 255, 255, 0.48); /* minimum for any text */
+  --on-accent: #17111C;            /* text on coral and any light tile (8.1:1) */
+  /* family members (thin frame, dot, left bar - never a large fill) */
+  --mom: #FF8C6B;
+  --older: #B49CFF;
+  --youngest: #4FD1C5;
+  /* statuses (always with an icon and a word, never colour alone) */
+  --fits: #7FE0A8;                 /* outline check, no filled circle */
+  --rose: #FF8FA3;                 /* set aside, reason text */
+  --unknown: #F2D06B;              /* "?" in an outline */
+  --file: #8CB8FF;                 /* source FILE */
+  /* the one bright fill in the product: the "Allow" action */
+  --accent: #FF8C6B;
+  --accent-text: #17111C;
+  /* mom's window under her visits: 15% coral on the card */
+  --mom-window: rgba(255, 140, 107, 0.15);
+  /* type scale (Alexa+ add-on guide, base px) */
+  --display1: 48px; --display2: 40px; --display3: 32px; --display4: 28px; --display5: 24px;
+  --headline1: 20px; --headline2: 18px;
+  --body1: 16px; --body2: 14px; --body3: 12px;  /* body3 = minimum for customer-facing text */
+  --label1: 10px;                                 /* badges and axis labels only; label2 (8) not used */
+  /* spacing, radii, icons */
+  --sp-2: 2px; --sp-6: 6px; --sp-8: 8px; --sp-12: 12px; --sp-16: 16px; --sp-20: 20px; --sp-24: 24px;
+  --r-card: 16px; --r-inner: 12px; --r-badge: 8px; --r-pill: 999px;
+  --icon-s: 16px; --icon-m: 20px; --icon-l: 24px;
+  --font: "Nunito", ui-rounded, system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme: dark;
+}
+:root[data-theme="light"] {
+  --screen: #FAF9FB;
+  --card: #FFFFFF;
+  --card-inner: #FAF9FB;
+  --hairline: #E6E2EA;
+  --text-1: #17111C;
+  --text-2: rgba(23, 17, 28, 0.72);
+  --text-3: rgba(23, 17, 28, 0.60);
+  --on-accent: #FFFFFF;
+  --mom: #B4462A;
+  --older: #6A4FCF;
+  --youngest: #0F7F76;
+  --fits: #1E7D4C;
+  --rose: #B42D4A;
+  --unknown: #8A6A00;
+  --file: #2F5FB3;
+  --accent: #B4462A;
+  --accent-text: #FFFFFF;
+  --mom-window: rgba(180, 70, 42, 0.10);
+  color-scheme: light;
+}
+/* own variables: geometry measured from variant-A.png (image px x 0.4842 = base px) */
+:root {
+  --pad-x: var(--sp-24);
+  --topbar-h: 24px;
+  --logo-h: 12px;
+  --ask-size: 13.2px;
+  --reply-size: var(--body1);
+  --topic-size: 17.5px;
+  --topic-sub-size: var(--body1);
+  --section-size: 15.6px;
+  --name-size: 15.6px;
+  --meta-size: 13px;
+  --slot-size: 13.5px;
+  --row-name-size: 13.3px;
+  --row-name-size-strong: var(--body3);
+  --reason-size: var(--body3);
+  --foot-size: var(--body3);
+  --card-h: 131px;
+  --row-h: 28px;
+  --row-gap: 3px;
+  --name-col: 174px;
+  --sep-h: 16.5px;
+}
+
+@font-face { font-family: "Nunito"; src: url("fonts/nunito-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+@font-face { font-family: "Nunito"; src: url("fonts/nunito-latin-600-normal.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
+@font-face { font-family: "Nunito"; src: url("fonts/nunito-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: block; }
+@font-face { font-family: "Nunito"; src: url("fonts/nunito-latin-800-normal.woff2") format("woff2"); font-weight: 800; font-style: normal; font-display: block; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { zoom: 1.667; overflow: hidden; background: var(--screen); }
+body {
+  width: 768px; height: 480px; overflow: hidden;
+  background: var(--screen); color: var(--text-1);
+  font-family: var(--font); font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 1. top bar: add-on mark + name left, demo data right */
+.topbar {
+  height: var(--topbar-h); padding: 0 var(--pad-x);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.brand { display: flex; align-items: center; gap: var(--sp-8); }
+.brand__mark { height: var(--logo-h); width: auto; display: block; }
+.brand__name { font-size: var(--body2); font-weight: 700; line-height: var(--topbar-h); color: var(--text-1); white-space: nowrap; }
+.demo-tag { font-size: var(--label1); line-height: var(--topbar-h); color: var(--text-3); white-space: nowrap; }
+
+/* 2. conversation band */
+.convo { padding: var(--sp-6) var(--pad-x) 0; }
+.convo__ask { font-size: var(--ask-size); line-height: 17px; color: var(--text-2); } /* spoken request: may wrap if longer */
+.convo__reply { margin-top: var(--sp-2); font-size: var(--reply-size); font-weight: 800; line-height: 19px; color: var(--text-1); }
+.convo__reply span { display: block; }
+
+/* 3. topic header with the youngest tab */
+.topic { margin: var(--sp-12) var(--pad-x) 0; display: flex; align-items: stretch; gap: var(--sp-12); min-height: 22px; }
+.topic__tab { flex: none; width: 8px; border-radius: var(--r-pill); background: var(--youngest); }
+.topic__title { line-height: 22px; font-size: var(--topic-sub-size); font-weight: 700; color: var(--text-1); }
+.topic__title b { font-size: var(--topic-size); font-weight: 800; }
+
+/* section titles */
+.section-title { padding: 0 var(--pad-x); font-size: var(--section-size); font-weight: 800; line-height: 20px; color: var(--text-1); white-space: nowrap; }
+.section-title--fits { margin-top: var(--sp-12); }
+.section-title--aside { margin-top: var(--sp-12); }
+
+/* 4. two doctor cards that fit */
+.fits-grid { margin-top: 4px; padding: 0 var(--pad-x); display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-12); }
+.doc-card {
+  min-height: var(--card-h); padding: 0 15px 7px; /* 1px border + 15 = 16 from the card edge */
+  background: var(--card); border: 1px solid var(--hairline); border-radius: var(--r-card);
+  display: flex; flex-direction: column;
+}
+.doc-card__name { margin-top: 7px; font-size: var(--name-size); font-weight: 800; line-height: 20px; color: var(--text-1); }
+.doc-card__spec { font-size: var(--meta-size); line-height: 17px; color: var(--text-2); }
+.doc-card__checks { margin-top: 5px; list-style: none; }
+.check-line { height: 21.5px; display: flex; align-items: center; gap: var(--sp-12); font-size: var(--meta-size); color: var(--text-1); white-space: nowrap; }
+.check-line svg { flex: none; width: var(--icon-s); height: var(--icon-s); display: block; }
+.doc-card__rule { margin-top: 6.5px; height: 1px; background: var(--hairline); border: 0; }
+.doc-card__slot { margin-top: 5px; font-size: var(--slot-size); font-weight: 600; line-height: 18px; color: var(--text-1); white-space: nowrap; }
+
+/* 5. set aside before you call */
+.aside-list { margin-top: 4px; padding: 0 var(--pad-x); list-style: none; display: flex; flex-direction: column; gap: var(--row-gap); }
+.aside-row {
+  min-height: var(--row-h); padding: 0 15px; /* 1px border + 15 = 16 */
+  background: var(--card); border: 1px solid var(--hairline); border-radius: var(--r-inner);
+  display: flex; align-items: center;
+}
+.aside-row__who { flex: none; width: var(--name-col); margin-right: var(--sp-8); display: flex; align-items: center; gap: var(--sp-8); }
+.aside-row__name { font-size: var(--row-name-size); line-height: 16px; color: var(--text-3); }
+.aside-row--struck .aside-row__name { text-decoration: line-through; text-decoration-color: var(--text-3); text-decoration-thickness: 1px; }
+.aside-row--unknown .aside-row__name { font-size: var(--row-name-size-strong); font-weight: 600; color: var(--text-1); }
+.aside-row__q { flex: none; width: var(--icon-m); height: var(--icon-m); display: block; }
+.aside-row__sep { flex: none; width: 1px; height: var(--sep-h); background: var(--hairline); }
+.aside-row__reason { margin-left: var(--sp-20); font-size: var(--reason-size); line-height: 16px; color: var(--rose); }
+.aside-row--unknown .aside-row__reason { color: var(--text-1); }
+
+/* 6. footer */
+.dot { margin: 0 1.5px; } /* the picture spaces its middle dots wider than a plain space */
+.foot-note { margin-top: 9px; padding: 0 var(--pad-x); text-align: right; font-size: var(--foot-size); line-height: 16px; color: var(--text-2); white-space: nowrap; }
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand__mark" viewBox="0 0 76 28" width="32.57" height="12" role="img" aria-label="InNetwork">
+        <circle cx="14" cy="14" r="13" fill="var(--mom)"/>
+        <circle cx="35" cy="14" r="13" fill="var(--older)"/>
+        <circle cx="56" cy="14" r="13" fill="var(--youngest)"/>
+      </svg>
+      <span class="brand__name">InNetwork</span>
+    </div>
+    <span class="demo-tag">demo data</span>
+  </header>
+
+  <section class="convo" aria-label="Conversation">
+    <p class="convo__ask">“Alexa, find an orthopedist for my youngest. He’s under two.”</p>
+    <p class="convo__reply"><span>I checked six nearby.</span><span>Two don’t see children under three, one isn’t in his plan. These two fit.</span></p>
+  </section>
+
+  <h1 class="topic"><span class="topic__tab" aria-hidden="true"></span><span class="topic__title"><b>Orthopedics</b> · for your youngest (under 2) · on Plan C</span></h1>
+
+  <h2 class="section-title section-title--fits">These see children this age</h2>
+  <div class="fits-grid">
+    <article class="doc-card">
+      <h3 class="doc-card__name">Dr. Imogen Pellworth</h3>
+      <p class="doc-card__spec">Pediatric orthopedics</p>
+      <ul class="doc-card__checks">
+        <li class="check-line"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.6l3.2 3.1L13 4.6" fill="none" stroke="var(--fits)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>in Plan C’s network</span></li>
+        <li class="check-line"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.6l3.2 3.1L13 4.6" fill="none" stroke="var(--fits)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>sees this age</span></li>
+      </ul>
+      <hr class="doc-card__rule">
+      <p class="doc-card__slot">Mon Oct 19 <span class="dot">·</span> 1:30 PM</p>
+    </article>
+    <article class="doc-card">
+      <h3 class="doc-card__name">Dr. Corwin Pembrook</h3>
+      <p class="doc-card__spec">Orthopedics</p>
+      <ul class="doc-card__checks">
+        <li class="check-line"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.6l3.2 3.1L13 4.6" fill="none" stroke="var(--fits)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>in Plan C’s network</span></li>
+        <li class="check-line"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.6l3.2 3.1L13 4.6" fill="none" stroke="var(--fits)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>sees this age</span></li>
+      </ul>
+      <hr class="doc-card__rule">
+      <p class="doc-card__slot">Tue Oct 20 <span class="dot">·</span> 2:00 PM</p>
+    </article>
+  </div>
+
+  <h2 class="section-title section-title--aside">Set aside before you call</h2>
+  <ul class="aside-list">
+    <li class="aside-row aside-row--struck">
+      <span class="aside-row__who"><span class="aside-row__name">Dr. Tobias Wrenfield</span></span>
+      <span class="aside-row__sep" aria-hidden="true"></span>
+      <span class="aside-row__reason">Doesn’t see children under 3</span>
+    </li>
+    <li class="aside-row aside-row--struck">
+      <span class="aside-row__who"><span class="aside-row__name">Dr. Percival Ashgrove</span></span>
+      <span class="aside-row__sep" aria-hidden="true"></span>
+      <span class="aside-row__reason">Doesn’t see children under 3</span>
+    </li>
+    <li class="aside-row aside-row--struck">
+      <span class="aside-row__who"><span class="aside-row__name">Dr. Caspian Ardley</span></span>
+      <span class="aside-row__sep" aria-hidden="true"></span>
+      <span class="aside-row__reason">Not in his plan’s network</span>
+    </li>
+    <li class="aside-row aside-row--unknown">
+      <span class="aside-row__who">
+        <svg class="aside-row__q" viewBox="0 0 20 20" role="img" aria-label="unknown">
+          <circle cx="10" cy="10" r="9" fill="none" stroke="var(--unknown)" stroke-width="1.25"/>
+          <path d="M7.6 7.7a2.45 2.45 0 1 1 3.7 2.1c-.8.45-1.3.95-1.3 1.9" fill="none" stroke="var(--unknown)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="10" cy="14.6" r="1.05" fill="var(--unknown)"/>
+        </svg>
+        <span class="aside-row__name">Dr. Wendeline Hartsworth</span>
+      </span>
+      <span class="aside-row__sep" aria-hidden="true"></span>
+      <span class="aside-row__reason">Age not listed <span class="dot">·</span> we’ll ask the office when booking</span>
+    </li>
+  </ul>
+
+  <p class="foot-note">Age used for this search only · not saved</p>
+</body>
+</html>

@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>InNetwork 06 Before we start</title>
+<script>if(/[?&]theme=light/.test(location.search))document.documentElement.dataset.theme='light'</script>
+<style>
+/* ---- tokens.css (verbatim) ---- */
+:root {
+  /* surfaces */
+  --screen: #14181E;
+  --card: #14181E;
+  --card-inner: #1B2028;
+  --hairline: #2A303A;             /* decoration only (1.3:1) */
+  /* text (white with alpha on dark) */
+  --text-1: #FFFFFF;
+  --text-2: rgba(255, 255, 255, 0.72);
+  --text-3: rgba(255, 255, 255, 0.48); /* minimum for any text */
+  --on-accent: #17111C;            /* text on coral and any light tile (8.1:1) */
+  /* family members (thin frame, dot, left bar - never a large fill) */
+  --mom: #FF8C6B;
+  --older: #B49CFF;
+  --youngest: #4FD1C5;
+  /* statuses (always with an icon and a word, never colour alone) */
+  --fits: #7FE0A8;                 /* outline check, no filled circle */
+  --rose: #FF8FA3;                 /* set aside, reason text */
+  --unknown: #F2D06B;              /* "?" in an outline */
+  --file: #8CB8FF;                 /* source FILE */
+  /* the one bright fill in the product: the "Allow" action */
+  --accent: #FF8C6B;
+  --accent-text: #17111C;
+  /* mom's window under her visits: 15% coral on the card */
+  --mom-window: rgba(255, 140, 107, 0.15);
+  /* type scale (Alexa+ add-on guide, base px) */
+  --display1: 48px; --display2: 40px; --display3: 32px; --display4: 28px; --display5: 24px;
+  --headline1: 20px; --headline2: 18px;
+  --body1: 16px; --body2: 14px; --body3: 12px;  /* body3 = minimum for customer-facing text */
+  --label1: 10px;                                 /* badges and axis labels only; label2 (8) not used */
+  /* spacing, radii, icons */
+  --sp-2: 2px; --sp-6: 6px; --sp-8: 8px; --sp-12: 12px; --sp-16: 16px; --sp-20: 20px; --sp-24: 24px;
+  --r-card: 16px; --r-inner: 12px; --r-badge: 8px; --r-pill: 999px;
+  --icon-s: 16px; --icon-m: 20px; --icon-l: 24px;
+  --font: "Nunito", ui-rounded, system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme: dark;
+}
+:root[data-theme="light"] {
+  --screen: #FAF9FB;
+  --card: #FFFFFF;
+  --card-inner: #FAF9FB;
+  --hairline: #E6E2EA;
+  --text-1: #17111C;
+  --text-2: rgba(23, 17, 28, 0.72);
+  --text-3: rgba(23, 17, 28, 0.60);
+  --on-accent: #FFFFFF;
+  --mom: #B4462A;
+  --older: #6A4FCF;
+  --youngest: #0F7F76;
+  --fits: #1E7D4C;
+  --rose: #B42D4A;
+  --unknown: #8A6A00;
+  --file: #2F5FB3;
+  --accent: #B4462A;
+  --accent-text: #FFFFFF;
+  --mom-window: rgba(180, 70, 42, 0.10);
+  color-scheme: light;
+}
+/* ---- screen variables (measured from variant-A.png, x0.4842 -> base px) ---- */
+:root {
+  --base-w: 768px;
+  --base-h: 480px;
+  --appbar-h: 24px;
+  --card-h: 444px;
+  --title-h: 59px;
+  --row1-h: 58px;
+  --row-h: 43px;
+  --icon-col: 68px;
+  --stmt-size: 17px;
+  --stmt-lh: 21.5px;
+  --disc-size: 15px;
+  --disc-lh: 19px;
+  --disc-h: 56px;
+  --btn-w: 104px;
+  --btn-h: 38px;
+  --btn-gap: 12px;
+  --allow-size: 14px;
+  --later-size: 13px;
+  --mark-h: 12px;
+  --mark-w: 32.57px;
+}
+
+@font-face { font-family: "Nunito"; src: url("fonts/nunito-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+@font-face { font-family: "Nunito"; src: url("fonts/nunito-latin-600-normal.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
+@font-face { font-family: "Nunito"; src: url("fonts/nunito-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: block; }
+@font-face { font-family: "Nunito"; src: url("fonts/nunito-latin-800-normal.woff2") format("woff2"); font-weight: 800; font-style: normal; font-display: block; }
+
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  zoom: 1.667;
+  overflow: hidden;
+  background: var(--screen);
+}
+body {
+  width: var(--base-w);
+  height: var(--base-h);
+  margin: 0;
+  overflow: hidden;
+  background: var(--screen);
+  color: var(--text-1);
+  font-family: var(--font);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- top bar: add-on mark top-left, "demo data" top-right ---- */
+.appbar {
+  height: var(--appbar-h);
+  padding: 0 var(--sp-24);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand { display: flex; align-items: center; gap: var(--sp-8); }
+.brand-mark { display: block; width: var(--mark-w); height: var(--mark-h); }
+.brand-mark .m1 { fill: var(--mom); }
+.brand-mark .m2 { fill: var(--older); }
+.brand-mark .m3 { fill: var(--youngest); }
+.brand-name { font-size: var(--body2); font-weight: 700; line-height: var(--appbar-h); color: var(--text-1); white-space: nowrap; }
+.demo-data { font-size: var(--label1); line-height: var(--appbar-h); color: var(--text-3); white-space: nowrap; }
+
+/* ---- consent card ---- */
+.consent-card {
+  margin: 0 var(--sp-24);
+  height: var(--card-h);
+  padding: 0 15px;               /* + 1px border = rows 16 inside the card edge */
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-card);
+  display: flex;
+  flex-direction: column;
+}
+.consent-title {
+  height: var(--title-h);
+  margin: 0;
+  padding: 13px 0 0 6px;
+  font-size: var(--display3);
+  font-weight: 800;
+  line-height: 40px;
+  color: var(--text-1);
+  white-space: nowrap;
+}
+
+.promises {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-8);
+}
+.promise {
+  height: var(--row-h);
+  flex: none;
+  display: grid;
+  grid-template-columns: var(--icon-col) 1fr;
+  column-gap: var(--sp-16);
+  align-items: center;
+  padding-right: var(--sp-24);
+  background: var(--card-inner);
+  border-radius: var(--r-inner);
+}
+.promise--tall { height: var(--row1-h); padding-top: 3px; }
+.nobreak { white-space: nowrap; }
+.promise-icon { display: flex; justify-content: center; align-items: center; }
+.promise-icon svg {
+  display: block;
+  width: var(--icon-l);
+  height: var(--icon-l);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.promise-icon .dot { fill: currentColor; stroke: none; }
+.icon-family   { color: var(--mom); }
+.icon-calendar { color: var(--older); }
+.icon-note     { color: var(--youngest); }
+.icon-lock     { color: var(--unknown); }
+.icon-chat     { color: var(--older); }
+.promise-text {
+  margin: 0;
+  font-size: var(--stmt-size);
+  font-weight: 600;
+  line-height: var(--stmt-lh);
+  color: var(--text-1);
+}
+
+.disclaimer {
+  flex: none;
+  height: var(--disc-h);
+  margin: var(--sp-8) 0 0;
+  padding: 5px 56px 0 var(--sp-16);  /* line breaks after "healthcare", text sits 2.5px below centre, as on the image */
+  display: flex;
+  align-items: center;
+  background: var(--card-inner);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-inner);
+  font-size: var(--disc-size);
+  line-height: var(--disc-lh);
+  color: var(--text-2);
+}
+
+.actions {
+  flex: none;
+  height: var(--btn-h);
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--btn-gap);
+}
+.btn {
+  width: var(--btn-w);
+  height: var(--btn-h);
+  margin: 0;
+  padding: 0;
+  border-radius: var(--r-pill);
+  font-family: var(--font);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.btn-allow {
+  border: 0;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-size: var(--allow-size);
+  font-weight: 800;
+}
+.btn-later {
+  border: 1px solid var(--text-3);
+  background: transparent;
+  color: var(--text-1);
+  font-size: var(--later-size);
+  font-weight: 600;
+}
+</style>
+</head>
+<body>
+<header class="appbar">
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 76 28" role="img" aria-label="InNetwork logo">
+      <circle class="m1" cx="14" cy="14" r="13"/>
+      <circle class="m2" cx="35" cy="14" r="13"/>
+      <circle class="m3" cx="56" cy="14" r="13"/>
+    </svg>
+    <span class="brand-name">InNetwork</span>
+  </div>
+  <span class="demo-data">demo data</span>
+</header>
+
+<main class="consent-card">
+  <h1 class="consent-title">Before we start</h1>
+
+  <ul class="promises">
+    <li class="promise promise--tall">
+      <span class="promise-icon icon-family" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="7.8" r="2.8"/>
+          <path d="M6.6 18.6A5.4 5.4 0 0 1 17.4 18.6"/>
+          <circle cx="4.7" cy="10.2" r="2.1"/>
+          <path d="M1 18.6A3.7 3.7 0 0 1 7.3 16"/>
+          <circle cx="19.3" cy="10.2" r="2.1"/>
+          <path d="M23 18.6A3.7 3.7 0 0 0 16.7 16"/>
+          <path d="M1 18.6H23"/>
+        </svg>
+      </span>
+      <p class="promise-text">I use your family's plan names and the age you tell me — only to find <span class="nobreak">in-network</span> doctors. I don't save ages.</p>
+    </li>
+    <li class="promise">
+      <span class="promise-icon icon-calendar" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <rect x="1.9" y="4.5" width="20.2" height="18" rx="3"/>
+          <path d="M1.9 9.6H22.1"/>
+          <path d="M7.4 1.4V6.4M16.6 1.4V6.4"/>
+        </svg>
+      </span>
+      <p class="promise-text">I use your family routine, like daycare drop-off, only to pick visit times.</p>
+    </li>
+    <li class="promise">
+      <span class="promise-icon icon-note" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M5.2 1.2H15.6L21.2 6.8V20.6A2.2 2.2 0 0 1 19 22.8H5A2.2 2.2 0 0 1 2.8 20.6V3.4A2.2 2.2 0 0 1 5 1.2Z"/>
+          <path d="M15.6 1.2V4.6A2.2 2.2 0 0 0 17.8 6.8H21.2"/>
+          <path d="M7.2 10.6H16.4M7.2 14.1H16.4M7.2 17.6H16.4"/>
+        </svg>
+      </span>
+      <p class="promise-text">Notes you tell me about a doctor stay with your family. No ratings.</p>
+    </li>
+    <li class="promise">
+      <span class="promise-icon icon-lock" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <rect x="4" y="10.5" width="16" height="11.8" rx="2.2"/>
+          <path d="M7.6 10.5V6.6A4.4 4.4 0 0 1 16.4 6.6V10.5"/>
+          <ellipse class="dot" cx="12" cy="16.3" rx="1" ry="1.5"/>
+        </svg>
+      </span>
+      <p class="promise-text">I never read member IDs aloud.</p>
+    </li>
+    <li class="promise">
+      <span class="promise-icon icon-chat" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M12.3 2.4C18.1 2.4 22.6 6.1 22.6 10.6C22.6 15.1 18.1 18.8 12.3 18.8C11 18.8 9.8 18.6 8.7 18.3L2.8 21L4.4 16.2C2.8 14.7 2 12.8 2 10.6C2 6.1 6.5 2.4 12.3 2.4Z"/>
+          <circle class="dot" cx="8" cy="10.6" r="1.3"/>
+          <circle class="dot" cx="12.3" cy="10.6" r="1.3"/>
+          <circle class="dot" cx="16.6" cy="10.6" r="1.3"/>
+        </svg>
+      </span>
+      <p class="promise-text">I don't give medical advice or pick a specialty for you.</p>
+    </li>
+  </ul>
+
+  <p class="disclaimer">This information is not a substitute for professional medical advice. Consult a healthcare provider for personal medical decisions.</p>
+
+  <div class="actions">
+    <button class="btn btn-allow" type="button">Allow</button>
+    <button class="btn btn-later" type="button">Not now</button>
+  </div>
+</main>
+</body>
+</html>
