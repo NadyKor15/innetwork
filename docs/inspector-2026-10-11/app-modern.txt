@@ -1,0 +1,9 @@
+{"hasApp":true,"toolName":"consent","resourceUri":"ui://innetwork/consent.html","csp":{"resourceDomains":["http://127.0.0.1:8796"]},"prefersBorder":false,"resourceMimeType":"text/html;profile=mcp-app"}
+{"hasApp":false,"toolName":"family_plans"}
+{"hasApp":false,"toolName":"family_routine"}
+{"hasApp":false,"toolName":"doctor_notes"}
+{"hasApp":true,"toolName":"find_in_network","resourceUri":"ui://innetwork/family-match.html","csp":{"resourceDomains":["http://127.0.0.1:8796"]},"prefersBorder":false,"resourceMimeType":"text/html;profile=mcp-app"}
+{"hasApp":false,"toolName":"check_doctor"}
+{"hasApp":true,"toolName":"book_visit","resourceUri":"ui://innetwork/booked.html","csp":{"resourceDomains":["http://127.0.0.1:8796"]},"prefersBorder":false,"resourceMimeType":"text/html;profile=mcp-app"}
+{"hasApp":true,"toolName":"cancel_visit","resourceUri":"ui://innetwork/booked.html","csp":{"resourceDomains":["http://127.0.0.1:8796"]},"prefersBorder":false,"resourceMimeType":"text/html;profile=mcp-app"}
+{"hasApp":true,"toolName":"checkup_year","resourceUri":"ui://innetwork/visit-plan.html","csp":{"resourceDomains":["http://127.0.0.1:8796"]},"prefersBorder":false,"resourceMimeType":"text/html;profile=mcp-app"}

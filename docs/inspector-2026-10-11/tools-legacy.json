@@ -1,0 +1,460 @@
+{
+  "tools": [
+    {
+      "name": "consent",
+      "title": "Before we start",
+      "description": "Show what InNetwork uses and why, and record the parent's answer. Nothing is looked up before 'allow'.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "show",
+              "allow",
+              "decline"
+            ]
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://innetwork/consent.html"
+        },
+        "ui/resourceUri": "ui://innetwork/consent.html"
+      }
+    },
+    {
+      "name": "family_plans",
+      "title": "Family and plans",
+      "description": "List who is in the household and which plan each person is on (labels only: Plan A/B/C), or move a person to another of the household's plans.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "default": "list",
+            "type": "string",
+            "enum": [
+              "list",
+              "set"
+            ]
+          },
+          "member": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "Who it is for, as the parent says it: \"Mom\", \"Older child\", \"Youngest\", \"my youngest\", \"me\""
+          },
+          "plan": {
+            "type": "string",
+            "pattern": "^Plan [A-Z]$"
+          }
+        },
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "family_routine",
+      "title": "Family routine",
+      "description": "List or replace the household's weekday routine blocks (label and time only, e.g. 'Daycare drop-off 07:50-08:15'). Visits are never placed over these without a yes.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "default": "list",
+            "type": "string",
+            "enum": [
+              "list",
+              "set"
+            ]
+          },
+          "blocks": {
+            "maxItems": 8,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 40
+                },
+                "days": {
+                  "minItems": 1,
+                  "maxItems": 7,
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 7
+                  }
+                },
+                "start": {
+                  "type": "string",
+                  "pattern": "^\\d{2}:\\d{2}$"
+                },
+                "end": {
+                  "type": "string",
+                  "pattern": "^\\d{2}:\\d{2}$"
+                },
+                "for_member": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40,
+                  "description": "Who it is for, as the parent says it: \"Mom\", \"Older child\", \"Youngest\", \"my youngest\", \"me\""
+                }
+              },
+              "required": [
+                "label",
+                "days",
+                "start",
+                "end"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "doctor_notes",
+      "title": "Your notes about doctors",
+      "description": "Save or list the parent's own words about a doctor. Notes stay with this household, are shown as 'Your note', and never change the order of results.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "default": "list",
+            "type": "string",
+            "enum": [
+              "list",
+              "add"
+            ]
+          },
+          "doctor": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 80
+          },
+          "text": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 140
+          }
+        },
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "find_in_network",
+      "title": "Find in-network doctors",
+      "description": "Find a doctor for one or more family members, each in their own plan's network. Doctors who aren't in network, don't see a child's age (office policy) or aren't taking new patients are set aside with the reason. Proposes visit times around the family routine; nothing is booked until book_visit(confirm=true).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "requests": {
+            "minItems": 1,
+            "maxItems": 4,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "member": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40,
+                  "description": "Who it is for, as the parent says it: \"Mom\", \"Older child\", \"Youngest\", \"my youngest\", \"me\""
+                },
+                "specialty": {
+                  "type": "string",
+                  "enum": [
+                    "primary_care",
+                    "ob_gyn",
+                    "gastroenterology",
+                    "dermatology",
+                    "allergy",
+                    "orthopedics",
+                    "pediatrics",
+                    "cardiology",
+                    "ent",
+                    "ophthalmology",
+                    "urology",
+                    "endocrinology"
+                  ],
+                  "description": "Specialty the parent named (closed list). Never infer it from symptoms."
+                },
+                "age_for_this_search": {
+                  "description": "Age as the parent said it for THIS search only, e.g. \"under 2\", \"5\". Never stored.",
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 30
+                }
+              },
+              "required": [
+                "member",
+                "specialty"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "requests"
+        ],
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": true
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://innetwork/family-match.html"
+        },
+        "ui/resourceUri": "ui://innetwork/family-match.html"
+      }
+    },
+    {
+      "name": "check_doctor",
+      "title": "Check one doctor",
+      "description": "Run the network gate for one doctor from the last search: network, age (office policy) and new patients, each with its source.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "member": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "Who it is for, as the parent says it: \"Mom\", \"Older child\", \"Youngest\", \"my youngest\", \"me\""
+          },
+          "specialty": {
+            "type": "string",
+            "enum": [
+              "primary_care",
+              "ob_gyn",
+              "gastroenterology",
+              "dermatology",
+              "allergy",
+              "orthopedics",
+              "pediatrics",
+              "cardiology",
+              "ent",
+              "ophthalmology",
+              "urology",
+              "endocrinology"
+            ],
+            "description": "Specialty the parent named (closed list). Never infer it from symptoms."
+          },
+          "doctor": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 80
+          },
+          "age_for_this_search": {
+            "description": "Age as the parent said it for THIS search only, e.g. \"under 2\", \"5\". Never stored.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30
+          }
+        },
+        "required": [
+          "member",
+          "specialty",
+          "doctor"
+        ],
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "book_visit",
+      "title": "Book visits",
+      "description": "Book the visits from the last proposal (find_in_network or checkup_year). confirm=false reads them back; confirm=true books after the parent said yes. Out-of-network needs book_anyway=true; a time over the family routine needs book_over_routine=true. Lab work is not booked before the primary care visit unless the parent has an order.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "confirm": {
+            "default": false,
+            "type": "boolean"
+          },
+          "book_anyway": {
+            "default": false,
+            "description": "second explicit yes for an out-of-network doctor",
+            "type": "boolean"
+          },
+          "book_over_routine": {
+            "default": false,
+            "description": "explicit yes to book over a routine block",
+            "type": "boolean"
+          },
+          "item": {
+            "description": "ask to book lab work",
+            "type": "string",
+            "const": "lab_work"
+          },
+          "have_order": {
+            "default": false,
+            "description": "the parent says she already has a lab order",
+            "type": "boolean"
+          }
+        },
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": true
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://innetwork/booked.html"
+        },
+        "ui/resourceUri": "ui://innetwork/booked.html"
+      }
+    },
+    {
+      "name": "cancel_visit",
+      "title": "Cancel a visit",
+      "description": "Cancel a booked visit, also in a later conversation. confirm=false reads it back; confirm=true cancels.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "specialty": {
+            "type": "string",
+            "enum": [
+              "primary_care",
+              "ob_gyn",
+              "gastroenterology",
+              "dermatology",
+              "allergy",
+              "orthopedics",
+              "pediatrics",
+              "cardiology",
+              "ent",
+              "ophthalmology",
+              "urology",
+              "endocrinology",
+              "lab_work"
+            ]
+          },
+          "member": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "Who it is for, as the parent says it: \"Mom\", \"Older child\", \"Youngest\", \"my youngest\", \"me\""
+          },
+          "confirm": {
+            "default": false,
+            "type": "boolean"
+          }
+        },
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "openWorldHint": true
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://innetwork/booked.html"
+        },
+        "ui/resourceUri": "ui://innetwork/booked.html"
+      }
+    },
+    {
+      "name": "checkup_year",
+      "title": "Checkup year",
+      "description": "plan: lay out the parent's remaining checkup visits before the plan year resets, around the family routine (read back; book with book_visit). status: what's booked and what's left, from saved state (works in any later conversation). Lab work waits for the primary care visit.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "plan",
+              "status"
+            ]
+          },
+          "items": {
+            "minItems": 1,
+            "maxItems": 8,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "primary_care",
+                "ob_gyn",
+                "gastroenterology",
+                "dermatology",
+                "allergy",
+                "orthopedics",
+                "pediatrics",
+                "cardiology",
+                "ent",
+                "ophthalmology",
+                "urology",
+                "endocrinology",
+                "lab_work"
+              ]
+            }
+          },
+          "oop_met": {
+            "description": "the parent said she has met her out-of-pocket max",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": true
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://innetwork/visit-plan.html"
+        },
+        "ui/resourceUri": "ui://innetwork/visit-plan.html"
+      }
+    }
+  ]
+}
