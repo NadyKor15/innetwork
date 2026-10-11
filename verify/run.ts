@@ -89,6 +89,11 @@ try {
   const c = testCounts(t.stdout + t.stderr);
   add({ id: "C1", check: "unit + tool tests (npm test: core gate, schedule, linter, intent, MCP tools end to end)", expected: "exit 0, fail 0", actual: `exit ${t.status} · tests ${c.tests} · pass ${c.pass} · fail ${c.fail}`, pass: t.status === 0 && c.fail === 0 && c.pass > 0 });
 
+  const sk = spawnSync(process.execPath, ["--test", "--test-timeout=60000", "skill/test/skill.test.ts"], { cwd: ROOT, encoding: "utf8", env: { ...process.env, INNETWORK_DATA_DIR: join(DATA_DIR, "skill") } });
+  writeFileSync(join(LOGS, "skill-tests.log"), sk.stdout + sk.stderr);
+  const skc = testCounts(sk.stdout + sk.stderr);
+  add({ id: "C3", check: "classic Alexa skill as an MCP client (APL card, voice only, consent, deadline, unsigned request rejected)", expected: "exit 0, fail 0", actual: `exit ${sk.status} · tests ${skc.tests} · pass ${skc.pass} · fail ${skc.fail}`, pass: sk.status === 0 && skc.fail === 0 && skc.pass > 0 });
+
   if (existsSync(join(ROOT, "packages", "plannet-directory-check", "package.json"))) {
     const pk = spawnSync(process.execPath, ["--test", "--test-timeout=60000"], { cwd: join(ROOT, "packages", "plannet-directory-check"), encoding: "utf8", env: { ...process.env, LIVE: "" } });
     const pc = testCounts(pk.stdout + pk.stderr);
