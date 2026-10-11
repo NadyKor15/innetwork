@@ -31,6 +31,8 @@ export type FixtureMeta = {
   provenance: string;
   distances: Record<string, number>;
   nppesTaxonomy?: Record<string, string[]>;
+  /** Per-record provenance when one record changed more than the file's default line says. */
+  provenanceByRole?: Record<string, string>;
 };
 type FixtureBody =
   | { planId: string; specialty: Specialty; zip: string; format: "fhir-bundle"; directory: "florida-blue"; networkIndex: Record<string, string>; data: { entry: { search?: { mode?: string }; resource: FhirResource }[] } }
@@ -56,7 +58,7 @@ export function loadFixture(planId: string, specialty: Specialty, dir = FIXTURE_
     recordId: `fx:${planId}:${roleKey.replace(/^.*\//, "")}`,
     officeId: locId ? fxOffice(locId) : r.officeId,
     distanceMi: meta.distances[roleKey] ?? meta.distances["*"] ?? null,
-    source: { directory: r.source.directory, mode: "fixture", asOf, ref, provenance: meta.provenance },
+    source: { directory: r.source.directory, mode: "fixture", asOf, ref, provenance: meta.provenanceByRole?.[roleKey] ?? meta.provenance },
   });
   let records: DirectoryRecord[] = [];
   let directory = "";

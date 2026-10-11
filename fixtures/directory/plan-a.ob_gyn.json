@@ -1,7 +1,7 @@
 {
  "planId": "plan-a",
  "specialty": "ob_gyn",
- "zip": "32801",
+ "zip": "32803",
  "format": "fhir-bundle",
  "directory": "florida-blue",
  "networkIndex": {

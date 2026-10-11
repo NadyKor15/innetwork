@@ -36,7 +36,7 @@ test("recorded samples: the demo cast, exactly the brief's names, normalized by 
     assert.deepEqual(fx.records.map((r) => r.name).sort(), [...names].sort(), key);
     for (const r of fx.records) {
       assert.equal(r.source.mode, "fixture");
-      assert.match(r.source.provenance ?? "", /captured Oct 11, names and offices changed/);
+      assert.match(r.source.provenance ?? "", /^(directory record|plan file) captured Oct 11, names(, offices and specialty| and offices) changed$/);
       assert.ok(r.recordId.startsWith(`fx:${planId}:`), r.recordId);
       assert.ok(r.officeId.startsWith("fx:office:"), r.officeId);
       assert.ok(r.npi === null || /^0\d{9}$/.test(r.npi), `fixture NPI is impossible (starts with 0): ${r.npi}`);

@@ -1,8 +1,8 @@
 {
  "planId": "plan-a",
  "specialty": "primary_care",
- "capturedAt": "2026-10-11T04:55:50.010Z",
- "zip": "32801",
+ "capturedAt": "2026-10-11T05:13:06.897Z",
+ "zip": "32803",
  "source": {
   "directory": "Florida Blue provider directory (FHIR Plan-Net)",
   "request": "https://apigw.bcbsfl.com/interop/interop-developer-portal/emr/api/v1/fhir/PractitionerRole?location.address-postalcode=32803&_count=100&identifier=https%3A%2F%2Fwww.edifecs.com%2Ffhir%2Fcms-organization%2Fplan_id%7CBCHPPO&specialty%3Atext=FAMILY&_include=PractitionerRole%3Alocation&_include=PractitionerRole%3Apractitioner",

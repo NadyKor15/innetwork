@@ -1,7 +1,7 @@
 {
  "planId": "plan-a",
  "specialty": "dermatology",
- "zip": "32801",
+ "zip": "32803",
  "format": "fhir-bundle",
  "directory": "florida-blue",
  "networkIndex": {
@@ -13,7 +13,7 @@
   "link": [
    {
     "relation": "self",
-    "url": "https://apigw.bcbsfl.com/interop/interop-developer-portal/emr/api/v1/fhir/PractitionerRole?location.address-postalcode=32801&_count=100&identifier=https%3A%2F%2Fwww.edifecs.com%2Ffhir%2Fcms-organization%2Fplan_id%7CBCHPPO&specialty%3Atext=DERMATOLOGY&_include=PractitionerRole%3Alocation&_include=PractitionerRole%3Apractitioner"
+    "url": "https://apigw.bcbsfl.com/interop/interop-developer-portal/emr/api/v1/fhir/PractitionerRole?location.address-postalcode=32803&_count=100&identifier=https%3A%2F%2Fwww.edifecs.com%2Ffhir%2Fcms-organization%2Fplan_id%7CBCHPPO&specialty%3Atext=DERMATOLOGY&_include=PractitionerRole%3Alocation&_include=PractitionerRole%3Apractitioner"
    }
   ],
   "entry": [
@@ -26,7 +26,7 @@
      "id": "fx-a-dermatology",
      "meta": {
       "versionId": "1",
-      "lastUpdated": "2026-07-04T06:30:01.266-04:00",
+      "lastUpdated": "2026-07-02T19:03:49.603-04:00",
       "source": "CMS",
       "profile": [
        "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-PractitionerRole"
@@ -166,7 +166,7 @@
      "id": "fx-a-office-a3",
      "meta": {
       "versionId": "1",
-      "lastUpdated": "2026-07-04T06:30:01.033-04:00",
+      "lastUpdated": "2026-07-02T15:17:37.556-04:00",
       "source": "CMS",
       "profile": [
        "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Location"
@@ -255,7 +255,7 @@
      "id": "fx-a-prac-brennagh",
      "meta": {
       "versionId": "1",
-      "lastUpdated": "2026-07-04T06:30:01.033-04:00",
+      "lastUpdated": "2026-07-02T19:03:49.603-04:00",
       "source": "CMS",
       "profile": [
        "http://hl7.org/fhir/us/davinci-pdex-plan-net/StructureDefinition/plannet-Practitioner"

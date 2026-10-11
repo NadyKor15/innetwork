@@ -17,7 +17,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Counters } from "../packages/plannet-directory-check/src/http.ts";
 import { FhirClient, type FhirResource } from "../packages/plannet-directory-check/src/fhir.ts";
-import { rolesInZip, type NormalizedRole } from "../packages/plannet-directory-check/src/records.ts";
+import { normalizeRole, rolesInZip, type NormalizedRole } from "../packages/plannet-directory-check/src/records.ts";
 import { addressOf } from "../packages/plannet-directory-check/src/plannet.ts";
 import { nppesSearch } from "../packages/plannet-directory-check/src/nppes.ts";
 import { planIdsOf, streamProviders, zipOf, type QhpProvider } from "../packages/plannet-directory-check/src/qhp.ts";
@@ -33,7 +33,10 @@ const PRIVATE = join(ROOT, "audit-private", "captures");
 mkdirSync(OUT, { recursive: true });
 mkdirSync(PRIVATE, { recursive: true });
 const capturedAt = new Date().toISOString();
-const DEMO_ZIP = "32801";
+const DEMO_ZIP = "32803"; // fixtures/demo/scenario.json (orchestrator decision 11.10: 32803, not 32801)
+/** ZIPs the samples may be captured from (central Orlando), in order of preference. Each meta records the real one. */
+const NEAR = ["32803", "32801", "32804", "32806"];
+const FROM_RAW = process.argv.includes("--from-raw");
 const counters = new Counters(true);
 
 // ---- the fictional side (names passed guard:names; offices are invented) ----------------------------------------
@@ -70,7 +73,7 @@ const PEOPLE = {
 
 /** Raw identifying strings collected while anonymizing; the self-check greps fixtures for them. */
 const secrets = new Set<string>();
-const remember = (...v: (string | null | undefined)[]) => { for (const s of v) if (s && s.trim().length >= 4) secrets.add(s.trim()); };
+const remember = (...v: unknown[]) => { for (const x of v) { const s = x === null || x === undefined ? "" : String(x).trim(); if (s.length >= 4) secrets.add(s); } };
 
 const nppesCheckDigitOk = (npi: string): boolean => {
   // Luhn over "80840" + first 9 digits (CMS NPI check digit). Our fake NPIs start with 0 and are never valid NPIs anyway.
@@ -136,8 +139,7 @@ async function fbRolesRaw(zip: string, text: string): Promise<{ roles: Normalize
 const byId = (a: NormalizedRole, b: NormalizedRole) => a.roleId.localeCompare(b.roleId, "en", { numeric: true });
 const pick = (r: NormalizedRole, url: string): FbPick => ({ role: r.raw!.role, location: r.raw!.location!, practitioner: r.raw!.practitioner!, norm: r, zip: r.location!.zip, url });
 
-async function capturePlanA() {
-  const netIndex = await networkIndex(fb);
+async function pickPlanA(): Promise<{ specialty: Specialty; who: Person; p: FbPick; nppes?: string[] }[]> {
   // Primary care + OB-GYN at ONE location ("same clinic"): first shared location (by id) in 32803.
   const fm = await fbRolesRaw("32803", "FAMILY");
   const ob = await fbRolesRaw("32803", "OBSTETRICS");
@@ -164,8 +166,27 @@ async function capturePlanA() {
     { specialty: "gastroenterology", who: PEOPLE.venterra, p: pick(gi, im.url), nppes: ["207RG0100X"] },
     { specialty: "dermatology", who: PEOPLE.brennagh, p: pick(derm, de.url) },
   ];
-  writeFileSync(join(PRIVATE, "plan-a.raw.json"), JSON.stringify({ capturedAt, picks: picks.map((x) => ({ specialty: x.specialty, url: x.p.url, role: x.p.role, location: x.p.location, practitioner: x.p.practitioner })) }, null, 1));
+  return picks;
+}
 
+
+async function capturePlanA() {
+  const rawFile = join(PRIVATE, "plan-a.raw.json");
+  const WHO: Record<string, Person> = { primary_care: PEOPLE.thistlewood, ob_gyn: PEOPLE.marchbank, gastroenterology: PEOPLE.venterra, dermatology: PEOPLE.brennagh };
+  let netIndex: Map<string, string>;
+  let picks: { specialty: Specialty; who: Person; p: FbPick; nppes?: string[] }[];
+  const saved = FROM_RAW && existsSync(rawFile) ? JSON.parse(readFileSync(rawFile, "utf8")) as { netIndex?: Record<string, string>; picks: { specialty: Specialty; url: string; role: FhirResource; location: FhirResource; practitioner: FhirResource; nppes?: string[] }[] } : null;
+  if (saved?.netIndex) {
+    netIndex = new Map(Object.entries(saved.netIndex));
+    picks = saved.picks.map((x) => {
+      const norm = normalizeRole("florida-blue", x.role, x.location, x.practitioner);
+      return { specialty: x.specialty, who: WHO[x.specialty], p: { role: x.role, location: x.location, practitioner: x.practitioner, norm, zip: norm.location!.zip, url: x.url }, nppes: x.nppes };
+    });
+  } else {
+    netIndex = await networkIndex(fb);
+    picks = await pickPlanA();
+    writeFileSync(rawFile, JSON.stringify({ capturedAt, netIndex: Object.fromEntries(netIndex), picks: picks.map((x) => ({ specialty: x.specialty, url: x.p.url, role: x.p.role, location: x.p.location, practitioner: x.p.practitioner, nppes: x.nppes })) }, null, 1));
+  }
   for (const x of picks) {
     const office = OFFICES[x.who.office];
     const ids = { role: `fx-a-${x.specialty}`, loc: `fx-a-office-${office.key.toLowerCase()}`, prac: `fx-a-prac-${x.who.family.toLowerCase()}`, hs: `fx-a-hs-${x.specialty}` };
@@ -199,23 +220,29 @@ async function capturePlanA() {
 async function capturePlanB() {
   const src = PLAN_SOURCES["plan-b"];
   if (src.kind !== "qhp-file") throw new Error("plan-b source");
-  const near = ["32801", "32803", "32804", "32806"];
-  const found: QhpProvider[] = [];
+  let raw: QhpProvider;
   let usedUrl = "";
-  for (const url of src.providerFiles) {
-    await streamProviders(url, (p) => {
-      if (p.type !== "INDIVIDUAL" || !planIdsOf(p).includes(src.hiosPlanId)) return;
-      if (!isSpecialty("allergy", [], p.specialty ?? [])) return;
-      if (!(p.addresses ?? []).some((a) => near.includes(zipOf(a)))) return;
-      found.push(p);
-      usedUrl = url;
-      return found.length >= 3;
-    }, { counters, maxBytes: 2_000_000_000, timeoutMs: 900_000 });
-    if (found.length) break;
+  const rawFile = join(PRIVATE, "plan-b.raw.json");
+  if (FROM_RAW && existsSync(rawFile)) {
+    ({ provider: raw, url: usedUrl } = JSON.parse(readFileSync(rawFile, "utf8")) as { provider: QhpProvider; url: string });
+  } else {
+    const found: QhpProvider[] = [];
+    for (const url of src.providerFiles) {
+      await streamProviders(url, (p) => {
+        if (p.type !== "INDIVIDUAL" || !planIdsOf(p).includes(src.hiosPlanId)) return;
+        if (!isSpecialty("allergy", [], p.specialty ?? []) || p.accepting !== "accepting") return;
+        if (!(p.addresses ?? []).some((a) => NEAR.includes(zipOf(a)))) return;
+        found.push(p);
+        usedUrl = url;
+      }, { counters, maxBytes: 2_000_000_000, timeoutMs: 900_000 });
+      if (found.length) break;
+    }
+    if (!found.length) throw new Error("no accepting Oscar FL allergist with the plan near the demo ZIP");
+    const rank = (p: QhpProvider) => Math.min(...(p.addresses ?? []).map((a) => { const i = NEAR.indexOf(zipOf(a)); return i < 0 ? 99 : i; }));
+    raw = found.sort((a, b) => rank(a) - rank(b) || String(a.npi).localeCompare(String(b.npi)))[0];
+    writeFileSync(rawFile, JSON.stringify({ capturedAt, url: usedUrl, provider: raw }, null, 1));
   }
-  if (!found.length) throw new Error("no Oscar FL allergist with the plan near the demo ZIP");
-  const raw = found.sort((a, b) => String(a.npi).localeCompare(String(b.npi)))[0];
-  writeFileSync(join(PRIVATE, "plan-b.raw.json"), JSON.stringify({ capturedAt, url: usedUrl, provider: raw }, null, 1));
+  const capturedFromZip = (raw.addresses ?? []).map((a) => zipOf(a)).filter((z) => NEAR.includes(z)).sort((a, b) => NEAR.indexOf(a) - NEAR.indexOf(b))[0] ?? null;
   const who = PEOPLE.quillfeather;
   const office = OFFICES[who.office];
   const nm = raw.name as Record<string, string> | undefined;
@@ -231,7 +258,7 @@ async function capturePlanB() {
   writeFixture("plan-b", "allergy", { format: "qhp-providers", directory: "oscar-qhp", data: [anon] }, {
     capturedAt,
     zip: DEMO_ZIP,
-    source: { directory: "Oscar Health machine-readable provider file (CMS QHP JSON)", request: usedUrl, index: src.indexUrl, hiosPlanId: src.hiosPlanId },
+    source: { directory: "Oscar Health machine-readable provider file (CMS QHP JSON)", request: usedUrl, index: src.indexUrl, hiosPlanId: src.hiosPlanId, capturedFromZip },
     realFieldsKept: ["provider object structure", `plans[] (the provider's full list of HIOS plan ids, including ${src.hiosPlanId})`, "accepting", "specialty", "last_updated_on"],
     changed: ["name (fictional, passed guard:names)", "gender (to match the fictional name)", "languages (set to English only)", "NPI (impossible number starting with 0)", "addresses: replaced by one fictional office (street, ZIP, phone)"],
     distances: { "*": who.distanceMi },
@@ -242,36 +269,81 @@ async function capturePlanB() {
 
 // ---- Molina Florida MMA (Plan C) -----------------------------------------------------------------------------------
 async function capturePlanC() {
-  const mol = new FhirClient(MOLINA.base, { timeoutMs: 60_000, counters, maxPages: 5 });
-  const zips = ["32806", "32803", "32804", "32801"];
-  const ortho: NormalizedRole[] = [];
-  for (const zip of zips) {
-    const res = await rolesInZip({ ...MOLINA, pauseMs: 350 }, mol, { zip, network: "15", keepRaw: true, maxLocations: 400 });
-    ortho.push(...res.roles.filter((r) => isSpecialty("orthopedics", r.specialtyCodes, r.specialtyTexts)));
-    if (ortho.length >= 8) break;
+  type RawPair = { role: FhirResource; location: FhirResource };
+  const rawFile = join(PRIVATE, "plan-c.raw.json");
+  let pool: { inNet: RawPair[]; other: RawPair[] };
+  if (FROM_RAW && existsSync(rawFile)) {
+    pool = (JSON.parse(readFileSync(rawFile, "utf8")) as { pool: typeof pool }).pool;
+  } else {
+    const mol = new FhirClient(MOLINA.base, { timeoutMs: 60_000, counters, maxPages: 5 });
+    const inNet: RawPair[] = [];
+    const other: RawPair[] = [];
+    // Pediatric orthopedics in Orlando sits mostly in 32806 (children's hospital campus); then the other central ZIPs.
+    for (const zip of ["32806", ...NEAR.filter((z) => z !== "32806")]) {
+      const res = await rolesInZip({ ...MOLINA, pauseMs: 350 }, mol, { zip, network: "15", keepRaw: true, maxLocations: 450 });
+      for (const r of res.roles) if (isSpecialty("orthopedics", r.specialtyCodes, r.specialtyTexts) && r.raw?.location) inNet.push({ role: r.raw.role, location: r.raw.location });
+      console.log(`  molina MMA ${zip}: ${res.locationsSeen} locations, ${res.roles.length} roles, ${inNet.length} orthopedic so far, ${res.failures.length} failed requests`);
+      if (inNet.length >= 12) break;
+    }
+    // Orthopedic roles at the same locations WITHOUT the network filter: some carry only other Molina networks.
+    const locIds = [...new Set(inNet.map((x) => String(x.location.id)))].slice(0, 15);
+    for (const id of locIds) {
+      await new Promise((r) => setTimeout(r, 350));
+      try {
+        const res = await mol.search("PractitionerRole", { location: id, _count: "100" }, 5);
+        const loc = inNet.find((x) => String(x.location.id) === id)!.location;
+        for (const role of res.matches) {
+          const n = normalizeRole("molina", role, loc, null);
+          if (isSpecialty("orthopedics", n.specialtyCodes, n.specialtyTexts) && n.networks.length > 0 && !n.networks.includes("15")) other.push({ role, location: loc });
+        }
+      } catch (err) { console.log(`  location ${id}: ${(err as Error).message}`); }
+      if (other.length >= 3) break;
+    }
+    pool = { inNet, other };
+    writeFileSync(rawFile, JSON.stringify({ capturedAt, pool }, null, 1));
   }
-  if (ortho.length < 5) throw new Error(`only ${ortho.length} MMA orthopedic roles found`);
-  // One role at an orthopedic location that is NOT in the MMA network (for "Not in his plan's network").
-  let other: NormalizedRole | null = null;
-  for (const r of ortho) {
-    const res = await rolesInZip({ ...MOLINA, pauseMs: 350, maxLocationPages: 1 }, mol, { zip: r.location!.zip, keepRaw: true, maxLocations: 60 });
-    other = res.roles.filter((x) => isSpecialty("orthopedics", x.specialtyCodes, x.specialtyTexts) && !x.networks.includes("15")).sort(byId)[0] ?? null;
-    if (other) break;
-  }
-  if (!other) throw new Error("no orthopedic role outside the MMA network found");
-  const ped = ortho.filter((r) => r.specialtyCodes.includes("207XP3100X") || r.specialtyTexts.some((t) => /pediatric/i.test(t))).sort(byId);
-  const gen = ortho.filter((r) => !ped.includes(r)).sort(byId);
+  const norm = (x: RawPair) => ({ x, n: normalizeRole("molina", x.role, x.location, null) });
+  const accepting = pool.inNet.map(norm).filter(({ n }) => n.accepting === "accepting").sort((a, b) => byId(a.n, b.n));
+  // One doctor per office in the sample: the age policy is a property of the office.
+  const seenLoc = new Set<string>();
+  const distinct = accepting.filter(({ x }) => (seenLoc.has(String(x.location.id)) ? false : (seenLoc.add(String(x.location.id)), true)));
+  const isPed = (n: NormalizedRole) => n.specialtyCodes.includes("207XP3100X") || n.specialtyTexts.some((t) => /pediatric/i.test(t));
+  const ped = distinct.filter(({ n }) => isPed(n));
+  const gen = distinct.filter(({ n }) => !isPed(n));
+  const other = pool.other.map(norm).sort((a, b) => byId(a.n, b.n))[0];
+  if (!ped.length) console.log("  note: no accepting pediatric orthopedic role in the pool; Pellworth gets a general orthopedic record");
   const order = [...ped, ...gen];
-  const take = (i: number) => order[i % order.length];
+  if (order.length < 5 || !other) throw new Error(`pool too small: ${order.length} accepting in-network orthopedic offices, other-network ${other ? 1 : 0}`);
+  const free = [...order];
+  const next = (preferPed: boolean) => {
+    const i = preferPed ? Math.max(0, free.findIndex(({ n }) => isPed(n))) : Math.max(0, free.findIndex(({ n }) => !isPed(n)));
+    return free.splice(i, 1)[0].n;
+  };
   const assign: { who: Person; r: NormalizedRole }[] = [
-    { who: PEOPLE.pellworth, r: ped[0] ?? take(0) },
-    { who: PEOPLE.pembrook, r: gen[0] ?? take(1) },
-    { who: PEOPLE.wrenfield, r: gen[1] ?? take(2) },
-    { who: PEOPLE.ashgrove, r: gen[2] ?? take(3) },
-    { who: PEOPLE.ardley, r: other },
-    { who: PEOPLE.hartsworth, r: gen[3] ?? take(4) },
+    { who: PEOPLE.pellworth, r: next(true) },
+    { who: PEOPLE.pembrook, r: next(false) },
+    { who: PEOPLE.wrenfield, r: next(false) },
+    { who: PEOPLE.ashgrove, r: next(false) },
+    { who: PEOPLE.ardley, r: other.n },
+    { who: PEOPLE.hartsworth, r: next(false) },
   ];
-  writeFileSync(join(PRIVATE, "plan-c.raw.json"), JSON.stringify({ capturedAt, assign: assign.map((a) => ({ fictional: a.who.family, raw: a.r.raw })) }, null, 1));
+  const all = [...pool.inNet, ...pool.other];
+  for (const a of assign) { const p = all.find((x) => `PractitionerRole/${x.role.id}` === a.r.roleId)!; a.r = { ...a.r, raw: { role: p.role, location: p.location, practitioner: null } }; }
+  // Fallback, disclosed per record: if the pool has no GENERAL orthopedic role in the network, the general cast
+  // (Pembrook, Wrenfield, Ashgrove, Hartsworth) is derived from in-network roles with the specialty and qualification
+  // set to those of the captured general orthopedic role (Ardley's source). Their provenance line says "specialty changed".
+  const generalSrc = other.n.raw?.role as Record<string, any> | undefined ?? (pool.other[0]?.role as Record<string, any>);
+  const derived = new Set<string>();
+  for (const a of assign) {
+    if (a.who === PEOPLE.pellworth || a.who === PEOPLE.ardley || !isPed(a.r)) continue;
+    const role = structuredClone(a.r.raw!.role) as Record<string, any>;
+    role.specialty = structuredClone(generalSrc.specialty);
+    role.extension = (role.extension ?? []).filter((e: any) => !String(e.url).endsWith("qualification")).concat(structuredClone((generalSrc.extension ?? []).filter((e: any) => String(e.url).endsWith("qualification"))));
+    a.r = { ...normalizeRole("molina", role, a.r.raw!.location, null), raw: { role, location: a.r.raw!.location, practitioner: null } };
+    derived.add(`PractitionerRole/fx-c-${a.who.family.toLowerCase()}`);
+  }
+  const templated = assign.some((a) => (a.r.raw?.location as Record<string, unknown> | null)?._templateNote);
+  const capturedFrom = Object.fromEntries(assign.map((a) => [`PractitionerRole/fx-c-${a.who.family.toLowerCase()}`, (a.r.raw?.location as Record<string, unknown> | null)?._templateNote ? "not captured" : a.r.location?.zip ?? null]));
   const roles: FhirResource[] = [];
   const locations: FhirResource[] = [];
   const distances: Record<string, number> = {};
@@ -290,7 +362,15 @@ async function capturePlanC() {
     if (role.organization) role.organization = { reference: `Organization/fx-c-org-${office.key.toLowerCase()}`, identifier: { value: `fx-c-org-${office.key.toLowerCase()}` }, display: office.name };
     role.location = [{ reference: `Location/${locId}`, identifier: { value: locId }, display: office.name }];
     remember(loc.name, loc.address?.line?.join(", "), ...(loc.address?.line ?? []), ...(loc.telecom ?? []).map((t: any) => t.value), loc.managingOrganization?.display);
+    remember(...(loc.alias ?? []), loc.description, loc.partOf?.reference, loc.partOf?.identifier?.value);
     delete loc.text;
+    delete loc._templateNote;
+    delete loc.position; // real coordinates of the captured place
+    if (loc.partOf) loc.partOf = { reference: `Location/${locId}-site`, identifier: { value: `${locId}-site` } };
+    if (loc.alias) loc.alias = [office.name.toUpperCase()];
+    if (typeof loc.description === "string") loc.description = office.line;
+    // The office's new-patient flag follows the role's (the role's flag is the one the card uses).
+    for (const e of loc.extension ?? []) if (String(e.url).endsWith("/newpatients") && e.valueCodeableConcept) e.valueCodeableConcept = structuredClone((role.extension ?? []).find((x: any) => String(x.url).endsWith("/newpatients"))?.valueCodeableConcept ?? e.valueCodeableConcept);
     loc.id = locId;
     loc.name = office.name;
     loc.address = { ...loc.address, line: [office.line], city: office.city, state: "FL", postalCode: office.zip };
@@ -304,12 +384,17 @@ async function capturePlanC() {
   writeFixture("plan-c", "orthopedics", { format: "fhir-roles-per-location", directory: "molina", data: { locations, roles } }, {
     capturedAt,
     zip: DEMO_ZIP,
-    source: { directory: MOLINA.label, request: `${MOLINA.base}/Location?address-postalcode=<zip> -> PractitionerRole?location=<id>&network=15`, network: "15 = Medicaid-Managed Medical Assistance (MMA), Molina Healthcare of Florida" },
-    realFieldsKept: ["PractitionerRole and Location structure", "network-reference (5 roles: 15 = Medicaid-Managed Medical Assistance (MMA); 1 role outside it, as captured)", "newpatients", "specialty and qualification (NUCC code) as captured", "hours (availableTime / telecom available-time) as captured"],
-    changed: ["practitioner names (fictional, passed guard:names)", "NPI (impossible number starting with 0)", "offices: name, street, ZIP, phone, organization, resource ids (fictional offices)", "generated narrative (text.div) removed: it repeated the real names"],
+    source: { directory: MOLINA.label, request: `${MOLINA.base}/Location?address-postalcode=<zip> -> PractitionerRole?location=<id>&network=15`, network: "15 = Medicaid-Managed Medical Assistance (MMA), Molina Healthcare of Florida", capturedFromZip: capturedFrom },
+    realFieldsKept: ["PractitionerRole and Location structure", "network-reference (5 roles: 15 = Medicaid-Managed Medical Assistance (MMA); 1 role outside it, as captured)", "newpatients (only accepting roles were picked for the in-network doctors)", "specialty and qualification (NUCC code) as captured", "hours (availableTime / telecom available-time) as captured"],
+    changed: ["practitioner names (fictional, passed guard:names)", "NPI (impossible number starting with 0)", "offices: name, street, ZIP, phone, organization, resource ids (fictional offices)", "generated narrative (text.div) removed: it repeated the real names", "Location position (coordinates) removed, alias/description/partOf replaced, Location new-patient flag set to the role's", "office age policies (fixtures/office-policies.json) are demo data attached to the fictional offices, not from the directory"],
     distances,
     distanceNote: "Fictional offices: distances are fictional too.",
     provenance: "directory record captured Oct 11, names and offices changed",
+    ...(derived.size ? {
+      provenanceByRole: Object.fromEntries([...derived].map((k) => [k, "directory record captured Oct 11, names, offices and specialty changed"])),
+      derivedNote: `${derived.size} records (${[...derived].map((k) => k.replace("PractitionerRole/fx-c-", "")).join(", ")}) are in-network MMA roles whose specialty and qualification were set to the captured general orthopedic role's (the captured pool had one general orthopedic practitioner, outside the network). To replace them with captured general-orthopedic MMA roles: node scripts/fixtures-capture.ts c (after the Molina quota resets).`,
+    } : {}),
+    ...(templated ? { locationNote: "The roles' Location resources were not fetched before Molina's daily call-volume quota stopped the capture (HTTP 403 \"Out of call volume quota\", 2026-10-11 ~05:09Z); each office uses the structure of another Molina Location captured the same day, with every field fictional." } : {}),
   });
 }
 
@@ -338,7 +423,7 @@ function selfCheck() {
   if (control.length === 0) { console.error("control did not light: the check cannot see"); process.exitCode = 1; }
 }
 
-const which = process.argv.slice(2);
+const which = process.argv.slice(2).filter((a) => !a.startsWith("--"));
 const want = (k: string) => which.length === 0 || which.includes(k);
 if (want("a")) await capturePlanA();
 if (want("b")) await capturePlanB();

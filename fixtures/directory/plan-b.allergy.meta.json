@@ -1,13 +1,14 @@
 {
  "planId": "plan-b",
  "specialty": "allergy",
- "capturedAt": "2026-10-11T04:56:29.908Z",
- "zip": "32801",
+ "capturedAt": "2026-10-11T05:13:06.897Z",
+ "zip": "32803",
  "source": {
   "directory": "Oscar Health machine-readable provider file (CMS QHP JSON)",
   "request": "https://d3ul0st9g52g6o.cloudfront.net/ffm/providers_5.json",
   "index": "https://d3ul0st9g52g6o.cloudfront.net/ffm/cms-data-index.json",
-  "hiosPlanId": "21525FL0010009"
+  "hiosPlanId": "21525FL0010009",
+  "capturedFromZip": "32804"
  },
  "realFieldsKept": [
   "provider object structure",
