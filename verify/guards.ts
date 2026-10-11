@@ -2,7 +2,7 @@
 // so "0 found" means "searched and none", not "the search is blind".
 //   G5  placeholder strings from the mockups never reach views, host, fixtures or the demo script (SPEC §8)
 //   G6  no personal data patterns (emails, phone numbers, SSNs, dates of birth) in the tracked tree
-//   G7  owner not decided yet: no brand/author line for a company in code or README (LICENSE says pending)
+//   G7  the entrant submits as an individual: no company brand or other author in code, README, docs (LICENSE names the owner)
 //   G8  MIT license present
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
@@ -29,7 +29,7 @@ const PII = [
 export function piiHits(files: { path: string; text: string }[]): string[] {
   return files.flatMap((f) => PII.flatMap((p) => (p.re.test(f.text) ? [`${f.path}: ${p.name} (${f.text.match(p.re)![0].slice(0, 24)})`] : [])));
 }
-const BRAND = /retail ?box/i;
+const BRAND = /retail ?box/i; // the entrant (owner) is named only in LICENSE once decided
 
 export function runStaticGuards(log: (s: string) => void): Row[] {
   const rows: Row[] = [];
@@ -48,7 +48,7 @@ export function runStaticGuards(log: (s: string) => void): Row[] {
   const piiControl = piiHits([{ path: "synthetic", text: "mail a.b@gmail.com or call (407) 555-0137, ssn 123-45-6789, DOB: 01/02/2023" }]).length;
   add("G6", "no personal data patterns in the tracked tree (emails, phones, SSN, DOB)", "0 hits; control finds 4", `${pii.length ? pii.slice(0, 3).join(" | ") : "0 hits"} in ${piiScope.length} files · control ${piiControl}`, pii.length === 0 && piiControl === 4);
 
-  const brandScope = all.filter((f) => !/^verify\/guards\.ts$|package-lock\.json$|^design\/fonts\//.test(f)).map((path) => ({ path, text: read(path) }));
+  const brandScope = all.filter((f) => !/^verify\/guards\.ts$|package-lock\.json$|^design\/fonts\/|^LICENSE$/.test(f)).map((path) => ({ path, text: read(path) }));
   const brand = brandScope.filter((f) => BRAND.test(f.text)).map((f) => f.path);
   add("G7", "owner pending: no company/author branding in the tree", `0 files; control ${BRAND.test("RetailBox") ? "lights" : "BLIND"}`, brand.length ? brand.slice(0, 5).join(", ") : `0 of ${brandScope.length} files`, brand.length === 0 && BRAND.test("RetailBox"));
 
