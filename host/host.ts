@@ -17,7 +17,7 @@ import { seconds as secondsOf } from "../src/core/lint.ts";
 
 type Cfg = { mcpUrl: string; devinfoUrl: string; sandboxProxyUrl: string };
 type Mode = "live" | "file" | "fixture" | "sandbox" | "simulated";
-type Step = { service: string; op: string; mode: Mode; ms: number; summary: string };
+type Step = { service: string; op: string; mode: Mode; ms: number; summary: string; asOf?: string };
 type SC = { speech?: string; speechParts?: string[]; seconds?: number[]; view?: string | null; card?: { view: string; [k: string]: unknown } | null; data?: Record<string, unknown> };
 type Turn = { n: number; source: "typed" | "voice" | "tap" | "demo"; utterance: string; tool: string | null; args: Record<string, unknown> | null; speech: string; parts: string[]; seconds: number[]; steps: Step[]; gate: string[] | null; isError: boolean; view: string | null; ms: number; beat: number; local: string | null };
 type Pending = { kind: "book" | "cancel" | "consent"; flags: { book_anyway?: boolean; book_over_routine?: boolean } } | null;
@@ -502,10 +502,15 @@ async function renderDevboard(): Promise<void> {
   const liveSteps = [...last.familySteps, ...last.lookupSteps].reverse().filter((st) => st.mode === "live" && /live network check/.test(st.op));
   const liveStep = liveSteps.find((st) => !/did not answer/.test(st.summary)) ?? null;
   const failedProbe = Object.values(d?.probes ?? {}).find((p) => !p.ok);
-  const req = probe
-    ? h("p", "req", `LIVE · ${probe.directory.replace(/ provider directory/, "")} · ${requestLabel(probe.ref)} · `, h("span", "nb", `${probe.ms} ms`), " · as of ", h("span", "nb", hhmm(probe.asOf)))
+  // the LIVE line and the count under it come from the same request: this session's live check when there is one,
+  // else the server's latest successful probe
+  const shown = liveStep && liveStep.asOf
+    ? { directory: liveStep.service, ref: liveStep.op.replace(/^live network check · /, ""), ms: liveStep.ms, asOf: liveStep.asOf }
+    : probe ?? null;
+  const req = shown
+    ? h("p", "req", `LIVE · ${shown.directory.replace(/ provider directory/, "")} · ${requestLabel(shown.ref)} · `, h("span", "nb", `${shown.ms} ms`), " · as of ", h("span", "nb", hhmm(shown.asOf)))
     : h("p", "req", `LIVE · no live directory call in this run · directory mode: ${d?.directoryMode ?? "unknown"}`);
-  state.devboard.probe = probe ? `${probe.directory} ${probe.ms} ms` : "none";
+  state.devboard.probe = shown ? `${shown.directory} ${shown.ms} ms` : "none";
   const chain = h("p", "chain", "chain: ");
   const lookupMode = last.familySteps.find((st) => / · ZIP /.test(st.op))?.mode ?? last.lookupSteps.find((st) => / · ZIP /.test(st.op))?.mode;
   const modeOf = (service: string) => last.bookSteps.find((st) => st.service === service)?.mode;

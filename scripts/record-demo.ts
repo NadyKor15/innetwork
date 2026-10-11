@@ -47,6 +47,16 @@ const doneAt = Date.now() - t0;
 const status = await page.evaluate(() => document.body.dataset.demo);
 const last = beats.at(-1);
 if (last && last.endMs < 0) last.endMs = doneAt;
+// the server's /devinfo after the run (directory mode, live probes with their latency, verify and audit totals; no
+// household data) so the numbers on the "behind the scenes" screen can be traced to a file, not only to a frame
+const devinfo = await page.evaluate(async () => {
+  try { return await (await fetch((window as unknown as { __INNET: { devinfoUrl: string } }).__INNET.devinfoUrl, { cache: "no-store" })).json(); } catch { return null; }
+});
+// the two lines of the "behind the scenes" screen as shown at the end of the run (LIVE request + its count)
+const board = await page.evaluate(() => ({
+  live: (document.querySelector("#devboard .req") as HTMLElement | null)?.innerText ?? null,
+  count: (document.querySelector("#devboard .count") as HTMLElement | null)?.innerText ?? null,
+}));
 await page.waitForTimeout(2000);
 const video = page.video();
 await context.close();
@@ -76,10 +86,12 @@ if (existsSync(webm)) {
 const probe = spawnSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", existsSync(mp4) && ffOk ? mp4 : webm], { encoding: "utf8" });
 const durationMs = Math.round(Number(probe.stdout.trim()) * 1000) || doneAt + 2000;
 const rel = (p: string) => p.replace(`${ROOT}/`, "");
+writeFileSync(join(OUT, "innetwork-demo-devinfo.json"), JSON.stringify({ recordedAt: new Date(t0).toISOString(), board, devinfo }, null, 2) + "\n");
 writeFileSync(join(OUT, "innetwork-demo-beats.json"), JSON.stringify({ video: rel(ffOk ? mp4 : webm), webm: rel(webm), mp4: ffOk ? rel(mp4) : null, durationMs, theme, demo: status, beats, cues }, null, 2) + "\n");
 console.log(`demo=${status} beats=${beats.length} cues=${cues.length} (alexa ${alexa.length}) duration=${(durationMs / 1000).toFixed(1)}s`);
 console.log(`  ${rel(webm)}`);
 console.log(`  ${ffOk ? rel(mp4) : `mp4 not written: ${ffErr.trim().slice(0, 200)}`}`);
 console.log(`  ${rel(join(OUT, "innetwork-demo-alexa-lines.srt"))}`);
 console.log(`  ${rel(join(OUT, "innetwork-demo-beats.json"))}`);
+console.log(`  ${rel(join(OUT, "innetwork-demo-devinfo.json"))}`);
 process.exit(status === "done" ? 0 : 1);

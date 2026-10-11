@@ -11,7 +11,9 @@ docs/video/*.webm
 docs/video/*.mp4
 docs/video/frame-*.png
 .DS_Store
-docs/video/tts/
+docs/video/tts/*
+# the measured durations of the synthetic lines are evidence (EVIDENCE E21); the audio stays local
+!docs/video/tts/durations.txt
 docs/video/*.m4a
 docs/video/*.aiff
 docs/video/.work/

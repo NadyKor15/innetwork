@@ -1,0 +1,9 @@
+voice=Samantha rate=175 wpm
+1. 10 words · 3.5 s · 2.86 w/s :: One doctor each, in their own plan. Book all three?
+2. 1 words · 0.5 s · 2.00 w/s :: Booked.
+3. 19 words · 8.4 s · 2.26 w/s :: After the out-of-pocket max, plans usually pay 100% of cover
+4. 40 words · 17.2 s · 2.33 w/s :: Your gastroenterologist is already booked for Thursday. Tues
+5. 11 words · 4.5 s · 2.44 w/s :: Booked. Details in your Alexa app and email. Say cancel anyt
+6. 8 words · 3.3 s · 2.42 w/s :: Four booked. Lab work comes after Tuesday's visit.
+7. 18 words · 6.1 s · 2.95 w/s :: I checked six nearby. Two don't see children under three, on
+total 107 words · 43.5 s · longest 17.2 s

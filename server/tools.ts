@@ -35,7 +35,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const VIEWS: C.ViewName[] = ["family-match", "set-aside", "visit-plan", "booked", "checkup-year", "consent"];
 export const viewUri = (v: C.ViewName) => `ui://innetwork/${v}.html`;
 
-export type Step = { service: string; op: string; mode: SourceMode; ms: number; summary: string };
+export type Step = { service: string; op: string; mode: SourceMode; ms: number; summary: string; asOf?: string };
 export type Services = {
   directory: DirectoryService;
   scenario: Scenario;
@@ -137,7 +137,7 @@ async function lookupFor(sv: Services, steps: Steps, u: UserState, member: Membe
     if (probe) {
       if (!probe.ok) probe = { ...probe, error: shortErr(probe.error) };
       sv.probes.set(plan.planId, probe);
-      steps.add({ service: probe.directory, op: `live network check · ${probe.ref}`, mode: "live", ms: probe.ms, summary: probe.ok ? `${probe.inNetworkCount} in-network for ${SPECIALTY_WORDS[specialty].visit} · ZIP ${u.profile.zip} · ${plan.label}` : `did not answer: ${probe.error} · not confirmed` });
+      steps.add({ service: probe.directory, op: `live network check · ${probe.ref}`, mode: "live", ms: probe.ms, asOf: probe.asOf, summary: probe.ok ? `${probe.inNetworkCount} in-network for ${SPECIALTY_WORDS[specialty].visit} · ZIP ${u.profile.zip} · ${plan.label}` : `did not answer: ${probe.error} · not confirmed` });
     }
   }
   const policies = loadPolicies(sv.policiesSeed);

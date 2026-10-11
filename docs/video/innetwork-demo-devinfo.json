@@ -1,0 +1,74 @@
+{
+  "recordedAt": "2026-10-11T08:22:30.252Z",
+  "board": {
+    "live": "LIVE · Florida Blue (FHIR Plan-Net) · GET PractitionerRole?…plan_id… · 6887 ms · as of 04:22",
+    "count": "5 in-network for gastroenterology · ZIP 32803 · Plan A"
+  },
+  "devinfo": {
+    "directoryMode": "auto",
+    "plans": [
+      {
+        "planId": "plan-a",
+        "label": "Plan A",
+        "insurer": "Florida Blue",
+        "product": "BlueChoice (PPO) · plan_id BCHPPO · network PPC-2026-BCHPPO",
+        "kind": "fhir-plannet",
+        "programType": "commercial PPO",
+        "sourceMode": "live"
+      },
+      {
+        "planId": "plan-b",
+        "label": "Plan B",
+        "insurer": "Oscar Health (Florida)",
+        "product": "Silver Classic Standard · HIOS 21525FL0010009",
+        "kind": "qhp-file",
+        "programType": "marketplace (ACA) plan",
+        "sourceMode": "file"
+      },
+      {
+        "planId": "plan-c",
+        "label": "Plan C",
+        "insurer": "Molina Healthcare of Florida",
+        "product": "Medicaid Managed Medical Assistance (MMA) · network 15",
+        "kind": "fhir-plannet",
+        "programType": "state program (Medicaid managed care)",
+        "sourceMode": "live"
+      }
+    ],
+    "probes": {
+      "plan-a": {
+        "ok": true,
+        "mode": "live",
+        "directory": "Florida Blue provider directory (FHIR Plan-Net)",
+        "ms": 1125,
+        "asOf": "2026-10-11T08:23:19.227Z",
+        "ref": "https://apigw.bcbsfl.com/interop/interop-developer-portal/emr/api/v1/fhir/PractitionerRole?location.address-postalcode=32803&_count=100&identifier=https%3A%2F%2Fwww.edifecs.com%2Ffhir%2Fcms-organization%2Fplan_id%7CBCHPPO&specialty%3Atext=DERMATOLOGY",
+        "inNetworkCount": 41
+      },
+      "plan-c": {
+        "ok": false,
+        "mode": "live",
+        "directory": "Molina Healthcare provider directory (FHIR Plan-Net)",
+        "ms": 338,
+        "asOf": "2026-10-11T08:24:07.626Z",
+        "ref": "https://api.interop.molinahealthcare.com/providerdirectory/Location?address-postalcode=32803",
+        "error": "HTTP 403, daily quota"
+      }
+    },
+    "verify": {
+      "total": 68,
+      "pass": 68,
+      "file": "logs/verify-latest.json"
+    },
+    "audits": {
+      "AUDIT-2026-10-11.json": {
+        "records": 8506,
+        "agePublished": 0,
+        "errors": 3,
+        "controlLit": true
+      }
+    },
+    "sessions": 2,
+    "now": "2026-10-16T23:45:00.000Z"
+  }
+}

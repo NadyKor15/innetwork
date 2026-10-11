@@ -80,7 +80,7 @@ Against the shifted reference, contours match (edgeF1 0.904). lumaMAE 9.6 comes 
 
 ## Differences from brief.md (built as on the picture)
 - Request quotes: the picture uses curly quotes “…”, the brief uses straight ones. Kept as on the picture. "He's", `"yes"` and `"great with kids"` keep straight quotes, as on the picture and in the brief.
-- The picture has a "Free morning" scale that is not in the brief. STYLE removed it anyway.
+- The picture has a "Free morning" scale that is not in the brief. STYLE removed it anyway (and N9 keeps the word "free" off every screen).
 - Brief items 8 (source badges) and the "demo data in a corner": the screen section of the task (STYLE (Д), screen (5)) overrides them, and the badges were removed.
 - The set-aside reason for Dr. Tobias Wrenfield is shortened from the brief's full text to "Doesn't see children under 3", per STYLE screen (3).
 

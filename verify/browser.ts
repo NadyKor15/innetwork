@@ -177,9 +177,9 @@ export async function runBrowserChecks(opts: { hostUrl: string; screensDir: stri
       return { caption: document.querySelector(".frame-caption")?.textContent ?? "", mark: document.querySelector(".sim-mark")?.textContent ?? "", w: r.width, h: r.height,
         imgs: document.querySelectorAll("img").length, scrollX: document.documentElement.scrollWidth - innerWidth, scrollY: document.documentElement.scrollHeight - innerHeight };
     });
-    add("B2", "device frame: caption, permanent simulated mark, true 1280x800 screen, no images/logos, no page scroll at 1920x1080", '"Echo Show 8 simulator (1280x800 frame)" · "Alexa+ simulated in our web host" · 1280x800 · 0 img · no scroll',
+    add("B2", "device frame: caption, permanent simulated mark, true 1280x800 screen, no images/logos, no page scroll at 1920x1080", '"Echo Show 8 simulator (1280x800 frame)" · "Alexa+ simulated in our web host · Alexa voice: synthetic" · 1280x800 · 0 img · no scroll',
       `"${frame.caption}" · "${frame.mark}" · ${frame.w}x${frame.h} · ${frame.imgs} img · scroll ${frame.scrollX}/${frame.scrollY}`,
-      frame.caption === "Echo Show 8 simulator (1280x800 frame)" && frame.mark === "Alexa+ simulated in our web host" && frame.w === 1280 && frame.h === 800 && frame.imgs === 0 && frame.scrollX <= 0 && frame.scrollY <= 0);
+      frame.caption === "Echo Show 8 simulator (1280x800 frame)" && frame.mark === "Alexa+ simulated in our web host · Alexa voice: synthetic" && frame.w === 1280 && frame.h === 800 && frame.imgs === 0 && frame.scrollX <= 0 && frame.scrollY <= 0);
 
     const viewFrame = (): Frame | undefined => page.frames().filter((f) => !f.isDetached() && f.parentFrame()?.url().includes("/sandbox.html")).at(-1);
     async function viewReady(view: string): Promise<Frame> {

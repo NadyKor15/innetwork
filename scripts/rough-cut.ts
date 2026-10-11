@@ -16,6 +16,8 @@ const WORK = join(VID, ".work");
 const DRAFT = process.argv.includes("--draft");
 // The device (1320x856 at 20,42 on the 1920x1080 host page) plus its caption and the subtitle bar under it.
 const CROP = process.env.ROUGH_CUT_CROP ?? "crop=1340:1000:10:12";
+// Top of the subtitle bar inside that crop (the device frame ends at y 898 on the page, the bar starts at y 907).
+const SUBTITLE_BAR_Y = Number(process.env.ROUGH_CUT_SUBTITLE_Y ?? 890);
 type Beats = { video: string; durationMs: number; beats: { beat: number; label: string; startMs: number; endMs: number }[]; cues: { atMs: number; who: "mom" | "alexa"; text: string; beat: number }[] };
 
 function run(cmd: string, args: string[]): string {
@@ -98,7 +100,7 @@ async function main() {
   const beat = (n: number) => b.beats.filter((x) => x.beat === n);
   const firstAlexa = (n: number) => b.cues.find((c) => c.beat === n && c.who === "alexa")?.atMs;
   const span = (ns: number[]) => { const xs = ns.flatMap(beat); if (!xs.length) throw new Error(`beat(s) ${ns} not in beats.json`); return { start: Math.min(...xs.map((x) => x.startMs)), end: Math.max(...xs.map((x) => x.endMs)) }; };
-  type Seg = { id: string; kind: "rec"; start: number; end: number; beats: number[] } | { id: string; kind: "card"; png: string; secs: number; text: string };
+  type Seg = { id: string; kind: "rec"; start: number; end: number; beats: number[]; silent?: boolean } | { id: string; kind: "card"; png: string; secs: number; text: string };
   const seg: Seg[] = [
     // cold open: the "Heard" screen shows the mom's words while she speaks, then the answer
     { id: "open", kind: "rec", ...span([2]), beats: [2] },
@@ -108,9 +110,10 @@ async function main() {
     { id: "c4", kind: "card", png: png.c4, secs: 4.5, text: cardText.c4 },
     { id: "scene1", kind: "rec", ...span([3, 4]), beats: [3, 4] },
     { id: "scene2", kind: "rec", ...span([5]), beats: [5] },
-    // consent and boundaries: about 8 s from the consent screen (SPEC §2 1:45-1:53)
-    { id: "consent", kind: "rec", start: (firstAlexa(1) ?? span([1]).start) - 300, end: Math.min(span([1]).end, (firstAlexa(1) ?? span([1]).start) + 7700), beats: [1] },
-    { id: "evidence", kind: "rec", ...span([6]), beats: [6] },
+    // consent and boundaries: about 8 s of the consent screen, no voice (SPEC §2 1:45-1:53) - the subtitle bar is covered
+    // and its lines stay out of the .srt, so the video's Alexa words stay the 107 checked by verify G3
+    { id: "consent", kind: "rec", silent: true, start: (firstAlexa(1) ?? span([1]).start) - 300, end: Math.min(span([1]).end, (firstAlexa(1) ?? span([1]).start) + 7700), beats: [1] },
+    { id: "evidence", kind: "rec", ...span([6]), beats: [6], silent: true }, // no voice; the bar would still show scene 2's line
     { id: "end", kind: "card", png: png.end, secs: 4, text: cardText.end },
   ];
   const parts: string[] = [];
@@ -124,7 +127,9 @@ async function main() {
       srt.push({ a: t, b: t + s.secs * 1000 - 50, text: s.text });
     } else {
       const ss = (s.start / 1000).toFixed(3), to = (s.end / 1000).toFixed(3);
-      run("ffmpeg", ["-y", "-loglevel", "error", "-ss", ss, "-to", to, "-i", src, "-f", "lavfi", "-i", "anullsrc=r=48000:cl=stereo", "-vf", `${CROP},scale=-2:1080,pad=1920:1080:(ow-iw)/2:0:color=0x0D0C0F,format=yuv420p`, "-r", "30", "-c:v", "libx264", "-crf", "18", "-c:a", "aac", "-shortest", f]);
+      const cover = s.silent ? `,drawbox=x=0:y=${SUBTITLE_BAR_Y}:w=iw:h=ih-${SUBTITLE_BAR_Y}:color=0x0D0C0F:t=fill` : "";
+      run("ffmpeg", ["-y", "-loglevel", "error", "-ss", ss, "-to", to, "-i", src, "-f", "lavfi", "-i", "anullsrc=r=48000:cl=stereo", "-vf", `${CROP}${cover},scale=-2:1080,pad=1920:1080:(ow-iw)/2:0:color=0x0D0C0F,format=yuv420p`, "-r", "30", "-c:v", "libx264", "-crf", "18", "-c:a", "aac", "-shortest", f]);
+      if (s.silent) { parts.push(f); t += dur(f) * 1000; continue; }
       const beatStart = Math.min(...s.beats.flatMap(beat).map((x) => x.startMs));
       for (const c of b.cues.filter((x) => s.beats.includes(x.beat) && x.atMs >= beatStart && x.atMs < s.end)) {
         const at = t + Math.max(0, c.atMs - s.start); // a line said just before the cut point starts with the segment
