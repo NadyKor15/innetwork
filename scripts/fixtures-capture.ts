@@ -272,8 +272,11 @@ async function capturePlanC() {
   type RawPair = { role: FhirResource; location: FhirResource };
   const rawFile = join(PRIVATE, "plan-c.raw.json");
   let pool: { inNet: RawPair[]; other: RawPair[] };
+  let pcCapturedAt = capturedAt; // the day the directory answered (the raw file's, with --from-raw)
   if (FROM_RAW && existsSync(rawFile)) {
-    pool = (JSON.parse(readFileSync(rawFile, "utf8")) as { pool: typeof pool }).pool;
+    const raw = JSON.parse(readFileSync(rawFile, "utf8")) as { capturedAt?: string; pool: typeof pool };
+    pool = raw.pool;
+    if (raw.capturedAt) pcCapturedAt = raw.capturedAt;
   } else {
     const mol = new FhirClient(MOLINA.base, { timeoutMs: 60_000, counters, maxPages: 5 });
     const inNet: RawPair[] = [];
@@ -303,14 +306,16 @@ async function capturePlanC() {
     writeFileSync(rawFile, JSON.stringify({ capturedAt, pool }, null, 1));
   }
   const norm = (x: RawPair) => ({ x, n: normalizeRole("molina", x.role, x.location, null) });
-  const accepting = pool.inNet.map(norm).filter(({ n }) => n.accepting === "accepting").sort((a, b) => byId(a.n, b.n));
+  // Re-check the specialty on the pool too: a raw pool may predate a classifier fix (allied health, 2026-10-13).
+  const ortho = ({ n }: { n: NormalizedRole }) => isSpecialty("orthopedics", n.specialtyCodes, n.specialtyTexts);
+  const accepting = pool.inNet.map(norm).filter((p) => p.n.accepting === "accepting" && ortho(p)).sort((a, b) => byId(a.n, b.n));
   // One doctor per office in the sample: the age policy is a property of the office.
   const seenLoc = new Set<string>();
   const distinct = accepting.filter(({ x }) => (seenLoc.has(String(x.location.id)) ? false : (seenLoc.add(String(x.location.id)), true)));
   const isPed = (n: NormalizedRole) => n.specialtyCodes.includes("207XP3100X") || n.specialtyTexts.some((t) => /pediatric/i.test(t));
   const ped = distinct.filter(({ n }) => isPed(n));
   const gen = distinct.filter(({ n }) => !isPed(n));
-  const other = pool.other.map(norm).sort((a, b) => byId(a.n, b.n))[0];
+  const other = pool.other.map(norm).filter(ortho).sort((a, b) => byId(a.n, b.n))[0];
   if (!ped.length) console.log("  note: no accepting pediatric orthopedic role in the pool; Pellworth gets a general orthopedic record");
   const order = [...ped, ...gen];
   if (order.length < 5 || !other) throw new Error(`pool too small: ${order.length} accepting in-network orthopedic offices, other-network ${other ? 1 : 0}`);
@@ -381,17 +386,18 @@ async function capturePlanC() {
     if (!locations.some((l) => l.id === locId)) locations.push(loc);
     distances[`PractitionerRole/${roleId}`] = who.distanceMi;
   }
+  const day = new Date(pcCapturedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
   writeFixture("plan-c", "orthopedics", { format: "fhir-roles-per-location", directory: "molina", data: { locations, roles } }, {
-    capturedAt,
+    capturedAt: pcCapturedAt,
     zip: DEMO_ZIP,
     source: { directory: MOLINA.label, request: `${MOLINA.base}/Location?address-postalcode=<zip> -> PractitionerRole?location=<id>&network=15`, network: "15 = Medicaid-Managed Medical Assistance (MMA), Molina Healthcare of Florida", capturedFromZip: capturedFrom },
     realFieldsKept: ["PractitionerRole and Location structure", "network-reference (5 roles: 15 = Medicaid-Managed Medical Assistance (MMA); 1 role outside it, as captured)", "newpatients (only accepting roles were picked for the in-network doctors)", "specialty and qualification (NUCC code) as captured", "hours (availableTime / telecom available-time) as captured"],
     changed: ["practitioner names (fictional, passed guard:names)", "NPI (impossible number starting with 0)", "offices: name, street, ZIP, phone, organization, resource ids (fictional offices)", "generated narrative (text.div) removed: it repeated the real names", "Location position (coordinates) removed, alias/description/partOf replaced, Location new-patient flag set to the role's", "office age policies (fixtures/office-policies.json) are demo data attached to the fictional offices, not from the directory"],
     distances,
     distanceNote: "Fictional offices: distances are fictional too.",
-    provenance: "directory record captured Oct 11, names and offices changed",
+    provenance: `directory record captured ${day}, names and offices changed`,
     ...(derived.size ? {
-      provenanceByRole: Object.fromEntries([...derived].map((k) => [k, "directory record captured Oct 11, names, offices and specialty changed"])),
+      provenanceByRole: Object.fromEntries([...derived].map((k) => [k, `directory record captured ${day}, names, offices and specialty changed`])),
       derivedNote: `${derived.size} records (${[...derived].map((k) => k.replace("PractitionerRole/fx-c-", "")).join(", ")}) are in-network MMA roles whose specialty and qualification were set to the captured general orthopedic role's (the captured pool had one general orthopedic practitioner, outside the network). To replace them with captured general-orthopedic MMA roles: node scripts/fixtures-capture.ts c (after the Molina quota resets).`,
     } : {}),
     ...(templated ? { locationNote: "The roles' Location resources were not fetched before Molina's daily call-volume quota stopped the capture (HTTP 403 \"Out of call volume quota\", 2026-10-11 ~05:09Z); each office uses the structure of another Molina Location captured the same day, with every field fictional." } : {}),

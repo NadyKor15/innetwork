@@ -1,19 +1,19 @@
 {
  "planId": "plan-c",
  "specialty": "orthopedics",
- "capturedAt": "2026-10-11T05:13:06.897Z",
+ "capturedAt": "2026-10-13T12:21:31.594Z",
  "zip": "32803",
  "source": {
   "directory": "Molina Healthcare provider directory (FHIR Plan-Net)",
   "request": "https://api.interop.molinahealthcare.com/providerdirectory/Location?address-postalcode=<zip> -> PractitionerRole?location=<id>&network=15",
   "network": "15 = Medicaid-Managed Medical Assistance (MMA), Molina Healthcare of Florida",
   "capturedFromZip": {
-   "PractitionerRole/fx-c-pellworth": "not captured",
-   "PractitionerRole/fx-c-pembrook": "not captured",
-   "PractitionerRole/fx-c-wrenfield": "not captured",
-   "PractitionerRole/fx-c-ashgrove": "not captured",
-   "PractitionerRole/fx-c-ardley": "not captured",
-   "PractitionerRole/fx-c-hartsworth": "not captured"
+   "PractitionerRole/fx-c-pellworth": "32806",
+   "PractitionerRole/fx-c-pembrook": "32806",
+   "PractitionerRole/fx-c-wrenfield": "32806",
+   "PractitionerRole/fx-c-ashgrove": "32806",
+   "PractitionerRole/fx-c-ardley": "32806",
+   "PractitionerRole/fx-c-hartsworth": "32806"
   }
  },
  "realFieldsKept": [
@@ -40,13 +40,5 @@
   "PractitionerRole/fx-c-hartsworth": 4.6
  },
  "distanceNote": "Fictional offices: distances are fictional too.",
- "provenance": "directory record captured Oct 11, names and offices changed",
- "provenanceByRole": {
-  "PractitionerRole/fx-c-pembrook": "directory record captured Oct 11, names, offices and specialty changed",
-  "PractitionerRole/fx-c-wrenfield": "directory record captured Oct 11, names, offices and specialty changed",
-  "PractitionerRole/fx-c-ashgrove": "directory record captured Oct 11, names, offices and specialty changed",
-  "PractitionerRole/fx-c-hartsworth": "directory record captured Oct 11, names, offices and specialty changed"
- },
- "derivedNote": "4 records (pembrook, wrenfield, ashgrove, hartsworth) are in-network MMA roles whose specialty and qualification were set to the captured general orthopedic role's (the captured pool had one general orthopedic practitioner, outside the network). To replace them with captured general-orthopedic MMA roles: node scripts/fixtures-capture.ts c (after the Molina quota resets).",
- "locationNote": "The roles' Location resources were not fetched before Molina's daily call-volume quota stopped the capture (HTTP 403 \"Out of call volume quota\", 2026-10-11 ~05:09Z); each office uses the structure of another Molina Location captured the same day, with every field fictional."
+ "provenance": "directory record captured Oct 13, names and offices changed"
 }

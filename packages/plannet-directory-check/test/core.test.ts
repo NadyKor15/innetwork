@@ -120,6 +120,8 @@ test("specialties: NUCC codes and directory words; sub-specialty never matched b
   assert.equal(groupOfText("Orthopedic Surgeon specializing in Pediatrics"), "orthopedics");
   assert.equal(groupOfText("OBGYN (Obstetrician and Gynecologist)"), "ob_gyn");
   assert.equal(groupOfText("Pediatric Dentist"), null);
+  assert.equal(groupOfText("Orthopedic Physical Therapist"), null); // allied health, not an orthopedist (Molina 2026-10-13)
+  assert.equal(groupOfText("Pediatric Orthopaedic Surgery"), "orthopedics");
 });
 
 test("records: per-location strategy asks one location at a time and keeps going past a failed location", async () => {
