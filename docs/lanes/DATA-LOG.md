@@ -2,6 +2,8 @@
 
 Times: UTC, from `date -u`. One line per finished step; facts only from real runs.
 
+> Lane log, kept as written. Numbers are as of the day of each line: the audit figures of 2026-10-11 below (0 of 8,506, five directories) are superseded by `docs/AUDIT-2026-10-13.md` (0 of 10,075, six directories, Molina measured).
+
 ## Phase 1 — data for the demo
 
 - 2026-10-11 04:30Z start. Worktree `innetwork-alexa-wt-data`, branch `lane/data`; merged `main` (directory service contract, scenario).

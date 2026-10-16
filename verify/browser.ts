@@ -11,7 +11,7 @@
 //   node verify/browser.ts [--host http://127.0.0.1:5188/] [--out docs/screens]   (standalone, servers already running)
 import { chromium, type Frame, type Page } from "playwright";
 import { spawnSync } from "node:child_process";
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -338,8 +338,12 @@ export async function runBrowserChecks(opts: { hostUrl: string; screensDir: stri
     const expVerify = dev.verify ? `verify ${dev.verify.pass}/${dev.verify.total} ${dev.verify.pass === dev.verify.total ? "PASS" : "· FAIL"}` : "verify — not run yet";
     const okProbe = Object.values(dev.probes).some((p) => p.ok);
     const boardText = await page.evaluate(() => document.getElementById("devboard")!.innerText);
-    add("B15", "behind the scenes (07): verify and live probe lines are what /devinfo says (no placeholder numbers)", `"${expVerify}" · ${okProbe ? "live probe line with ms" : '"no live directory call in this run"'}`,
-      `${hEnd.devboard.verify} · probe ${hEnd.devboard.probe} · mode ${dev.directoryMode}`, hEnd.devboard.verify === expVerify && boardText.includes(expVerify) && (okProbe ? / ms · as of /.test(boardText) : /no live directory call in this run/.test(boardText)));
+    // the footer's audit number must be the NEWEST docs/AUDIT-*.json, read here straight from the file (not through /devinfo)
+    const auditFiles = readdirSync(join(ROOT, "docs")).filter((f) => /^AUDIT-.*\.json$/.test(f)).sort();
+    const auditTot = auditFiles.length ? (JSON.parse(readFileSync(join(ROOT, "docs", auditFiles.at(-1)!), "utf8")) as { totals: { records: number; age_policy_published: number } }).totals : null;
+    const expAudit = auditTot ? `audit: ${auditTot.age_policy_published.toLocaleString("en-US")} of ${auditTot.records.toLocaleString("en-US")} directory records state a patient age` : null;
+    add("B15", "behind the scenes (07): verify, live probe and audit lines are what /devinfo and the newest docs/AUDIT-*.json say (no placeholder numbers)", `"${expVerify}" · ${okProbe ? "live probe line with ms" : '"no live directory call in this run"'} · "${expAudit ?? "no audit file"}"`,
+      `${hEnd.devboard.verify} · probe ${hEnd.devboard.probe} · mode ${dev.directoryMode} · ${/audit: [^\n]*/.exec(boardText)?.[0] ?? "no audit line"}`, hEnd.devboard.verify === expVerify && boardText.includes(expVerify) && (okProbe ? / ms · as of /.test(boardText) : /no live directory call in this run/.test(boardText)) && (expAudit === null || boardText.includes(expAudit)));
 
     // ---- comparisons with the references ----
     const cmp: string[] = [];

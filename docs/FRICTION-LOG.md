@@ -103,7 +103,7 @@ re-counted by `npm run audit:directories`.
 
 ### F10. NPPES: a ZIP search also matches mailing addresses
 - **Task:** practices in an Orlando ZIP.
-- **Steps:** spike 2026-10-11 02:2xZ: `…?version=2.1&state=FL&taxonomy_description=Urgent+Care&postal_code=<an Orlando ZIP>` → 4 of 8 organizations practice in other cities. Audit 2026-10-11 05:28Z (`npm run audit:directories`, individuals, 3 ZIPs × 6 specialties, 36 requests, 0 errors): **25 of 474** results (5.3%) have no practice address (primary LOCATION or secondary practice location) in the searched ZIP; with `address_purpose=LOCATION` the same queries return 449.
+- **Steps:** spike 2026-10-11 02:2xZ: `…?version=2.1&state=FL&taxonomy_description=Urgent+Care&postal_code=<an Orlando ZIP>` → 4 of 8 organizations practice in other cities. Audit 2026-10-13 12:34Z (`npm run audit:directories`, individuals, 3 ZIPs × 6 specialties, 36 requests, 0 errors): **25 of 475** results (5.3%) have no practice address (primary LOCATION or secondary practice location) in the searched ZIP; with `address_purpose=LOCATION` the same queries return 450. (Earlier run 2026-10-11 05:28Z: 25 of 474, 449; superseded by `docs/AUDIT-2026-10-13.md`.)
 - **Expected:** a postal-code search returns practices located in that ZIP.
 - **Actual:** it also matches mailing addresses (half of the urgent-care organizations in the spike, 5.3% of individuals in the audit).
 - **Severity:** medium for organizations, low for individuals.
@@ -121,9 +121,9 @@ re-counted by `npm run audit:directories`.
 
 ### F12. No public directory record states a patient age (Plan-Net has no field for it)
 - **Task:** know before calling whether a doctor sees a child that age.
-- **Steps:** `npm run audit:directories` 2026-10-11 05:28Z: Florida Blue, UnitedHealthcare/Optum, Cigna, Humana, Centene (Molina not measured: quota, F6b) × ZIPs 32801/32803/32806 × 6 specialties; 283 requests, 3 errors (all Molina 403).
+- **Steps:** `npm run audit:directories` 2026-10-13 12:34–12:42Z: Florida Blue, Molina, UnitedHealthcare/Optum, Cigna, Humana, Centene (6 of 6 answered) × ZIPs 32801/32803/32806 × 6 specialties; 414 requests, 0 errors. (Earlier run 2026-10-11 05:28Z measured five directories — Molina was over its daily quota, F6b — 283 requests, 3 errors, 0 of 8,506; superseded by `docs/AUDIT-2026-10-13.md`.)
 - **Expected:** an age range where a practice limits ages; Plan-Net offers only `newpatients.characteristics`, a free string.
-- **Actual:** **0 of 8,506** records (4,170 PractitionerRole + 4,336 Location) state a patient age in any text field we read (characteristics, comments, descriptions, eligibility, string extensions); the must-light control on a synthetic "Ages 3 and up" record counts it.
+- **Actual:** **0 of 10,075** records (5,649 PractitionerRole + 4,426 Location) state a patient age in any text field we read (characteristics, comments, descriptions, eligibility, string extensions); the must-light control on a synthetic "Ages 3 and up" record counts it.
 - **Severity:** high for families with young children (an unsuitable referral is found out on the phone).
 - **Workaround:** office policy learned once at a booking, kept per office without family data (SPEC §4.2; demo data in the add-on).
 - **Suggestion:** a structured patient-age range in Plan-Net (e.g. a coded extension on `newpatients` or HealthcareService.eligibility with an age range), and directories populating it.
@@ -132,7 +132,7 @@ re-counted by `npm run audit:directories`.
 - **Task:** specialty, NPI, new-patient status and hours from one PractitionerRole.
 - **Steps:** same audit run (F12).
 - **Expected:** PractitionerRole carries specialty (Must Support in Plan-Net) and the NPI (on the role or one hop away); `newpatients` informative; hours where offered.
-- **Actual:** UnitedHealthcare/Optum: **435 of 1,500** roles carry a specialty, **341 of 1,500** an NPI. Humana: **0 of 912** roles carry an NPI (it sits on Practitioner, by absolute URL). Florida Blue: `newpatients` = `newpt` on **4,932 of 4,932** records; hours on **0 of 4,932**. Hours across all five directories: **1,431 of 8,506** records (16.8%). Hours conflicts inside one record: **0 found** in this run (the known example is a Molina record, F6b — not measured today).
+- **Actual:** UnitedHealthcare/Optum: **435 of 1,500** roles carry a specialty, **341 of 1,500** an NPI. Humana: **0 of 910** roles carry an NPI (it sits on Practitioner, by absolute URL). Florida Blue: `newpatients` = `newpt` on **4,932 of 4,932** records; hours on **0 of 4,932**. Hours across all six directories: **3,006 of 10,075** records (29.8%). Hours conflicts inside one record: **0 found** in this run (Molina included: 1,571 records, hours on all of them).
 - **Severity:** medium.
 - **Workaround:** joins (Practitioner, NPPES by NPI), and never showing hours or "accepting" as verified.
 - **Suggestion:** populate specialty and NPI on the role; vary `newpatients` by practice.

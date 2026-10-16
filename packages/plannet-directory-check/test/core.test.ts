@@ -124,6 +124,25 @@ test("specialties: NUCC codes and directory words; sub-specialty never matched b
   assert.equal(groupOfText("Pediatric Orthopaedic Surgery"), "orthopedics");
 });
 
+test("specialties: allied-health titles named after a field are not a physician specialty (Molina 2026-10-13); physician titles still match", () => {
+  const alliedHealth = [
+    "Orthopedic Physical Therapist",
+    "Orthopaedic Technologist",
+    "Orthopedic Assistant",
+    "Orthotist",
+    "Prosthetist",
+    "Dermatology Physician Assistant",
+    "Allergy Technician",
+    "Orthopedic Physical Therapy",
+  ];
+  for (const t of alliedHealth) assert.equal(groupOfText(t), null, t);
+  // must-light control: the same field words with a physician title are still found, so the nulls above are not a dead matcher
+  assert.equal(groupOfText("Orthopedic Surgeon"), "orthopedics");
+  assert.equal(groupOfText("Orthopaedic Surgery"), "orthopedics");
+  assert.equal(groupOfText("Dermatologist"), "dermatology");
+  assert.equal(groupOfText("Allergist"), "allergy");
+});
+
 test("records: per-location strategy asks one location at a time and keeps going past a failed location", async () => {
   const dir: DirectoryInfo = { key: "t", label: "t", base: "https://x.invalid/fhir", strategy: "per-location", bareIds: true, notes: "" };
   const calls: string[] = [];
