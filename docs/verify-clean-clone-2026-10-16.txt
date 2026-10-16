@@ -1,0 +1,165 @@
+# verify run 2026-10-16T03:36:40.524Z
+node v26.10.0 | @modelcontextprotocol/client 2.3.1 | server 2.3.1 | node-adapter 2.1.1 | ext-apps 2.0.3 | playwright 1.63.0
+SDK client LATEST_PROTOCOL_VERSION=2025-11-25; server: 2025-11-25 strict sessions + 2026-07-28 via isLegacyRequest/createMcpHandler; DIRECTORY_MODE=fixture
+build: exit 0 built dist/host.js, dist/sandbox.js, dist/host.css, dist/views/{family-match,set-aside,visit-plan,booked,checkup-year,consent}.html (637 KB each)
+servers up: mcp pid 12935, host pid 12936; data <fresh clone>/data/verify
+PASS P1 initialize negotiates protocolVersion (official client) :: "2025-11-25" sid=present
+PASS P2 tools/list: the nine InNetwork tools :: book_visit,cancel_visit,check_doctor,checkup_year,consent,doctor_notes,family_plans,family_routine,find_in_network
+PASS P3 client sends MCP-Protocol-Version after init :: "2025-11-25"
+PASS P4 tools with a screen link their MCP App view; data-only tools have none :: consent->ui://innetwork/consent.html family_plans->none family_routine->none doctor_notes->none find_in_network->ui://innetwork/family-match.html check_doctor->none book_visit->ui://innetwork/booked.html cancel_visit->ui://innetwork/booked.html checkup_year->ui://innetwork/visit-plan.html
+PASS P5 no tool takes symptoms, names, dates of birth or member IDs (N1, N4, N5) :: none among 25 top-level fields
+PASS P6 all six ui:// views readable as MCP App HTML :: booked:ok(637KB) checkup-year:ok(637KB) consent:ok(637KB) family-match:ok(637KB) set-aside:ok(637KB) visit-plan:ok(637KB)
+PASS P7 directory is src/directory (recorded samples / live), not the unit-test double :: mode=fixture plans=Plan A:fhir-plannet,Plan B:qhp-file,Plan C:fhir-plannet
+PASS T1 N6: before consent, nothing is looked up; the consent screen comes back :: isError=true view=consent steps=Household state
+PASS T2 consent: purpose and the §13 disclaimer by voice once, then allowed :: Before we start, here's what I use and why. This information is not a… | Thanks. You can change this anytime.
+PASS T3 opening: one phrase, three people, three plans (SPEC line) :: One doctor each, in their own plan. Book all three?
+PASS T4 opening rows: doctor and time per person, inside the routine (N12) :: [["Mom","Plan A","Gastroenterology","Dr. Marisol Venterra","Thu Oct 22 · 9:15 AM"],["Older child","Plan B","Allergy","Dr. Ansel Quillfeather","Wed Oct 21 · 2:30 PM"],["Youngest","Plan C","Orthopedics","Dr. Imogen Pellworth","Mon Oct 19 · 1:30 PM"]]
+PASS T5 youngest's row: set aside with the reason (N2, N3); note on the older child's doctor (N13) :: Dr. Tobias Wrenfield: Doesn't see children under 3 | Dr. Caspian Ardley: Not in his plan's network | note=great with kids
+PASS T6 every tools/call names its sources (steps with a mode) :: fixture:Florida Blue provider directory (FHIR Plan-Net) > sandbox:network gate > fixture:Oscar Health machine-readable provider file (CMS QHP JSON) > sandbox:network gate
+PASS T7 opening booked (voice) + written confirmation queued (§15) :: Booked. | 3 visit(s) · sandbox outbox
+PASS T8 scene 1: OOP line with 'usually' and HealthCare.gov (N9) :: After the out-of-pocket max, plans usually pay 100% of covered in-network care until the plan year ends — per HealthCare.gov.
+PASS T9 scene 1: plan read back around the routine; lab work waits (N10, N12) :: Your gastroenterologist is already booked for Thursday. Tuesday, same clinic: primary care, then OB-GYN. Friday: dermatology. All between 8:30 and 11, while he's at daycare. Lab work may need an order — I'll add it after primary care. Book these three?
+PASS T10 visit plan screen: four doctors, same clinic, already booked :: Primary care|Dr. Rowena Thistlewood|Tue Oct 20 · 9:00 AM|same clinic ; OB-GYN|Dr. Linnea Marchbank|Tue Oct 20 · 10:15 AM|same clinic ; Gastroenterology|Dr. Marisol Venterra|Thu Oct 22 · 9:15 AM|Already booked ; Dermatology|Dr. Ottilie Brennagh|Fri Oct 23 · 9:30 AM|
+PASS T11 scene 1 booked: voice + Alexa app + email + cancel anytime (§15) :: Booked. Details in your Alexa app and email. Say cancel anytime. | Booked · 3 visits | All between 8:30 and 11, while he's at daycare
+PASS T12 N10: lab work is not booked before the primary care visit :: isError=true refused=N10 | Lab work may need an order from your doctor. I'll add it after your primary care visit.
+PASS S1 old session id rejected after DELETE :: HTTP 404
+PASS S2 new session: 'what's left' from saved state (SPEC line) :: sid 8bf0e66f…->dcd01f5b… | Four booked. Lab work comes after Tuesday's visit.
+PASS T13 scene 2: six checked, two set aside by age, one by network, two fit (SPEC line) :: I checked six nearby. Two don't see children under three, one isn't in his plan. These two fit.
+PASS T14 set aside screen: reasons, 'age not listed' in yellow, age not saved (N3, N4) :: Wrenfield:age,Ashgrove:age,Ardley:network,Hartsworth:ask_office | Age used for this search only · not saved
+PASS S3 control: a different household has nothing booked :: Zero booked. Lab work comes after your primary care visit.
+PASS S4 2026-07-28 client on the same endpoint, same saved state :: "2026-07-28" sid=none | Four booked. Lab work comes after Tuesday's visit.
+PASS S5 state survives a server process restart :: pid 12937 -> 12938 | Four booked. Lab work comes after Tuesday's visit. == Four booked. Lab work comes after Tuesday's visit.
+PASS N1 unknown Mcp-Session-Id :: HTTP 404
+PASS N2 initialize from a foreign Origin (DNS-rebinding guard) :: HTTP 403
+PASS N3 initialize without the (simulated) account link :: HTTP 401 www-authenticate=Bearer realm="innetwork-sandbox"
+PASS N4 CORS preflight from the host origin :: HTTP 204 allow-origin=http://127.0.0.1:25188
+PASS N5 strict: initialize asks 2024-11-05 :: result.protocolVersion="2025-11-25"
+PASS N6 strict: header MCP-Protocol-Version 2024-11-05 on a 2025-11-25 session :: HTTP 400
+PASS N7 another account reusing someone's session id :: HTTP 403
+PASS N8 non-initialize request without Mcp-Session-Id :: HTTP 400
+PASS N9 input: no symptoms field, closed specialty list, bounded text, a child's search needs the age said now (N1, N4) :: symptoms=true specialty=true 500-char note=true | How old is he? I use it for this search only.
+PASS G1 N4: household files hold no ages, names, dates of birth, program types :: 0 keys · age text in 0 files
+PASS G2 every Alexa line of this run passes the linter (N5/N7/N9, ≤20 s) :: 0 issues in 17 lines
+PASS G3 voice budget of the video's Alexa lines (SPEC §2) :: 107 words ≈ 42.8 s · longest 16.0 s
+PASS G4 customer cards: no tool names, internal ids, JSON, source badges, stars :: 0 in 787 card strings
+PASS C1 unit + tool tests (npm test: core gate, schedule, linter, intent, MCP tools end to end) :: exit 0 · tests 51 · pass 50 · fail 0
+PASS C3 classic Alexa skill as an MCP client (APL card, voice only, consent, deadline, unsigned request rejected) :: exit 0 · tests 5 · pass 5 · fail 0
+PASS C2 open-source package plannet-directory-check: offline tests :: exit 0 · tests 12 · pass 12 · fail 0
+PASS M0 mutation control: the unmutated copy is green :: exit 0 · pass 30 · fail 0
+  killed   M-N1 N1 symptom without a specialty -> fixed answer · applied=1
+  killed   M-N2 N2 in network only with the plan's network id · applied=1
+  killed   M-N2b N2 out-of-network booking needs a second yes · applied=1
+  killed   M-N3 N3 no age data never fits a child's search · applied=1
+  killed   M-N4 N4 the age said for a search is never stored · applied=1
+  killed   M-N5 N5 no member ID read aloud · applied=1
+  killed   M-N6 N6 nothing looked up before consent · applied=1
+  killed   M-N7 N7 emergencies get the fixed line · applied=1
+  killed   M-N8 N8 directory did not answer -> not confirmed · applied=1
+  killed   M-N9 N9 never 'free'; coverage needs 'usually' + source · applied=1
+  killed   M-N10 N10 lab work waits for the primary care visit · applied=1
+  killed   M-N11 N11 real directory records never get sandbox slots · applied=1
+  killed   M-N12 N12 no visit over the routine · applied=1
+  killed   M-N12b N12 over-routine booking needs an explicit yes · applied=1
+  killed   M-N13 N13 notes never reorder results · applied=1
+  killed   M-N13b N13 notes never enter office policies · applied=1
+PASS M1 mutation checks: each refusal broken in a throwaway copy turns its test red (N1-N13) :: 16/16 killed
+PASS G5 mockup placeholders never reach views, host, fixtures, demo script (SPEC §8) :: 0 hits in 22 files · control 5
+PASS G6 no personal data patterns in the tracked tree (emails, phones, SSN, DOB) :: 0 hits in 145 files · control 4
+PASS G7 owner pending: no company/author branding in the tree :: 0 of 144 files
+PASS G8 MIT license at the root :: MIT License  Copyright (c) 2026 <OWNER — pending>
+PASS G9 name guard: every fictional doctor name has 0 matches in NPPES (FL and US) and in the live pool; control lights :: exit 0 · network: requests 45 · errors 0 (network 0, timeout 0, http 0, parse 0, outcome 0) · PASS: 11 names and 10 offices, 0 matches, controls lit
+PASS B1 host connects with the official MCP client (Streamable HTTP, simulated account link) :: protocol=2025-11-25 session=b7a267e0… tools=9
+PASS B2 device frame: caption, permanent simulated mark, true 1280x800 screen, no images/logos, no page scroll at 1920x1080 :: "Echo Show 8 simulator (1280x800 frame)" · "Alexa+ simulated in our web host · Alexa voice: synthetic" · 1280x800 · 0 img · scroll 0/0
+PASS B3 tap in the view: Allow -> ui/message -> host turn -> consent(allow) :: source=tap tool=consent args={"action":"allow"} calls+1
+PASS B4 host refusals N1 (symptom, no specialty) and N7 (emergency): fixed lines, spoken without any tools/call :: "I can't suggest a kind of doctor. Tell me which doctor you'd like, and I'll find one in your network." · "I can't help with emergencies. If this is an emergency, call 911." · 0 tools/call
+PASS B5 "no" with a proposal waiting books nothing :: 0 book_visit · "OK, I won't book anything."
+PASS B6 views run in a sandbox proxy on a second origin; CSP from the view's _meta.ui.csp; host document unreachable from the view :: origin=http://127.0.0.1:25189 sandbox="allow-scripts allow-same-origin" csp="default-src 'none'; font-src 'self' http://127.0.0.1:28797; connect-src 'none'" top=blocked
+PASS B7 Play demo reaches done: every beat answered without an error, views in order :: demo=done · views consent, consent, family-match, family-match, visit-plan, booked, checkup-year, set-aside · errors 0 · steps beat-1-consent,beat-1-consent-allowed,beat-2-family-match,beat-2-family-match-booked,beat-3-visit-plan,beat-3-booked,beat-4-checkup-year,beat-5-set-aside,beat-6-developer
+PASS B18 conversation band per screen: framed request + reply (01, 02), open request + two short lines (05), quote of the request's last sentence (03), none (04, 06) :: 7/7
+PASS B8 speech parts of scene 1 shown one after the other in the subtitle bar, each with its own seconds :: parts=2 order=10<11 seconds="7.6 s","16.0 s" vs [7.6,16]
+PASS B9 MCP Apps lifecycle: every card view initialized before data; ui/resource-teardown before each view change :: renders=11 initialized=11 teardowns=10
+PASS B10 theme switch goes out as host-context-changed and the view re-themes (light snapshot of all 7 screens) :: 7/7 switched · light shots 7
+PASS B11 views take zoom from hostContext deviceClass echo-show-8 (base 768x480 x 1.667), Nunito loaded :: 14 views · zoom 1.667 · fonts 400:loaded 600:unloaded 700:loaded 800:loaded
+PASS B12 dom_check on every view document (dark + light) and on the board: 0 wrapped numbers/times, 0 clipped, 0 overlapping cards, fits the screen, no img, no brand marks :: 15 documents clean
+PASS B13 host page dom_check at every step (subtitles, band, developer view): 0 wrapped numbers, 0 clipped, 0 overlaps, nothing below 1080 px :: 9 steps clean
+PASS B14 customer screens: no stars, "checked today", tool names, ids, source badges, JSON; board: no mockup placeholders :: 0 hits in 15 screens
+PASS B15 behind the scenes (07): verify, live probe and audit lines are what /devinfo and the newest docs/AUDIT-*.json say (no placeholder numbers) :: verify 68/68 PASS · probe none · mode fixture · audit: 0 of 10,075 directory records state a patient age
+PASS B16 each of the 7 screens vs the render of its reference screen.html: edgeF1 ≥ 0.85 (compare_to_image.py; also vs reference.png and the light theme, reported) :: 01 family-match: html 1/0 · light 1/0 · picked 0.349/21.8 | 02 checkup-year: html 1/1.2 · light 0.97/1.3 · picked 0.254/24.9 | 03 visit-plan: html 0.963/1.5 · light 0.976/1.6 · picked 0.378/22.4 | 04 booked: html 0.999/0.1 · light 1/0.2 · picked 0.28/23.8 | 05 set-aside: html 0.996/0.2 · light 0.996/0.2 · picked 0.37/18.5 | 06 consent: html 1/0 · light 1/0 · picked 0.33/18.9 | 07 developer: html 0.91/3.1 · light 0.928/3.1 · picked 0.784/10.3
+PASS B17 no console errors on the host page or in the views :: 0
+PASS B19 controls: the dom check and the forbidden-text check light on synthetic defects and stay dark on real customer text :: wrapped 2 clipped 1 overlaps 1 overflowY 60 img 1; forbidden 6/6, clean 0
+screenshots -> docs/screens/beat-1-consent.png, docs/screens/light-consent.png, docs/screens/beat-1-consent-allowed.png, docs/screens/beat-2-family-match.png, docs/screens/light-family-match.png, docs/screens/beat-2-family-match-booked.png, docs/screens/beat-3-visit-plan.png, docs/screens/light-visit-plan.png, docs/screens/beat-3-booked.png, docs/screens/light-booked.png, docs/screens/beat-4-checkup-year.png, docs/screens/light-checkup-year.png, docs/screens/beat-5-set-aside.png, docs/screens/light-set-aside.png, docs/screens/beat-6-developer.png, docs/screens/light-developer.png
+side-by-side compares -> logs/screens-compare/compare-*.png, metrics.json
+servers stopped (mcp alive=false, host alive=false)
+
+| id   | result | check                                                                          | actual
+|------|--------|--------------------------------------------------------------------------------|-------
+| P1   | PASS   | initialize negotiates protocolVersion (official client)                        | "2025-11-25" sid=present
+| P2   | PASS   | tools/list: the nine InNetwork tools                                           | book_visit,cancel_visit,check_doctor,checkup_year,consent,doctor_notes,family_plans,family_routine,find_in_network
+| P3   | PASS   | client sends MCP-Protocol-Version after init                                   | "2025-11-25"
+| P4   | PASS   | tools with a screen link their MCP App view; data-only tools have none         | consent->ui://innetwork/consent.html family_plans->none family_routine->none doctor_notes->none find_in_network->ui://innetwork/family-match.html check_doctor->none book_visit->ui://innetwork/booked.html cancel_visit->ui://innetwork/booked.html checkup_year->ui://innetwork/visit-plan.html
+| P5   | PASS   | no tool takes symptoms, names, dates of birth or member IDs (N1, N4, N5)       | none among 25 top-level fields
+| P6   | PASS   | all six ui:// views readable as MCP App HTML                                   | booked:ok(637KB) checkup-year:ok(637KB) consent:ok(637KB) family-match:ok(637KB) set-aside:ok(637KB) visit-plan:ok(637KB)
+| P7   | PASS   | directory is src/directory (recorded samples / live), not the unit-test double | mode=fixture plans=Plan A:fhir-plannet,Plan B:qhp-file,Plan C:fhir-plannet
+| T1   | PASS   | N6: before consent, nothing is looked up; the consent screen comes back        | isError=true view=consent steps=Household state
+| T2   | PASS   | consent: purpose and the §13 disclaimer by voice once, then allowed            | Before we start, here's what I use and why. This information is not a… | Thanks. You can change this anytime.
+| T3   | PASS   | opening: one phrase, three people, three plans (SPEC line)                     | One doctor each, in their own plan. Book all three?
+| T4   | PASS   | opening rows: doctor and time per person, inside the routine (N12)             | [["Mom","Plan A","Gastroenterology","Dr. Marisol Venterra","Thu Oct 22 · 9:15 AM"],["Older child","Plan B","Allergy","Dr. Ansel Quillfeather","Wed Oct 21 · 2:30 PM"],["Youngest","Plan C","Orthopedics","Dr. Imogen Pellworth","Mon Oct 19 · 1:30 PM"]]
+| T5   | PASS   | youngest's row: set aside with the reason (N2, N3); note on the older child's… | Dr. Tobias Wrenfield: Doesn't see children under 3 | Dr. Caspian Ardley: Not in his plan's network | note=great with kids
+| T6   | PASS   | every tools/call names its sources (steps with a mode)                         | fixture:Florida Blue provider directory (FHIR Plan-Net) > sandbox:network gate > fixture:Oscar Health machine-readable provider file (CMS QHP JSON) > sandbox:network gate
+| T7   | PASS   | opening booked (voice) + written confirmation queued (§15)                     | Booked. | 3 visit(s) · sandbox outbox
+| T8   | PASS   | scene 1: OOP line with 'usually' and HealthCare.gov (N9)                       | After the out-of-pocket max, plans usually pay 100% of covered in-network care until the plan year ends — per HealthCare.gov.
+| T9   | PASS   | scene 1: plan read back around the routine; lab work waits (N10, N12)          | Your gastroenterologist is already booked for Thursday. Tuesday, same clinic: primary care, then OB-GYN. Friday: dermatology. All between 8:30 and 11, while he's at daycare. Lab work may need an order — I'll add it after primary care. Book these three?
+| T10  | PASS   | visit plan screen: four doctors, same clinic, already booked                   | Primary care|Dr. Rowena Thistlewood|Tue Oct 20 · 9:00 AM|same clinic ; OB-GYN|Dr. Linnea Marchbank|Tue Oct 20 · 10:15 AM|same clinic ; Gastroenterology|Dr. Marisol Venterra|Thu Oct 22 · 9:15 AM|Already booked ; Dermatology|Dr. Ottilie Brennagh|Fri Oct 23 · 9:30 AM|
+| T11  | PASS   | scene 1 booked: voice + Alexa app + email + cancel anytime (§15)               | Booked. Details in your Alexa app and email. Say cancel anytime. | Booked · 3 visits | All between 8:30 and 11, while he's at daycare
+| T12  | PASS   | N10: lab work is not booked before the primary care visit                      | isError=true refused=N10 | Lab work may need an order from your doctor. I'll add it after your primary care visit.
+| S1   | PASS   | old session id rejected after DELETE                                           | HTTP 404
+| S2   | PASS   | new session: 'what's left' from saved state (SPEC line)                        | sid 8bf0e66f…->dcd01f5b… | Four booked. Lab work comes after Tuesday's visit.
+| T13  | PASS   | scene 2: six checked, two set aside by age, one by network, two fit (SPEC lin… | I checked six nearby. Two don't see children under three, one isn't in his plan. These two fit.
+| T14  | PASS   | set aside screen: reasons, 'age not listed' in yellow, age not saved (N3, N4)  | Wrenfield:age,Ashgrove:age,Ardley:network,Hartsworth:ask_office | Age used for this search only · not saved
+| S3   | PASS   | control: a different household has nothing booked                              | Zero booked. Lab work comes after your primary care visit.
+| S4   | PASS   | 2026-07-28 client on the same endpoint, same saved state                       | "2026-07-28" sid=none | Four booked. Lab work comes after Tuesday's visit.
+| S5   | PASS   | state survives a server process restart                                        | pid 12937 -> 12938 | Four booked. Lab work comes after Tuesday's visit. == Four booked. Lab work comes after Tuesday's visit.
+| N1   | PASS   | unknown Mcp-Session-Id                                                         | HTTP 404
+| N2   | PASS   | initialize from a foreign Origin (DNS-rebinding guard)                         | HTTP 403
+| N3   | PASS   | initialize without the (simulated) account link                                | HTTP 401 www-authenticate=Bearer realm="innetwork-sandbox"
+| N4   | PASS   | CORS preflight from the host origin                                            | HTTP 204 allow-origin=http://127.0.0.1:25188
+| N5   | PASS   | strict: initialize asks 2024-11-05                                             | result.protocolVersion="2025-11-25"
+| N6   | PASS   | strict: header MCP-Protocol-Version 2024-11-05 on a 2025-11-25 session         | HTTP 400
+| N7   | PASS   | another account reusing someone's session id                                   | HTTP 403
+| N8   | PASS   | non-initialize request without Mcp-Session-Id                                  | HTTP 400
+| N9   | PASS   | input: no symptoms field, closed specialty list, bounded text, a child's sear… | symptoms=true specialty=true 500-char note=true | How old is he? I use it for this search only.
+| G1   | PASS   | N4: household files hold no ages, names, dates of birth, program types         | 0 keys · age text in 0 files
+| G2   | PASS   | every Alexa line of this run passes the linter (N5/N7/N9, ≤20 s)               | 0 issues in 17 lines
+| G3   | PASS   | voice budget of the video's Alexa lines (SPEC §2)                              | 107 words ≈ 42.8 s · longest 16.0 s
+| G4   | PASS   | customer cards: no tool names, internal ids, JSON, source badges, stars        | 0 in 787 card strings
+| C1   | PASS   | unit + tool tests (npm test: core gate, schedule, linter, intent, MCP tools e… | exit 0 · tests 51 · pass 50 · fail 0
+| C3   | PASS   | classic Alexa skill as an MCP client (APL card, voice only, consent, deadline… | exit 0 · tests 5 · pass 5 · fail 0
+| C2   | PASS   | open-source package plannet-directory-check: offline tests                     | exit 0 · tests 12 · pass 12 · fail 0
+| M0   | PASS   | mutation control: the unmutated copy is green                                  | exit 0 · pass 30 · fail 0
+| M1   | PASS   | mutation checks: each refusal broken in a throwaway copy turns its test red (… | 16/16 killed
+| G5   | PASS   | mockup placeholders never reach views, host, fixtures, demo script (SPEC §8)   | 0 hits in 22 files · control 5
+| G6   | PASS   | no personal data patterns in the tracked tree (emails, phones, SSN, DOB)       | 0 hits in 145 files · control 4
+| G7   | PASS   | owner pending: no company/author branding in the tree                          | 0 of 144 files
+| G8   | PASS   | MIT license at the root                                                        | MIT License  Copyright (c) 2026 <OWNER — pending>
+| G9   | PASS   | name guard: every fictional doctor name has 0 matches in NPPES (FL and US) an… | exit 0 · network: requests 45 · errors 0 (network 0, timeout 0, http 0, parse 0, outcome 0) · PASS: 11 names and 10 offices, 0 matches, controls lit
+| B1   | PASS   | host connects with the official MCP client (Streamable HTTP, simulated accoun… | protocol=2025-11-25 session=b7a267e0… tools=9
+| B2   | PASS   | device frame: caption, permanent simulated mark, true 1280x800 screen, no ima… | "Echo Show 8 simulator (1280x800 frame)" · "Alexa+ simulated in our web host · Alexa voice: synthetic" · 1280x800 · 0 img · scroll 0/0
+| B3   | PASS   | tap in the view: Allow -> ui/message -> host turn -> consent(allow)            | source=tap tool=consent args={"action":"allow"} calls+1
+| B4   | PASS   | host refusals N1 (symptom, no specialty) and N7 (emergency): fixed lines, spo… | "I can't suggest a kind of doctor. Tell me which doctor you'd like, and I'll find one in your network." · "I can't help with emergencies. If this is an emergency, call 911." · 0 tools/call
+| B5   | PASS   | "no" with a proposal waiting books nothing                                     | 0 book_visit · "OK, I won't book anything."
+| B6   | PASS   | views run in a sandbox proxy on a second origin; CSP from the view's _meta.ui… | origin=http://127.0.0.1:25189 sandbox="allow-scripts allow-same-origin" csp="default-src 'none'; font-src 'self' http://127.0.0.1:28797; connect-src 'none'" top=blocked
+| B7   | PASS   | Play demo reaches done: every beat answered without an error, views in order   | demo=done · views consent, consent, family-match, family-match, visit-plan, booked, checkup-year, set-aside · errors 0 · steps beat-1-consent,beat-1-consent-allowed,beat-2-family-match,beat-2-family-match-booked,beat-3-visit-plan,beat-3-booked,beat-4-checkup-year,beat-5-set-aside,beat-6-developer
+| B18  | PASS   | conversation band per screen: framed request + reply (01, 02), open request +… | 7/7
+| B8   | PASS   | speech parts of scene 1 shown one after the other in the subtitle bar, each w… | parts=2 order=10<11 seconds="7.6 s","16.0 s" vs [7.6,16]
+| B9   | PASS   | MCP Apps lifecycle: every card view initialized before data; ui/resource-tear… | renders=11 initialized=11 teardowns=10
+| B10  | PASS   | theme switch goes out as host-context-changed and the view re-themes (light s… | 7/7 switched · light shots 7
+| B11  | PASS   | views take zoom from hostContext deviceClass echo-show-8 (base 768x480 x 1.66… | 14 views · zoom 1.667 · fonts 400:loaded 600:unloaded 700:loaded 800:loaded
+| B12  | PASS   | dom_check on every view document (dark + light) and on the board: 0 wrapped n… | 15 documents clean
+| B13  | PASS   | host page dom_check at every step (subtitles, band, developer view): 0 wrappe… | 9 steps clean
+| B14  | PASS   | customer screens: no stars, "checked today", tool names, ids, source badges, … | 0 hits in 15 screens
+| B15  | PASS   | behind the scenes (07): verify, live probe and audit lines are what /devinfo … | verify 68/68 PASS · probe none · mode fixture · audit: 0 of 10,075 directory records state a patient age
+| B16  | PASS   | each of the 7 screens vs the render of its reference screen.html: edgeF1 ≥ 0.… | 01 family-match: html 1/0 · light 1/0 · picked 0.349/21.8 | 02 checkup-year: html 1/1.2 · light 0.97/1.3 · picked 0.254/24.9 | 03 visit-plan: html 0.963/1.5 · light 0.976/1.6 · picked 0.378/22.4 | 04 booked: html 0.999/0.1 · light 1/0.2 · picked 0.28/23.8 | 05 set-aside: html 0.996/0.2 · light 0.996/0.2 · picked 0.37/18.5 | 06 consent: html 1/0 · light 1/0 · picked 0.33/18.9 | 07 developer: html 0.91/3.1 · light 0.928/3.1 · picked 0.784/10.3
+| B17  | PASS   | no console errors on the host page or in the views                             | 0
+| B19  | PASS   | controls: the dom check and the forbidden-text check light on synthetic defec… | wrapped 2 clipped 1 overlaps 1 overflowY 60 img 1; forbidden 6/6, clean 0
+
+TOTAL 68 checks: 68 PASS, 0 FAIL
