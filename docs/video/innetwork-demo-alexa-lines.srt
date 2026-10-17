@@ -1,35 +1,31 @@
 1
-00:00:03,533 --> 00:00:17,231
+00:00:03,569 --> 00:00:17,265
 Alexa (simulated): Before we start, here's what I use and why. This information is not a substitute for professional medical advice. Consult a healthcare provider for personal medical decisions. Say allow to continue.
 
 2
-00:00:17,331 --> 00:00:31,557
+00:00:17,365 --> 00:00:24,362
 Alexa (simulated): Thanks. You can change this anytime.
 
 3
-00:00:31,657 --> 00:00:36,898
+00:00:24,462 --> 00:00:29,706
 Alexa (simulated): One doctor each, in their own plan. Book all three?
 
 4
-00:00:36,998 --> 00:00:50,034
+00:00:29,806 --> 00:00:36,416
 Alexa (simulated): Booked.
 
 5
-00:00:50,134 --> 00:00:57,989
-Alexa (simulated): After the out-of-pocket max, plans usually pay 100% of covered in-network care until the plan year ends — per HealthCare.gov.
+00:00:36,516 --> 00:00:47,359
+Alexa (simulated): Your gastroenterologist is already booked for Thursday. Tuesday, same clinic: primary care, then OB-GYN. Friday: dermatology. All while he's at daycare. Book these three?
 
 6
-00:00:58,089 --> 00:01:23,278
-Alexa (simulated): Your gastroenterologist is already booked for Thursday. Tuesday, same clinic: primary care, then OB-GYN. Friday: dermatology. All between 8:30 and 11, while he's at daycare. Lab work may need an order — I'll add it after primary care. Book these three?
-
-7
-00:01:23,378 --> 00:01:31,212
+00:00:47,459 --> 00:00:55,274
 Alexa (simulated): Booked. Details in your Alexa app and email. Say cancel anytime.
 
-8
-00:01:31,312 --> 00:01:37,645
+7
+00:00:55,374 --> 00:01:01,359
 Alexa (simulated): Four booked. Lab work comes after Tuesday's visit.
 
-9
-00:01:37,745 --> 00:01:43,745
+8
+00:01:01,459 --> 00:01:07,459
 Alexa (simulated): I checked six nearby. Two don't see children under three, one isn't in his plan. These two fit.

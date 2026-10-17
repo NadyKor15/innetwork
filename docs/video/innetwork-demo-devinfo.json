@@ -1,11 +1,11 @@
 {
-  "recordedAt": "2026-10-11T08:22:30.252Z",
+  "recordedAt": "2026-10-17T12:53:54.982Z",
   "board": {
-    "live": "LIVE · Florida Blue (FHIR Plan-Net) · GET PractitionerRole?…plan_id… · 6887 ms · as of 04:22",
-    "count": "5 in-network for gastroenterology · ZIP 32803 · Plan A"
+    "live": "LIVE · no live directory call in this run · directory mode: fixture",
+    "count": "6 records · Orthopedics · ZIP 32803 · Plan C"
   },
   "devinfo": {
-    "directoryMode": "auto",
+    "directoryMode": "fixture",
     "plans": [
       {
         "planId": "plan-a",
@@ -35,26 +35,7 @@
         "sourceMode": "live"
       }
     ],
-    "probes": {
-      "plan-a": {
-        "ok": true,
-        "mode": "live",
-        "directory": "Florida Blue provider directory (FHIR Plan-Net)",
-        "ms": 1125,
-        "asOf": "2026-10-11T08:23:19.227Z",
-        "ref": "https://apigw.bcbsfl.com/interop/interop-developer-portal/emr/api/v1/fhir/PractitionerRole?location.address-postalcode=32803&_count=100&identifier=https%3A%2F%2Fwww.edifecs.com%2Ffhir%2Fcms-organization%2Fplan_id%7CBCHPPO&specialty%3Atext=DERMATOLOGY",
-        "inNetworkCount": 41
-      },
-      "plan-c": {
-        "ok": false,
-        "mode": "live",
-        "directory": "Molina Healthcare provider directory (FHIR Plan-Net)",
-        "ms": 338,
-        "asOf": "2026-10-11T08:24:07.626Z",
-        "ref": "https://api.interop.molinahealthcare.com/providerdirectory/Location?address-postalcode=32803",
-        "error": "HTTP 403, daily quota"
-      }
-    },
+    "probes": {},
     "verify": {
       "total": 68,
       "pass": 68,
@@ -66,9 +47,15 @@
         "agePublished": 0,
         "errors": 3,
         "controlLit": true
+      },
+      "AUDIT-2026-10-13.json": {
+        "records": 10075,
+        "agePublished": 0,
+        "errors": 0,
+        "controlLit": true
       }
     },
-    "sessions": 2,
+    "sessions": 1,
     "now": "2026-10-16T23:45:00.000Z"
   }
 }
