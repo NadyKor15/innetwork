@@ -23,7 +23,7 @@ An Alexa+ add-on: a self-hosted **MCP server (spec 2025-11-25, Streamable HTTP; 
 | Product feedback (5 questions) | Draft | `docs/PRODUCT-FEEDBACK.md` |
 | Friction log (optional, up to +10%) | Draft | `docs/FRICTION-LOG.md` |
 | Feature requests (optional) | Draft | `docs/FEATURE-REQUESTS.md` |
-| Open Source mini challenge: a new open-source project in the window | Built (to be published as its own repo) | `packages/plannet-directory-check/` |
+| Open Source mini challenge: a new open-source project in the window | Built, published as its own repo: [NadyKor15/plannet-directory-check](https://github.com/NadyKor15/plannet-directory-check) | `packages/plannet-directory-check/` |
 
 ## Try it in 5 minutes (offline, no keys)
 ```
