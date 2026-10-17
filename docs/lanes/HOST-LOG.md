@@ -15,7 +15,7 @@ Branch `lane/host` (worktree `innetwork-alexa-wt-host`). Started 2026-10-11 04:4
 
 ## Checks run
 
-On `src/directory` (recorded samples, `DIRECTORY_MODE=fixture`), after `git merge main` (d483919: lane/data + card labels):
+On `src/directory` (recorded samples, `DIRECTORY_MODE=fixture`), after `git merge main` (fbc5057: lane/data + card labels):
 - `npm test`: 48 tests, 47 pass, 0 fail, 1 skipped (live).
 - `node verify/guards.ts`: G5–G8 PASS. G5 covers views/host/fixtures/demo.ts with 0 placeholder hits; the control finds 5.
 - Clean install: in a throwaway worktree (lane/host + lane/data, since removed), `npm ci` then `npm run demo` came up: `/healthz` ok, host 200.
@@ -55,7 +55,7 @@ The "picked image" numbers are low on purpose; the reference notes give the same
 
 Checked by eye (Read), 3 rounds:
 1. Every beat against its reference shot. The 06 font was off and the view fell back to the 600 weight. Cause: a CSS comment containing `*/` swallowed the 400 `@font-face`. Fixed.
-2. The 03 week was wrong (server bug, below). Fixed in main 56df6cd and merged. The "Booked" mark on 05 pushed the cards 2 px down; fixed. Long subtitle lines pushed the controls below 1080; now shrunk to fit 2 lines. 07 rows wrapped to 3 lines; the format text now goes only on rows that were really read.
+2. The 03 week was wrong (server bug, below). Fixed in main 838b143 and merged. The "Booked" mark on 05 pushed the cards 2 px down; fixed. Long subtitle lines pushed the controls below 1080; now shrunk to fit 2 lines. 07 rows wrapped to 3 lines; the format text now goes only on rows that were really read.
 3. Light theme on all 7, and the dev page at 1920x1080 from the recording frames.
 
 Differences from the references that remain on purpose:
@@ -72,5 +72,5 @@ Recording (on `src/directory`, fixture, normal pace, 05:24Z): `node scripts/reco
 
 ## Needed from the server (build lane)
 
-1. ✅ done in main 56df6cd: `checkup_year` plan week started from "now + 1 day" (Mon Oct 12) instead of the week of the visits.
-2. ✅ done in main b30cabf: `BookedCard.list[].note`, `fit.bookedLabel` / `fits[].bookedLabel`, `ageLabel` only where it explains a set-aside. The view now renders them from data. "Older child (5)" is gone; 01 vs reference = 1.000.
+1. ✅ done in main 838b143: `checkup_year` plan week started from "now + 1 day" (Mon Oct 12) instead of the week of the visits.
+2. ✅ done in main 24960a6: `BookedCard.list[].note`, `fit.bookedLabel` / `fits[].bookedLabel`, `ageLabel` only where it explains a set-aside. The view now renders them from data. "Older child (5)" is gone; 01 vs reference = 1.000.

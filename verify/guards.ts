@@ -30,7 +30,7 @@ const PII = [
 export function piiHits(files: { path: string; text: string }[]): string[] {
   return files.flatMap((f) => PII.flatMap((p) => (p.re.test(f.text) ? [`${f.path}: ${p.name} (${f.text.match(p.re)![0].slice(0, 24)})`] : [])));
 }
-const BRAND = /retail ?box/i; // the entrant (owner) is named only in LICENSE once decided
+const BRAND = /retail ?box/i; // company branding stays out of the tree; the author is named in LICENSE
 
 export function runStaticGuards(log: (s: string) => void): Row[] {
   const rows: Row[] = [];
@@ -51,7 +51,7 @@ export function runStaticGuards(log: (s: string) => void): Row[] {
 
   const brandScope = all.filter((f) => !/^verify\/guards\.ts$|package-lock\.json$|^design\/fonts\/|^LICENSE$/.test(f)).map((path) => ({ path, text: read(path) }));
   const brand = brandScope.filter((f) => BRAND.test(f.text)).map((f) => f.path);
-  add("G7", "owner pending: no company/author branding in the tree", `0 files; control ${BRAND.test("RetailBox") ? "lights" : "BLIND"}`, brand.length ? brand.slice(0, 5).join(", ") : `0 of ${brandScope.length} files`, brand.length === 0 && BRAND.test("RetailBox"));
+  add("G7", "no company branding in the tree (the author is named in LICENSE)", `0 files; control ${BRAND.test("RetailBox") ? "lights" : "BLIND"}`, brand.length ? brand.slice(0, 5).join(", ") : `0 of ${brandScope.length} files`, brand.length === 0 && BRAND.test("RetailBox"));
 
   const lic = read("LICENSE");
   add("G8", "MIT license at the root", "MIT License + permission notice", lic.split("\n").slice(0, 3).join(" ").trim(), /^MIT License/.test(lic) && /Permission is hereby granted, free of charge/.test(lic));
