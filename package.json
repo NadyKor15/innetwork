@@ -5,6 +5,7 @@
   "type": "module",
   "description": "InNetwork: an Alexa+ add-on (MCP 2025-11-25 + 2026-07-28, Streamable HTTP) that finds a doctor for each person in a family inside their own plan's network, sets aside the ones who can't see them, and books around the family routine",
   "license": "MIT",
+  "author": "Nadezhda Korchagina (https://github.com/NadyKor15)",
   "engines": {
     "node": ">=24"
   },
