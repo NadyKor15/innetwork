@@ -80,6 +80,7 @@ export type SetAsideCard = {
 // ---------- 03 visit plan ----------
 export type VisitPlanCard = {
   view: "visit-plan"; quote: string | null; title: string; week: WeekModel;
+  note: string | null; // out-of-pocket line (N9 wording), shown next to the title instead of spoken
   doctors: { specialty: string; name: string; when: string; detail: string; tag: string | null; quiet: boolean }[];
   sourceLine: string | null;
   lab: string | null;

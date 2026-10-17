@@ -153,7 +153,7 @@ test("N1-symptom-refusal: a symptom without a specialty gets the fixed answer; a
 });
 
 test("voice budget: one reply at most 20 seconds", () => {
-  assert.ok(seconds("Your gastroenterologist is already booked for Thursday. Tuesday, same clinic: primary care, then OB-GYN. Friday: dermatology. All between 8:30 and 11, while he's at daycare. Lab work may need an order — I'll add it after primary care. Book these three?") <= 20);
+  assert.ok(seconds("Your gastroenterologist is already booked for Thursday. Tuesday, same clinic: primary care, then OB-GYN. Friday: dermatology. All while he's at daycare. Book these three?") <= 12);
   assert.equal(lintSpeech("word ".repeat(51))[0].rule, "budget");
 });
 

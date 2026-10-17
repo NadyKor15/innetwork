@@ -23,13 +23,13 @@ const MODES = new Set(["live", "file", "fixture", "sandbox", "simulated"]);
 export const SPEC_LINES = {
   openingReadBack: "One doctor each, in their own plan. Book all three?",
   openingBooked: "Booked.",
-  oop: "After the out-of-pocket max, plans usually pay 100% of covered in-network care until the plan year ends — per HealthCare.gov.",
-  plan: "Your gastroenterologist is already booked for Thursday. Tuesday, same clinic: primary care, then OB-GYN. Friday: dermatology. All between 8:30 and 11, while he's at daycare. Lab work may need an order — I'll add it after primary care. Book these three?",
+  oopNote: "Out-of-pocket max met · plans usually pay 100% of covered in-network care until Dec 31 · Source: HealthCare.gov glossary",
+  plan: "Your gastroenterologist is already booked for Thursday. Tuesday, same clinic: primary care, then OB-GYN. Friday: dermatology. All while he's at daycare. Book these three?",
   booked: "Booked. Details in your Alexa app and email. Say cancel anytime.",
   status: "Four booked. Lab work comes after Tuesday's visit.",
   setAside: "I checked six nearby. Two don't see children under three, one isn't in his plan. These two fit.",
 };
-export const VIDEO_ALEXA_LINES = [SPEC_LINES.openingReadBack, SPEC_LINES.openingBooked, SPEC_LINES.oop, SPEC_LINES.plan, SPEC_LINES.booked, SPEC_LINES.status, SPEC_LINES.setAside];
+export const VIDEO_ALEXA_LINES = [SPEC_LINES.openingReadBack, SPEC_LINES.openingBooked, SPEC_LINES.plan, SPEC_LINES.booked, SPEC_LINES.status, SPEC_LINES.setAside];
 export const TOOLS = ["book_visit", "cancel_visit", "check_doctor", "checkup_year", "consent", "doctor_notes", "family_plans", "family_routine", "find_in_network"];
 export const VIEW_OF: Record<string, string | null> = { consent: "consent", find_in_network: "family-match", book_visit: "booked", cancel_visit: "booked", checkup_year: "visit-plan", family_plans: null, family_routine: null, doctor_notes: null, check_doctor: null };
 /** Tool names, JSON and internal ids must never reach a customer card. */
@@ -171,8 +171,8 @@ export async function runProtocolChecks(opts: { mcpUrl: string; dataDir: string;
   add("T7", "opening booked (voice) + written confirmation queued (§15)", SPEC_LINES.openingBooked, `${ob.speech} | ${ob.steps.filter((s) => /Written confirmation/.test(s.service)).map((s) => s.summary).join("")}`, ob.speech === SPEC_LINES.openingBooked && ob.steps.some((s) => /Written confirmation/.test(s.service)));
 
   const plan = await call(cA, "checkup_year", CHECKUP);
-  add("T8", "scene 1: OOP line with 'usually' and HealthCare.gov (N9)", SPEC_LINES.oop, plan.parts[0] ?? "", plan.parts[0] === SPEC_LINES.oop);
-  add("T9", "scene 1: plan read back around the routine; lab work waits (N10, N12)", SPEC_LINES.plan, plan.parts[1] ?? "", plan.parts[1] === SPEC_LINES.plan);
+  add("T8", "scene 1: OOP line on the screen with 'usually' and HealthCare.gov (N9), not spoken", SPEC_LINES.oopNote, `${plan.sc.card?.note} | parts ${plan.parts.length}`, plan.sc.card?.note === SPEC_LINES.oopNote && plan.parts.length === 1);
+  add("T9", "scene 1: plan read back around the routine; lab work waits on the screen (N10, N12)", SPEC_LINES.plan, `${plan.parts[0] ?? ""} | ${plan.sc.card?.lab}`, plan.parts[0] === SPEC_LINES.plan && /^Lab work — may need an order/.test(String(plan.sc.card?.lab ?? "")));
   const docs = (plan.sc.card?.doctors ?? []).map((d: any) => `${d.specialty}|${d.name}|${d.when}|${d.tag ?? ""}`);
   add("T10", "visit plan screen: four doctors, same clinic, already booked", "PC Tue 9:00 · OB Tue 10:15 · GI Thu 9:15 (Already booked) · Derm Fri 9:30", docs.join(" ; "),
     docs.join(";") === ["Primary care|Dr. Rowena Thistlewood|Tue Oct 20 · 9:00 AM|same clinic", "OB-GYN|Dr. Linnea Marchbank|Tue Oct 20 · 10:15 AM|same clinic", "Gastroenterology|Dr. Marisol Venterra|Thu Oct 22 · 9:15 AM|Already booked", "Dermatology|Dr. Ottilie Brennagh|Fri Oct 23 · 9:30 AM|"].join(";"));

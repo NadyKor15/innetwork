@@ -2,7 +2,7 @@
 // the 20-second budget) before it leaves the server.
 import { assertSpeech, DISCLAIMER } from "../src/core/lint.ts";
 import { SPECIALTY_WORDS, itemVisit } from "../src/core/specialty.ts";
-import { clock12, toZoned, weekdayLong, minutesOfDay, timeAmPm } from "../src/core/time.ts";
+import { toZoned, weekdayLong, timeAmPm } from "../src/core/time.ts";
 import type { CheckupItem, Specialty } from "../src/core/types.ts";
 import type { Pronoun } from "../src/core/network-gate.ts";
 
@@ -46,19 +46,20 @@ export function searchSummary(args: { checked: number; ageSetAside: { count: num
   return assertSpeech(parts.join(" "));
 }
 
-export const OOP_LINE = assertSpeech("After the out-of-pocket max, plans usually pay 100% of covered in-network care until the plan year ends — per HealthCare.gov.");
+/** The out-of-pocket line is shown on the visit-plan screen, not spoken: it kept the scene-1 turn over 25 s. Same N9 wording as the checkup-year subtitle. */
+export const oopNote = (until: string) => `Out-of-pocket max met · plans usually pay 100% of covered in-network care until ${until} · Source: HealthCare.gov glossary`;
 
 export type PlanSpeechInput = {
   tz: string;
   bookedEarlier: { item: CheckupItem; start: number }[];
   proposals: { item: Specialty; start: number; end: number; officeId: string }[];
-  windowStartMin: number | null; // child-away gap start, when every proposal sits in it
+  allInWindow: boolean;          // every proposal sits in the child-away gap
   childPronoun: Pronoun | null;
   routineLabel: string | null;   // "daycare"
-  labWaits: boolean;
 };
 
-/** Scene 1 read-back: built from the plan, grouped by day, same clinic named. */
+/** Scene 1 read-back: built from the plan, grouped by day, same clinic named. Hours and the lab-work note are on the
+ *  screen (window band, lab row), so the voice keeps only days, the routine and the question (about 10 s). */
 export function checkupReadBack(p: PlanSpeechInput): string {
   const s: string[] = [];
   for (const b of p.bookedEarlier) {
@@ -75,12 +76,7 @@ export function checkupReadBack(p: PlanSpeechInput): string {
     const list = xs.map((x) => itemVisit(x.item));
     s.push(`${day}${same ? ", same clinic" : ""}: ${list.length > 1 ? `${list.slice(0, -1).join(", ")}, then ${list.at(-1)}` : list[0]}.`);
   }
-  if (p.proposals.length && p.windowStartMin !== null && p.childPronoun && p.routineLabel) {
-    const lastEnd = Math.max(...p.proposals.map((x) => minutesOfDay(toZoned(x.end, p.tz))));
-    const endHour = Math.ceil(lastEnd / 60) * 60;
-    s.push(`All between ${clock12(p.windowStartMin)} and ${clock12(endHour)}, while ${contraction(p.childPronoun)} at ${p.routineLabel}.`);
-  }
-  if (p.labWaits) s.push("Lab work may need an order — I'll add it after primary care.");
+  if (p.proposals.length && p.allInWindow && p.childPronoun && p.routineLabel) s.push(`All while ${contraction(p.childPronoun)} at ${p.routineLabel}.`);
   if (p.proposals.length) s.push(p.proposals.length === 1 ? "Book this one?" : p.proposals.length === 2 ? "Book these two?" : `Book these ${numberWord(p.proposals.length)}?`);
   else s.push("Nothing new to book right now.");
   return assertSpeech(s.join(" "));

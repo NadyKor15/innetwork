@@ -310,11 +310,13 @@ export async function runBrowserChecks(opts: { hostUrl: string; screensDir: stri
     add("B18", "conversation band per screen: framed request + reply (01, 02), open request + two short lines (05), quote of the request's last sentence (03), none (04, 06)", "7/7 as specified",
       bandMiss.length ? bandMiss.join(" | ") : `${EXPECT_BAND.length}/${EXPECT_BAND.length}`, bandMiss.length === 0);
     const planTurn = demoTurns.find((t) => t.tool === "checkup_year" && t.view === "visit-plan");
-    const p1 = subtitleLog.findIndex((x) => x.text === planTurn?.parts?.[0]);
-    const p2 = subtitleLog.findIndex((x) => x.text === planTurn?.parts?.[1]);
-    add("B8", "speech parts of scene 1 shown one after the other in the subtitle bar, each with its own seconds", "part 1 then part 2, seconds from structuredContent.seconds",
-      `parts=${planTurn?.parts?.length} order=${p1}<${p2} seconds="${subtitleLog[p1]?.seconds}","${subtitleLog[p2]?.seconds}" vs ${JSON.stringify(planTurn?.seconds)}`,
-      planTurn?.parts?.length === 2 && p1 >= 0 && p2 > p1 && subtitleLog[p1]?.seconds === `${Number(planTurn.seconds[0]).toFixed(1)} s` && subtitleLog[p2]?.seconds === `${Number(planTurn.seconds[1]).toFixed(1)} s`);
+    // Scene 1 is one part since 2026-10-17 (the out-of-pocket line moved to the screen); the check still walks every part.
+    const planParts: string[] = planTurn?.parts ?? [];
+    const idx = planParts.map((t) => subtitleLog.findIndex((x) => x.text === t));
+    const secOk = planParts.every((_, i) => idx[i] >= 0 && subtitleLog[idx[i]]?.seconds === `${Number(planTurn!.seconds[i]).toFixed(1)} s`);
+    add("B8", "speech parts of scene 1 shown one after the other in the subtitle bar, each with its own seconds", "every part in order, seconds from structuredContent.seconds",
+      `parts=${planParts.length} order=${idx.join("<")} seconds=${idx.map((j) => `"${subtitleLog[j]?.seconds}"`).join(",")} vs ${JSON.stringify(planTurn?.seconds)}`,
+      planParts.length >= 1 && idx.every((j, i) => j >= 0 && (i === 0 || j > idx[i - 1])) && secOk);
 
     add("B9", "MCP Apps lifecycle: every card view initialized before data; ui/resource-teardown before each view change", "initialized = renders; teardowns = renders - 1 (per household) or more",
       `renders=${hEnd.card.renders} initialized=${hEnd.card.initialized} teardowns=${hEnd.card.teardowns}`, hEnd.card.renders > 0 && hEnd.card.initialized === hEnd.card.renders && hEnd.card.teardowns >= hEnd.card.renders - 1);

@@ -285,7 +285,7 @@ function visitPlan(c: VisitPlanCard): Node[] {
   }
   if (c.sourceLine) docs.append(el("p", "src", c.sourceLine));
 
-  const out: Node[] = [el("h1", "title", c.title), el("main", "main", cal, docs)];
+  const out: Node[] = [c.note ? el("div", "title-row", el("h1", "title", c.title), el("p", "note", ...dotted(c.note, true))) : el("h1", "title", c.title), el("main", "main", cal, docs)];
   if (c.lab) {
     const [a, b] = splitOnce(c.lab, " — ");
     const lab = el("div", "lab", ICON.vpLab(), el("p", null, el("b", null, a), b ? ` — ${b}` : null));

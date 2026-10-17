@@ -212,6 +212,8 @@ body {
   display: flex; flex-direction: column;
 }
 .s-vp .title { flex: none; margin: 1.5px 0 0 15px; height: 28px; font-size: var(--display5); font-weight: 800; line-height: 28px; color: var(--text-1); white-space: nowrap; }
+.s-vp .title-row { flex: none; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.s-vp .note { margin: 0 12px 0 0; max-width: 440px; font-size: var(--body3); line-height: 14px; color: var(--text-2); text-align: right; }
 .s-vp .main { flex: none; margin: 3.9px 10px 0; height: 337px; display: grid; grid-template-columns: 472px 269px; column-gap: 7px; }
 .s-vp .cal { position: relative; background: var(--card); border: 1px solid var(--hairline); border-radius: var(--r-card); }
 .s-vp .cal-cols { position: absolute; left: var(--axis); top: 0; bottom: 0; display: grid; grid-template-columns: repeat(5, var(--col)); }

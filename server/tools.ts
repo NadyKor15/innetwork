@@ -584,8 +584,7 @@ export function buildMcpServer({ era, services: sv, assetBase = "" }: BuildOptio
     const allInWindow = proposals.length > 0 && proposals.every((p) => { const m = minutesOfDay(toZoned(p.start, tz)); return win && m >= win.startMin && m + (p.end - p.start) / 60000 <= win.endMin; });
     const who = childPronounOfRoutine(u);
     const parts = [
-      ...(oop_met ? [S.OOP_LINE] : []),
-      S.checkupReadBack({ tz, bookedEarlier: earlierLines.map((l) => ({ item: l.item, start: l.visit.start })), proposals: proposals.map((p) => ({ item: p.item as Specialty, start: p.start, end: p.end, officeId: p.officeId })), windowStartMin: allInWindow ? win!.startMin : null, childPronoun: who?.pronoun ?? null, routineLabel: who?.word ?? null, labWaits }),
+      S.checkupReadBack({ tz, bookedEarlier: earlierLines.map((l) => ({ item: l.item, start: l.visit.start })), proposals: proposals.map((p) => ({ item: p.item as Specialty, start: p.start, end: p.end, officeId: p.officeId })), allInWindow, childPronoun: who?.pronoun ?? null, routineLabel: who?.word ?? null }),
     ];
     const others = activeVisits(u, now).filter((v) => v.memberId !== adult.memberId);
     const weekVisits = [
@@ -601,6 +600,7 @@ export function buildMcpServer({ era, services: sv, assetBase = "" }: BuildOptio
     ].sort((a, b) => a.start - b.start).map((x) => x.row);
     const card: C.VisitPlanCard = {
       view: "visit-plan", quote: null, title: `Your visits before ${shortDate(u.checkup?.planYearEnd ?? sv.scenario.planYearEnd)}`,
+      note: u.checkup?.oopMetToldAt ? S.oopNote(shortDate(u.checkup.planYearEnd)) : null,
       week: C.weekModel({ weekStart: C.mondayOf(firstStart, tz), tz, routine: u.routine, window: win, visits: weekVisits }),
       doctors: docRows,
       sourceLine: sourceLineOf([...lookups.values()].flatMap((l) => [...l.records.values()])),

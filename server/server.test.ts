@@ -82,11 +82,11 @@ test("demo story: opening for three people -> book -> checkup plan -> book -> ne
   // Scene 1: checkup year
   const plan = await s.call("checkup_year", { action: "plan", items: ["primary_care", "ob_gyn", "dermatology", "gastroenterology", "lab_work"], oop_met: true });
   assert.deepEqual(plan.structuredContent.speechParts, [
-    "After the out-of-pocket max, plans usually pay 100% of covered in-network care until the plan year ends — per HealthCare.gov.",
-    "Your gastroenterologist is already booked for Thursday. Tuesday, same clinic: primary care, then OB-GYN. Friday: dermatology. All between 8:30 and 11, while he's at daycare. Lab work may need an order — I'll add it after primary care. Book these three?",
+    "Your gastroenterologist is already booked for Thursday. Tuesday, same clinic: primary care, then OB-GYN. Friday: dermatology. All while he's at daycare. Book these three?",
   ]);
   const card = plan.structuredContent.card;
   assert.equal(card.title, "Your visits before Dec 31");
+  assert.equal(card.note, "Out-of-pocket max met · plans usually pay 100% of covered in-network care until Dec 31 · Source: HealthCare.gov glossary", "the out-of-pocket line moved from the voice to the screen (N9 wording kept)");
   assert.deepEqual(card.doctors.map((d: any) => [d.specialty, d.name, d.when, d.tag]), [
     ["Primary care", "Dr. Rowena Thistlewood", "Tue Oct 20 · 9:00 AM", "same clinic"],
     ["OB-GYN", "Dr. Linnea Marchbank", "Tue Oct 20 · 10:15 AM", "same clinic"],
