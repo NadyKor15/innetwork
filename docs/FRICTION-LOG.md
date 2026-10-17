@@ -38,7 +38,7 @@ Not in this log: the classic Alexa skill (`skill/`) is built and tested against 
 - **Steps:** read the add-on docs and the hackathon forum; looked for a public toolkit or web simulator.
 - **Expected vs actual:** expected a sandbox or simulator for builders; actual: "the Alexa+ Add-on toolkit and web simulator are in preview with select partners" (forum 45397).
 - **Severity:** High (for any Alexa+ track entry).
-- **Workaround:** our own host: official MCP client + MCP Apps bridge + a sandbox proxy on a second origin + a 1280×800 device frame (`host/`); a classic skill for one scene on a real Echo Show (`skill/`).
+- **Workaround:** our own host: official MCP client + MCP Apps bridge + a sandbox proxy on a second origin + a 1280×800 device frame (`host/`); a classic skill for one scene, meant for a real Echo Show in development mode (`skill/`; built and tested against the server, not yet run on a device).
 - **Suggestion:** publish the add-on simulator (even read-only, without commerce) so demos are comparable and closer to the device.
 
 ### A2. `hostContext.theme` has no documented values; no host color or type tokens
