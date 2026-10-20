@@ -7,9 +7,9 @@ An Alexa+ add-on: a self-hosted **MCP server (spec 2025-11-25, Streamable HTTP; 
 > One sentence — "I need a gastroenterologist, an allergist for my five-year-old, and an orthopedist for my little one. He's under two." — becomes three people, three plans, three doctors in each one's own network. The doctors who can't see them are set aside **with the reason and its source** before anyone calls.
 
 ## Demo video
-[Watch the demo on YouTube (2:14)](https://www.youtube.com/watch?v=ty3mfTK4KDY).
+[Watch the demo on YouTube (2:32)](https://www.youtube.com/watch?v=6WkTxLjawZc).
 
-About the video: the family scenes are an AI-generated dramatization based on the author's family, labelled on screen. The narration is the author's own voice, AI-cloned from her recording. Alexa's voice is synthetic and labelled on screen. The demo runs on sandbox data with fictional doctors. The developer view labels the source of every step; in this recording none of them is a live directory call: they are recorded directory samples (fixture mode) and sandbox steps, and the screen says so. Timecodes in the table below refer to this video.
+About the video: the family scenes are an AI-generated dramatization based on the author's family, labelled on screen. The narration is the author's own voice, AI-cloned from her recording. Alexa's voice is synthetic and labelled on screen, except in the live clip at 2:02: a real Echo Show 8 running the classic skill from `skill/`, recorded on Oct 20, 2026, with the real Alexa voice, labelled "Real recording · not AI-generated". The demo runs on sandbox data with fictional doctors. The developer view labels the source of every step; in this recording none of them is a live directory call: they are recorded directory samples (fixture mode) and sandbox steps, and the screen says so. Timecodes in the table below refer to this video.
 
 ## Self-scoring against the judging criteria
 
@@ -24,7 +24,7 @@ About the video: the family scenes are an AI-generated dramatization based on th
 |---|---|---|
 | Alexa+: self-hosted MCP server (2025-11-25+, Streamable HTTP), called in code | Built | `server/server.ts`, `server/tools.ts` |
 | Simulated Alexa+ experience: simulation source in the repo, demo shows it working | Built | `host/`, `scripts/demo.ts` |
-| Demo video < 3 min, public, English | Done: [2:14 on YouTube](https://www.youtube.com/watch?v=ty3mfTK4KDY) (author's voice AI-cloned, synthetic Alexa voice, licensed music, AI-generated family scenes labelled as such; see [Demo video](#demo-video)) | `docs/video/` (video files are not in git; the capture's subtitles, beats, `/devinfo` snapshot and TTS durations are) |
+| Demo video < 3 min, public, English | Done: [2:32 on YouTube](https://www.youtube.com/watch?v=6WkTxLjawZc) (author's voice AI-cloned, synthetic Alexa voice, licensed music, AI-generated family scenes labelled as such, a live clip on a real Echo Show 8 at 2:02; see [Demo video](#demo-video)) | `docs/video/` (video files are not in git; the capture's subtitles, beats, `/devinfo` snapshot and TTS durations are) |
 | Product feedback (5 questions) | Done | `docs/PRODUCT-FEEDBACK.md` |
 | Friction log (optional, up to +10%) | Done | `docs/FRICTION-LOG.md` |
 | Feature requests (optional) | Done | `docs/FEATURE-REQUESTS.md` |
