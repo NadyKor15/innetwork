@@ -1,6 +1,6 @@
 # Friction log — InNetwork (Alexa+ track)
 
-Part 1 (A1–A6): the Alexa+ platform, MCP Apps and the add-on design guide. Part 2 (F1–F15): public provider directories, NPPES and CMS files — measured with `npm run audit:directories`. Every entry has the six fields the hackathon asks for: task · steps · expected vs actual · severity · workaround · suggestion. Feature requests that follow from these entries are in `docs/FEATURE-REQUESTS.md`.
+Part 1 (A1–A8): the Alexa+ platform, MCP Apps and the add-on design guide. Part 2 (F1–F15): public provider directories, NPPES and CMS files — measured with `npm run audit:directories`. Every entry has the six fields the hackathon asks for: task · steps · expected vs actual · severity · workaround · suggestion. Feature requests that follow from these entries are in `docs/FEATURE-REQUESTS.md`.
 
 ## At a glance
 
@@ -12,6 +12,8 @@ Part 1 (A1–A6): the Alexa+ platform, MCP Apps and the add-on design guide. Par
 | A4 | No health-care path in Alexa+ booking | Medium |
 | A5 | Policy for a parent-directed health navigator is unclear | Medium |
 | A6 | Design-guide minimum text sizes vs dense layouts | Low |
+| A7 | On an Echo Show with Alexa+, "open In Network" does not reach the development skill | Medium |
+| A8 | APL: a lone `payload` parameter receives the whole datasources object | Low |
 | F1 | Florida Blue: no CapabilityStatement; supported search parameters only visible through an error message | Medium |
 | F2 | Florida Blue: an unknown search parameter answers HTTP 200 + OperationOutcome | Medium |
 | F3 | Florida Blue: InsurancePlan.network points to a network no practitioner role references (5 of 14 plans) | High |
@@ -29,7 +31,7 @@ Part 1 (A1–A6): the Alexa+ platform, MCP Apps and the add-on design guide. Par
 | F14 | In-network listings at Orlando addresses for practitioners who report practicing elsewhere | Medium–high |
 | F15 | Practice websites that refuse automated reads (the second measurement is thin) | Low for the build, medium for families |
 
-Not in this log: the classic Alexa skill (`skill/`) is built and tested against the server, but we have not yet run it on a device, so there is no on-device entry; we only log what we actually tried.
+The classic Alexa skill (`skill/`) ran on a real Echo Show 8 on Oct 20, 2026 (the live clip at 2:02 in the demo video); A7 and A8 are what we hit on the device. We only log what we actually tried.
 
 ## Part 1 — Alexa+ platform, MCP Apps, design guide
 
@@ -38,7 +40,7 @@ Not in this log: the classic Alexa skill (`skill/`) is built and tested against 
 - **Steps:** read the add-on docs and the hackathon forum; looked for a public toolkit or web simulator.
 - **Expected vs actual:** expected a sandbox or simulator for builders; actual: "the Alexa+ Add-on toolkit and web simulator are in preview with select partners" (forum 45397).
 - **Severity:** High (for any Alexa+ track entry).
-- **Workaround:** our own host: official MCP client + MCP Apps bridge + a sandbox proxy on a second origin + a 1280×800 device frame (`host/`); a classic skill for one scene, meant for a real Echo Show in development mode (`skill/`; built and tested against the server, not yet run on a device).
+- **Workaround:** our own host: official MCP client + MCP Apps bridge + a sandbox proxy on a second origin + a 1280×800 device frame (`host/`); a classic skill for one scene on a real Echo Show in development mode (`skill/`; tested against the server, run on an Echo Show 8 on Oct 20, 2026).
 - **Suggestion:** publish the add-on simulator (even read-only, without commerce) so demos are comparable and closer to the device.
 
 ### A2. `hostContext.theme` has no documented values; no host color or type tokens
@@ -80,6 +82,22 @@ Not in this log: the classic Alexa skill (`skill/`) is built and tested against 
 - **Severity:** Low.
 - **Workaround:** labels only on the first day column, two-line tiles, Label1 for axis labels.
 - **Suggestion:** a calendar/week example in Components and Patterns with recommended minimum cell sizes.
+
+### A7. On an Echo Show with Alexa+, "open In Network" does not reach the development skill
+- **Task:** open the classic skill (invocation name "in network", development stage) by voice on an Echo Show 8 that runs Alexa+.
+- **Steps:** "Alexa, open In Network" and "Alexa, launch In Network" on the device and in the developer console simulator, on Oct 20, 2026.
+- **Expected vs actual:** expected the skill's launch response; actual: Alexa+ answered "What would you like me to open?" and the skill got no request. "Alexa, open the In Network skill" worked: Alexa+ said "Here's In Network. Say "Alexa exit" to get back to Alexa plus." and then the skill answered.
+- **Severity:** Medium (a tester who says the invocation name as documented sees nothing).
+- **Workaround:** say "Alexa, open the In Network skill"; `skill/README.md` gives that phrase.
+- **Suggestion:** under Alexa+, route "open <invocation name>" to an enabled development skill, or say in the testing docs which phrase reaches it.
+
+### A8. APL: a lone `payload` parameter receives the whole datasources object
+- **Task:** show the "Your checkup year" card on the Echo Show.
+- **Steps:** `mainTemplate.parameters: ["payload"]`, the card under `datasources.payload`, bindings `${payload.card.*}`.
+- **Expected vs actual:** expected `payload` to be `datasources.payload`; actual: on the device every `${payload.card.*}` rendered empty (only the header and one check showed), because a single parameter named `payload` gets the whole datasources object.
+- **Severity:** Low (once known).
+- **Workaround:** the parameter is named `innetwork` and the datasource key matches; the skill test fails on any binding through `payload`.
+- **Suggestion:** a warning in the APL authoring tool when the only parameter is `payload` and a datasource key of the same name exists.
 
 ---
 
