@@ -28,7 +28,7 @@ export function buildSkill(deps: { innetwork: InNetwork; skillId?: string }) {
       rb.speak(escapeSsml(out.text));
       const card = out.structured?.card as (CheckupCard & { view?: string }) | undefined;
       if (hasScreen(h) && card?.view === "checkup-year") {
-        rb.addDirective({ type: `${APL}.RenderDocument`, token: "innetwork-checkup", document: checkupDocument(), datasources: { payload: { card } } } as never);
+        rb.addDirective({ type: `${APL}.RenderDocument`, token: "innetwork-checkup", document: checkupDocument(), datasources: { innetwork: { card } } } as never);
       }
       // consent first: the server says so, the parent answers "allow"
       if (out.structured?.data?.consentRequired) { rb.reprompt("Say allow to continue."); return rb.getResponse(); }

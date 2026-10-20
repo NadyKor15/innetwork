@@ -44,9 +44,12 @@ test("launch on an Echo Show: the saved checkup year, spoken and as an APL card"
   assert.equal(speech(r), "Four booked. Lab work comes after Tuesday's visit.");
   const apl = r.response.directives?.find((d: any) => d.type === "Alexa.Presentation.APL.RenderDocument");
   assert.ok(apl, "APL card rendered");
-  const items = apl.datasources.payload.card.items.map((i: any) => `${i.item}:${i.status}`);
+  const items = apl.datasources.innetwork.card.items.map((i: any) => `${i.item}:${i.status}`);
   assert.deepEqual(items, ["Primary care:booked", "OB-GYN:booked", "Gastroenterology:booked_earlier", "Dermatology:booked", "Lab work:may_need_order"]);
   assert.equal(apl.document.type, "APL");
+  // a lone "payload" parameter gets the whole datasources object on a device: every ${payload.card.*} renders empty
+  assert.deepEqual(apl.document.mainTemplate.parameters, ["innetwork"]);
+  assert.ok(!JSON.stringify(apl.document).includes("${payload."), "no bindings through payload");
 });
 
 test("the same request on a speaker without a screen: voice only", async () => {
