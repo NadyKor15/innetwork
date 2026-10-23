@@ -13,5 +13,5 @@ Narrow on purpose (SPEC §6.4): the adult's own checkup year only — "Alexa, op
 ## Putting it on the device (human steps — not done by any script)
 1. Amazon developer console, the account the Echo Show is registered to: create a custom skill "In Network", paste `interaction-model/en-US.json`, enable APL.
 2. Run the server and `SKILL_ID=… SKILL_HOUSEHOLD=… npm run skill:start` behind a TLS endpoint you control; set it as the HTTPS endpoint.
-3. Test tab → Development → on the Echo Show: "Alexa, open the In Network skill". With Alexa+ on the device the short "Alexa, open In Network" does not reach a development skill (friction log A7). Run on an Echo Show 8 on Oct 20, 2026 — the live clip at 2:02 in the demo video.
+3. Test tab → Development → on the Echo Show: "Alexa, open the In Network skill". With Alexa+ on the device the short "Alexa, open In Network" does not reach a development skill (friction log A7). Run on an Echo Show 8 on Oct 20, 2026 — the live clip at 2:15 in the demo video.
 No AWS account, Lambda or payment is needed for this path.

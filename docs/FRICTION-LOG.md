@@ -31,7 +31,7 @@ Part 1 (A1–A8): the Alexa+ platform, MCP Apps and the add-on design guide. Par
 | F14 | In-network listings at Orlando addresses for practitioners who report practicing elsewhere | Medium–high |
 | F15 | Practice websites that refuse automated reads (the second measurement is thin) | Low for the build, medium for families |
 
-The classic Alexa skill (`skill/`) ran on a real Echo Show 8 on Oct 20, 2026 (the live clip at 2:02 in the demo video); A7 and A8 are what we hit on the device. We only log what we actually tried.
+The classic Alexa skill (`skill/`) ran on a real Echo Show 8 on Oct 20, 2026 (the live clip at 2:15 in the demo video); A7 and A8 are what we hit on the device. We only log what we actually tried.
 
 ## Part 1 — Alexa+ platform, MCP Apps, design guide
 
